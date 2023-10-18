@@ -1,0 +1,16 @@
+lib/
+src/*/*.o
+src/*/*/*.o
+src/*/*/*/*.o
+examples/test-*
+examples/CopyInfo
+!examples/test-*.C
+examples/ex-*
+!examples/ex-*.C
+src/tests/test-*
+src/AlgebraicCore/leak_checker
+src/CoCoA-5/CoCoAInterpreter
+src/CoCoA-5/CoCoAManual/wordlist.txt
+src/CoCoA-5/check-version-defines
+src/server/CoCoAServer
+src/server/all
