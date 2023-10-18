@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      LogStream</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      LogStream</h1>
+<h2>      &copy;  2017 John Abbott, Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc5">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc6">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-LogStream1.C">ex-LogStream1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+CoCoALib offers its own "log output stream" for logging messages
+(see for instance <a href="obsolescent.html"><code>obsolescent</code></a>.  By default this is <code>std::cout</code>
+but it may be set to any other stream (_e.g._ <code>std::clog</code>).
+</p>
+<p>
+NOTE: internally the implementation uses a global variable, so multi-threaded
+applications should be careful about using <code>LogStreamForThisBlock</code>.
+</p>
+
+<section id="operations">
+<h3>Operations</h3>
+
+<ul>
+<li><code>LogStream()</code>  returns the current CoCoA "log stream" (as a ref to <code>std::ostream</code>)
+</li>
+<li><code>LogStreamForThisBlock BlockName(out)</code>  sets the CoCoA "log stream" (global var) to be <code>out</code> (of type <code>std::ostream</code>) for this code block; it restores previous stream upon exiting the block.
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation</h2>
+
+<p>
+The implementation could hardly be simpler.
+</p>
+<p>
+The global variable is a pointer because references cannot be reseated in C++
+(so it would be impossible to implement <code>mySetLogStreamPtr</code>).
+</p>
+
+</section>
+<section id="toc5">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Should the default CoCoA "log stream" be <code>std::cout</code> or <code>std::clog</code>?
+<code>std::cout</code> is probably easier to deal with for non-expert users
+(_e.g._ when redirecting output to a file).
+</p>
+
+</section>
+<section id="toc6">
+<h2>Main changes</h2>
+
+<p>
+<strong>2017</strong>
+</p>
+
+<ul>
+<li>April (v0.99560): revised interface for changing log stream in a block
+</li>
+<li>March (v0.99560): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

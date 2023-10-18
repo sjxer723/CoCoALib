@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      ExternalLibs-frobby</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      ExternalLibs-frobby</h1>
+<h2>      &copy;  2010 Anna Bigatti, Bjarke Hammersholt Roune</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation</a>
+      <ul>
+      <li><a href="#toc2">Examples</a>
+      </li>
+      <li><a href="#toc3">Download and compile Frobby</a>
+      </li>
+      <li><a href="#toc4">Configure and compile CoCoALib with frobby</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation</h2>
+
+<p>
+<strong>Frobby</strong> is a software system and project for computations with
+monomial ideals.  <strong>Frobby</strong> is free software and it is intended as a
+vehicle for research on monomial ideals, as well as a useful practical
+tool for investigating monomial ideals.
+</p>
+<p>
+Available functions:
+</p>
+
+<pre>
+  long dimension(const ideal&amp; I);
+
+  ideal AlexanderDualFrobby(I, pp);
+  ideal AlexanderDualFrobby(I);
+  ideal MaximalStandardMonomialsFrobby(I);
+
+  void IrreducibleDecompositionFrobby(std::vector&lt;ideal&gt;&amp; components, I);
+  void PrimaryDecompositionFrobby(std::vector&lt;ideal&gt;&amp; components, I);
+  void AssociatedPrimesFrobby(std::vector&lt;ideal&gt;&amp; primes, I);
+
+  RingElem MultigradedHilbertPoincareNumeratorFrobby(I);
+  RingElem TotalDegreeHilbertPoincareNumeratorFrobby(I);
+  RingElem TotalDegreeHilbertPoincareNumeratorFrobby(I, const RingElem&amp; base);
+</pre>
+
+<section id="toc2">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-frobby1.C">ex-frobby1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Download and compile Frobby</h3>
+
+<table style="margin-left: auto; margin-right: auto;">
+<tr>
+<td><a href="http://www.broune.com/frobby/">**frobby** website</a></td>
+</tr>
+</table>
+
+<p>
+<strong>CoCoALib</strong> requires <strong>Frobby</strong> release 0.9.0 or later.
+Download <strong>Frobby</strong> from the website.
+</p>
+<p>
+<strong>IMPORTANT</strong> there are some minor mistakes in the frobby source code:
+</p>
+
+<ul>
+<li>insert the following two lines in frobby source files <code>main.cpp</code> and <code>randomDataGenerators.cpp</code>
+</li>
+<li><code>#include &lt;sys/types.h&gt;</code> 
+</li>
+<li><code>#include &lt;unistd.h&gt;</code>
+</li>
+<li>on line 143 of file <code>StatisticsStrategy.cpp</code> change <code>mpz_class</code> into <code>mpq_class</code>
+<p></p>
+Now compile <strong>Frobby</strong> following the instructions in the <strong>Frobby release</strong>.
+<p></p>
+<strong>NOTE</strong>: JAA says that to compile Frobby (0.8.2) on my machine I had to
+execute the following:
+
+<pre>
+export CFLAGS="-m64 -mtune=core2 -march=core2"  # taken from gmp.h
+export LDFLAGS=$CFLAGS
+make library
+</pre>
+
+<code>make</code> might give some linking issues if <code>libgmpxx</code> is not installed
+systemwide.  Anyway, for linking with CoCoA you only need <code>make library</code>.
+</li>
+</ul>
+
+</section>
+<section id="toc4">
+<h3>Configure and compile CoCoALib with frobby</h3>
+
+<p>
+Look to see where the library file <code>libfrobby.a</code> is -- on my computer
+it was inside the Frobby subdirectory <code>bin/</code>.  Note the full path to
+the library file as you will need it when configuring CoCoALib!
+</p>
+<p>
+Then configure and compile <strong>CoCoALib</strong> typing
+</p>
+
+<pre>
+cd CoCoALib-0.99
+./configure --with-libfrobby=&lt;your_path_to&gt;/libfrobby.a
+make
+</pre>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation</h2>
+
+</section>
+<section id="toc6">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Currently Frobby is not really intended to be used as a library, so linking
+it with CoCoALib is not as simple as it could be.  Hopefully this will soon
+change.
+</p>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2011</strong>
+</p>
+
+<ul>
+<li>29 July: added (temporarily?) <code>Frobby</code> suffix to all functions
+</li>
+<li>5 July: modified AlexanderDualFrobby into AlexanderDualFrobby,
+          PrimaryDecomposition into PrimaryDecompositionFrobby.
+</li>
+</ul>
+
+<p>
+<strong>2010</strong>
+</p>
+
+<ul>
+<li>1 October: first inclusion
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

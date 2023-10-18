@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      matrix</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      matrix</h1>
+<h2>      &copy;  2005,2008,2011,2016  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for the classes matrix, MatrixView and ConstMatrixView</a>
+      <ul>
+      <li><a href="#toc2">Examples</a>
+      </li>
+      <li><a href="#toc3">Constructors and Pseudo-constructors</a>
+      </li>
+      <li><a href="#operations">Operations on ConstMatrixView, MatrixView, ConstMatrix, matrix</a>
+      </li>
+      <li><a href="#toc5">Operations on MatrixView, matrix</a>
+      </li>
+      <li><a href="#toc6">Operations on matrix</a>
+      </li>
+      <li><a href="#toc7">Utility functions</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc8">Library contributor documentation</a>
+    </li>
+    <li><a href="#toc9">Maintainer documentation for the matrix classes</a>
+    </li>
+    <li><a href="#toc10">Bugs, Shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc11">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for the classes matrix, MatrixView and ConstMatrixView</h2>
+
+<p>
+<strong>IMPORTANT: in CoCoALib row/column indices start from 0.</strong>
+</p>
+<p>
+CoCoALib offers two distinct concepts for dealing with matrices: one
+is an explicit implementation of a matrix, the other is a way to "view"
+another existing object as though it were a matrix (possibly of a special form).
+An example of a <code>MatrixView</code> is seeing a <code>std::vector&lt;RingElem&gt;</code> as a
+row matrix (see <a href="MatrixView.html"><code>MatrixView</code></a>).
+</p>
+<p>
+There are two categories of matrix view, namely <code>ConstMatrixView</code> and
+<code>MatrixView</code>.  The only difference between them is that the former
+does not allow you to change the entries while the latter allows you
+to change them (or at least some of them).
+</p>
+<p>
+There are also two categories of explicit matrix.  A <code>ConstMatrix</code> is
+a matrix whose entries and dimensions are fixed.  In contrast, a (non-const)
+<code>matrix</code> offers operations for assigning to entries, exchanging rows and
+columns, and even varying the dimensions -- see the maintainer documentation
+if you're curious about why these operations are not allowed on a <code>MatrixView</code>.
+</p>
+<p>
+Here are some guidelines for writing a function or procedure which takes
+matrices as arguments.  If the function/procedure does not change the
+structure of the matrix, then use <code>ConstMatrixView</code> or <code>MatrixView</code>.
+If the structure of the matrix parameter may be modified then you must use
+<code>matrix&amp;</code> as the parameter type.
+</p>
+
+<section id="toc2">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-matrix1.C">ex-matrix1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-matrix2.C">ex-matrix2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Constructors and Pseudo-constructors</h3>
+
+<p>
+The following create a <code>matrix</code>:
+</p>
+
+<ul>
+<li><code>NewDenseMat(R, r, c)</code>  -- (see <a href="DenseMatrix.html"><code>DenseMatrix</code></a>)
+</li>
+<li><code>NewSparseMat(R, r, c)</code> -- NOT YET IMPLEMENTED!!
+</li>
+</ul>
+
+<p>
+The following create a <code>ConstMatrix</code>:
+</p>
+
+<ul>
+<li><code>ZeroMat(R, r, c)</code>     -- constant matrix: <code>r</code>-by-<code>c</code> zero matrix over <code>R</code>
+</li>
+<li><code>IdentityMat(R, n)</code>    -- constant matrix: <code>n</code>-by-<code>n</code> identity matrix over <code>R</code>
+</li>
+</ul>
+
+<p>
+The following create <em>matrix views</em>: for instance, changing an entry in
+<code>RowMat(v)</code> will also change the vector <code>v</code>,
+see <a href="MatrixView.html#PseudoConstructors"><code>MatrixView</code> PseudoConstructors</a> for more details.
+</p>
+
+<ul>
+<li><code>transpose(M)</code>         
+</li>
+<li><code>submat(M, rows, cols)</code>
+</li>
+<li><code>ColMat(v)</code>            
+</li>
+<li><code>RowMat(v)</code>            
+</li>
+<li><code>DiagMat(v)</code>           
+</li>
+<li><code>BlockMat(A, B, C, D)</code> 
+</li>
+<li><code>ConcatVer(A, B)</code>      
+</li>
+<li><code>ConcatHor(A, B)</code>      
+</li>
+<li><code>ConcatDiag(A, B)</code>     
+</li>
+<li><code>ConcatAntiDiag(A, B)</code> 
+</li>
+</ul>
+
+<p>
+The following create a <code>matrix</code> and come from <a href="MatrixSpecial.html"><code>MatrixSpecial</code></a>.
+See there for more details.
+</p>
+
+<ul>
+<li><code>jacobian(f, indets)</code>
+</li>
+<li><code>TensorMat(M1, M2)</code>
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations on ConstMatrixView, MatrixView, ConstMatrix, matrix</h3>
+
+<ul>
+<li><code>RingOf(M)</code>    -- the ring to which the matrix entries belong
+</li>
+<li><code>NumRows(M)</code>   -- the number of rows in <code>M</code> (may be zero)
+</li>
+<li><code>NumCols(M)</code>   -- the number of columns in <code>M</code> (may be zero)
+</li>
+<li><code>out &lt;&lt; M</code>     -- print the value of the matrix on ostream out
+                      (with a <em>dense</em> representation)
+</li>
+</ul>
+
+<ul>
+<li><code>M1 == M2</code>           -- true iff <code>M1(i,j) == M2(i,j)</code> for all i,j
+</li>
+<li><code>IsSymmetric(M)</code>     -- true iff <code>M(i,j) ==  M(j,i)</code>  for all i,j
+</li>
+<li><code>IsAntiSymmetric(M)</code> -- true iff <code>M(i,j) == -M(j,i)</code>  for all i,j
+</li>
+<li><code>IsDiagonal(M)</code>      -- true iff <code>M(i,j) == 0</code>        for all i!=j
+</li>
+<li><code>IsMat0x0(M)</code>        -- true iff <code>NumRows(M) == 0 &amp;&amp; NumCols(M)==0</code>
+</li>
+</ul>
+
+<ul>
+<li><code>M(i,j)</code>         -- the (<code>i</code>,<code>j</code>) entry of <code>M</code>  <strong>(NB indices start from 0)</strong>
+</li>
+<li><code>IsZeroRow(M,i)</code> -- true iff row <code>i</code> of <code>M</code> is zero  <strong>(NB indices start from 0)</strong>
+</li>
+<li><code>IsZeroCol(M,j)</code> -- true iff column <code>j</code> of <code>M</code> is zero  <strong>(NB indices start from 0)</strong>
+</li>
+</ul>
+
+<p>
+The following come from <a href="MatrixOps.html"><code>MatrixOps</code></a>, see there for more details.
+</p>
+
+<ul>
+<li><code>*</code> <code>+</code> <code>-</code> <code>/</code>
+</li>
+<li><code>det(M)</code>
+</li>
+<li><code>rank(M)</code>
+</li>
+<li><code>inverse(M)</code>
+</li>
+<li><code>adjoint(M)</code>
+</li>
+<li><code>void mul(matrix&amp; lhs, M1, M2)</code>
+</li>
+<li><code>LinSolve(M,rhs)</code>
+</li>
+<li><code>LinKer(M)</code>
+</li>
+</ul>
+
+</section>
+<section id="toc5">
+<h3>Operations on MatrixView, matrix</h3>
+
+<ul>
+<li><code>M-&gt;myIsWritable(i,j)</code> -- true iff posn <code>(i,j)</code> can be written to.  <strong>Row/col indices start from 0.</strong>
+</li>
+<li><code>SetEntry(M,i,j,val)</code> -- set entry <code>(i,j)</code> of matrix <code>M</code> to <code>val</code> 
+                     (integer, rational, RingElem).  <strong>Row/col indices start from 0.</strong>
+                     Throws <code>ERR::BadMatrixSetEntry</code> if <code>(i,j)</code> is not writable
+</li>
+<li><code>MV-&gt;myRawEntry(i,j)</code>  -- raw pointer to <code>(i,j)</code> entry.  <strong>Row/col indices start from 0.</strong>
+                     Throws error if the <code>(i,j)</code> posn is not writable.
+</li>
+</ul>
+
+<p>
+<strong>NOTE:</strong> You cannot set a matrix entry the obvious way,
+  <em>i.e.</em> <code>M(i,j) = value;</code> You must use <code>SetEntry(M,i,j,value)</code>.
+</p>
+
+</section>
+<section id="toc6">
+<h3>Operations on matrix</h3>
+
+<p>
+With sanity checks
+</p>
+
+<ul>
+<li><code>SwapRows(M,i1,i2)</code>   -- swap rows <code>i1</code> and <code>i2</code>
+</li>
+<li><code>SwapCols(M,j1,j2)</code>   -- swap columns <code>j1</code> and <code>j2</code>
+</li>
+<li><code>DeleteRow(M,i)</code>      -- delete row <code>i</code> and moves up the following rows
+</li>
+<li><code>DeleteCol(M,j)</code>      -- delete column <code>j</code> and moves up the following cols
+</li>
+</ul>
+
+<p>
+Without sanity checks
+</p>
+
+<ul>
+<li><code>M-&gt;myResize(r,c)</code>       -- change size of <code>M</code> to <code>r</code>-by-<code>c</code> (new entries are zero)
+</li>
+<li><code>M-&gt;myRowMul(i,r)</code>       -- multiply row <code>i</code> by <code>r</code>
+</li>
+<li><code>M-&gt;myColMul(j,r)</code>       -- multiply column <code>j</code> by <code>r</code>
+</li>
+<li><code>M-&gt;myAddRowMul(i1,i2,r)</code> -- add <code>r</code> times row <code>i2</code> to row <code>i1</code>
+</li>
+<li><code>M-&gt;myAddColMul(j1,j2,r)</code> -- add <code>r</code> times column <code>j2</code> to column <code>j1</code>
+</li>
+<li><code>M-&gt;mySwapRows(i1,i2)</code>   -- swap rows <code>i1</code> and <code>i2</code>
+</li>
+<li><code>M-&gt;mySwapCols(j1,j2)</code>   -- swap columns <code>j1</code> and <code>j2</code>
+</li>
+</ul>
+
+<p>
+<strong>NOTE:</strong> these are not permitted on <a href="MatrixView.html"><code>MatrixView</code></a> because of various problems which
+  could arise <em>e.g.</em> with aliasing in block matrices (see maintainer documentation).
+  <code>myResize</code> simply truncates rows/columns if they are too long, and any new
+  entries are filled with zeroes.  So, if you resize to a smaller matrix, you get
+  just the "top left hand" part of the original.
+</p>
+<p>
+At the moment assignment of matrices is not allowed.  The only way to make
+a copy of a matrix (view) is by calling a genuine constructor (so far only
+<code>NewDenseMat</code> comes into this category).
+</p>
+
+</section>
+<section id="toc7">
+<h3>Utility functions</h3>
+
+<ul>
+<li><code>IsRectangular(VV)</code> -- says whether a C++ <code>vector</code> of <code>vector</code> is rectangular
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc8">
+<h2>Library contributor documentation</h2>
+
+<p>
+The classes <code>ConstMatrixView</code> , <code>MatrixView</code>, <code>ConstMatrix</code> and <code>matrix</code> are
+just reference counting smart-pointers to objects of type derived from
+the abstract base classes <code>ConstMatrixViewBase</code>, <code>MatrixViewBase</code>,
+<code>ConstMatrixBase</code> and <code>MatrixBase</code> respectively;
+this is analogous to the way <a href="ring.html"><code>ring</code></a>s are implemented.  Consequently every
+concrete matrix class or matrix view class must be derived from these abstract
+classes.  At the moment, it is better to derive from <code>MatrixViewBase</code> rather
+than <code>ConstMatrixViewBase</code> because of the way <code>BlockMat</code> is implemented.
+</p>
+<p>
+The base class <code>ConstMatrixViewBase</code> declares the following pure virtual
+member fns:
+</p>
+
+<ul>
+<li><code>myRing()</code>           -- returns the ring to which the matrix entries belong
+</li>
+<li><code>myNumRows()</code>        -- returns the number of rows in the matrix
+</li>
+<li><code>myNumCols()</code>        -- returns the number of columns in the matrix
+<p></p>
+</li>
+<li><code>myEntry(i,j)</code>       -- returns ConstRefRingElem aliasing the value of entry <code>(i,j)</code>
+</li>
+<li><code>IamEqual(M)</code>        -- true iff *this==M
+</li>
+<li><code>IamSymmetric()</code>     -- true iff entry (i,j) == entry (j,i)
+</li>
+<li><code>IamAntiSymmetric()</code> -- true iff entry (i,j) == -entry (j,i)
+</li>
+<li><code>IamDiagonal()</code>      -- true iff entry (i,j) == 0 for i!=j
+</li>
+<li><code>myMulByRow(v,w)</code>    -- v = w.M, vector-by-matrix product
+</li>
+<li><code>myMulByCol(v,w)</code>    -- v = M.w, matrix-by-vector product
+</li>
+<li><code>myIsZeroRow(i)</code>     -- true iff row <code>i</code> is zero
+</li>
+<li><code>myIsZeroCol(j)</code>     -- true iff column <code>j</code> is zero
+</li>
+<li><code>myDet(d)</code>           -- computes determinant into d
+</li>
+<li><code>myRank()</code>           -- computes rank (matrix must be over an integral domain)
+<p></p>
+</li>
+<li><code>myOutput(out)</code>      -- print out the matrix on ostream <code>out</code>
+</li>
+<li><code>myCheckRowIndex(i)</code> -- throws an exception ERR::BadRowIndex if <code>i</code> is too large
+</li>
+<li><code>myCheckColIndex(j)</code> -- throws an exception ERR::BadColIndex if <code>j</code> is too large
+</li>
+</ul>
+
+<p>
+These are the additional virtual functions present in <code>MatrixViewBase</code>:
+</p>
+
+<ul>
+<li><code>myIsWritable(i,j)</code>  -- true iff entry <code>(i,j)</code> can be modified; <code>i</code> &amp; <code>j</code> are unchecked
+</li>
+<li><code>mySetEntry(i,j,value)</code> -- set entry <code>(i,j)` to ``value</code> (integer, rational, RingElem)
+</li>
+</ul>
+
+<p>
+The class <code>ConstMatrixBase</code> is almost identical to <code>ConstMatrixViewBase</code>; the
+only real difference is that an instance of a concrete class derived from
+<code>ConstMatrixBase</code> should be self-contained (<em>i.e.</em> not refer to any external
+data structure) whereas a <code>ConstMatrixView</code> may refer to an external object
+(and typically <em>should</em> do so, unless it is derived from <code>ConstMatrixBase</code>).
+</p>
+<p>
+These are the additional virtual functions present in <code>MatrixBase</code>:
+</p>
+
+<ul>
+<li><code>myRowMul(i,r)</code>      -- multiply row i by r
+</li>
+<li><code>myColMul(j,r)</code>      -- multiply column j by r
+</li>
+<li><code>myAddRowMul(i1,i2,r)</code> --add r times row i2 to row i1
+</li>
+<li><code>myAddColMul(j1,j2,r)</code> --add r times column j2 to column j1
+</li>
+<li><code>mySwapRows(i1,i2)</code>  -- swap rows i1 and i2
+</li>
+<li><code>mySwapCols(j1,j2)</code>  -- swap columns j1 and j2
+</li>
+</ul>
+
+<p>
+<strong>Default definitions:</strong>
+</p>
+
+<ul>
+<li>IamEqual, IamSymmetric, IamAntiSymmetric, IamDiagonal,
+   myMulByRow, myMulByCol, myIsZeroRow, myIsZeroCol, myOutput all have
+    default <em>dense</em> definitions
+</li>
+<li>myDet and myRank have default definitions which use gaussian
+    elimination
+</li>
+</ul>
+
+</section>
+<section id="toc9">
+<h2>Maintainer documentation for the matrix classes</h2>
+
+<p>
+I shall assume that you have already read the <em>User Documentation</em> and
+<em>Library Contributor Documentation</em>.
+</p>
+<p>
+The implementation underwent a big structural change in April 2008.  I believe
+most of the design is sensible now, but further important changes could still
+occur.  The implementation of the four matrix classes is wholly analogous to
+that of ring: they are simply reference counting smart-pointer classes (which
+may have derived classes).  If assignment of matrices becomes permitted then
+some extra complication will be needed -- <em>e.g.</em> <code>MakeUnique</code>, and the pointed
+object must be able to clone itself.
+</p>
+<p>
+The only delicate part of the implementation is in <code>myMulByRow</code> and
+<code>myMulByCol</code> where a buffer is used for the answer so that the fns can be
+exception clean and not suffer from aliasing problems between the args.
+</p>
+<p>
+Recall that by convention member functions of the base class do not
+perform sanity checks on their arguments; though it is wise to include
+such checks inside <code>CoCoA_ASSERT</code> calls to help during debugging.  The
+sanity check should be conducted in the functions which present a nice
+user interface.
+</p>
+<p>
+Q: Why did I create both <code>MatrixView</code> and <code>ConstMatrixView</code>?
+</p>
+<p>
+A: Because the usual C++ <em>const mechanism</em> doesn't work the way I want it to.
+   Consider a function which takes an argument of type <code>const MatrixView&amp;</code>.
+   One would not expect that function to be able to modify the entries of the
+   matrix view supplied as argument.  However, you can create a new non
+   const <code>MatrixView</code> using the default copy ctor, and since <code>MatrixView</code> is
+   a smart pointer the copy refers to the same underlying object.  Currently,
+   a <code>MatrixView</code> object does not perform <em>copy on write</em> if the reference
+   count of the underlying object is greater than 1 -- it is not at all clear
+   what <em>copy on write</em> would mean for a matrix view (Should the underlying
+   object be duplicated???  I don't like that idea!).
+</p>
+<p>
+Q: Why are row, column and resizing operations which are allowed on <code>matrix</code>
+   objects not allowed on <code>MatrixView</code> objects?
+</p>
+<p>
+A: I disallowed them because there are cases where it is unclear what should
+   happen.  For example, suppose <code>M</code> is a square matrix, and someone creates the
+   view <code>MtrM</code> defined to be <code>ConcatHor(M, transpose(M))</code> then there is non-trivial
+   aliasing between the entries of <code>MtrM</code>.  What should happen if you try to
+   multiply the second row of <code>MtrM</code> by 2?  What should happen if you try to
+   add a new column to <code>MtrM</code>?  In general, resizing <code>MtrM</code> would be problematic.
+   Here's another case: it is not clear how a resize operation should work on a
+   matrix view based on a <code>vector&lt;RingElem&gt;</code>; would the underlying vector be
+   resized too?
+</p>
+<p>
+I chose to offer member fns for checking indices so that error messages could
+be uniform in appearance.  I chose to have two index checking member fns
+<code>myCheckRowIndex</code> and <code>myCheckColIndex</code> rather than a single unified fn, as a
+single fn would have to have the <em>ugly</em> possibility of throwing either of two
+different exceptions.
+</p>
+<p>
+I declared (and defined) explicitly the default ctor and dtor of the four
+base classes, to prohibit/discourage improper use of pointers to these classes.
+</p>
+<p>
+The default <em>dense</em> definition of <code>MatrixBase::myOutput</code> seems a reasonable
+starting point -- but see the bugs section below!
+</p>
+
+</section>
+<section id="toc10">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+The use of <code>std::vector&lt;RingElem&gt;</code> should be replaced by <code>ModuleElem</code> which
+automatically guarantees that all its components are in the same ring.
+</p>
+<p>
+Should the default <em>dense</em> definitions of the output functions be removed?
+They could be quite inappropriate for a large sparse matrix.
+</p>
+<p>
+Should the OpenMath output function send the ring with every value
+sent (given that the ring is also specified in the header)?
+</p>
+<p>
+Should the index checking fns <code>myCheckRowIndex</code> and <code>myCheckColIndex</code> really
+throw?  Perhaps there should be an alternative which merely returns a boolean
+value?  When would the boolean version be genuinely beneficial?
+</p>
+<p>
+Why can you not simply write <code>M(i,j) = NewValue;</code>?  It is non-trivial
+because if <code>M</code> is a sparse matrix then use of <code>M(i,j)</code> in that context
+will require a structural modification to <code>M</code> if <code>NewValue</code> is non-zero
+and currently <code>M</code> has no <code>[i,j]</code> element.  This natural syntax could be made
+possible by using a proxy class for <code>M(i,j)</code>; in a RHS context it simply
+produces a <code>ConstRefRingElem</code> for the value of the entry; in a LHS context
+the appropriate action depends on the implementation of the matrix.
+</p>
+<p>
+I'm quite unsure about the signatures of several functions.  I am not happy
+about requiring the user to use member functions for self-modifying operations
+(<em>e.g.</em> swap rows, etc) since elsewhere member functions by convention do not
+check the validity of their arguments.
+</p>
+<p>
+Virtual member fn <code>myIsWritable</code> is not really intended for public use, but an
+arcane C++ rule prevents me from declaring it to be <code>protected</code>.  Apparently a
+<code>protected</code> name in the base class is accessible only through a ptr/ref to the
+derived class (and not through one to the base class) -- no idea why!
+</p>
+<p>
+Should assignment of matrices be allowed?  Ref counting should make this
+relatively cheap, but must beware of the consequences for iterators
+(<em>e.g.</em> if it is possible to have a <em>reference to a row/column of a matrix</em>).
+</p>
+<p>
+Would it be useful/helpful/interesting to have row-iterators and col-iterators
+for matrices?
+</p>
+
+</section>
+<section id="toc11">
+<h2>Main changes</h2>
+
+<p>
+<strong>2016</strong>
+</p>
+
+<ul>
+<li>Sept: added doc for <code>ConstMatrix</code>
+</li>
+</ul>
+
+<p>
+<strong>2012</strong>
+</p>
+
+<ul>
+<li>April: added fns <code>SwapRows</code> and <code>SwapCols</code>
+</li>
+<li>March: changed printing style
+</li>
+</ul>
+
+<p>
+<strong>2011</strong>
+</p>
+
+<ul>
+<li>February: IsSymmetric, IsAntiSymmetric, IsDiagonal, operator==
+  default and some optimized implementations.
+</li>
+<li>February (v0.9942): first release of <a href="MatrixSpecial.html"><code>MatrixSpecial</code></a> files
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

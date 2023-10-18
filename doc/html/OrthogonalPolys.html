@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>    OrthogonalPolys</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>    OrthogonalPolys</h1>
+<h2>      &copy;  2017,2018 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc5">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc6">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-OrthogPolys.C">ex-OrthogPolys.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+Here are some functions for constructing individual members of
+certain families of orthogonal polynomials.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<p>
+Let <code>n</code> be a non-negative integer, and <code>x</code> a ring element
+(typically an indeterminate or a number).  The functions below
+evaluate the corresponding polynomial at <code>x</code>: if <code>x</code> is an
+indeterminate then the polynomial itself is returned.
+</p>
+
+<ul>
+<li><code>ChebyshevPoly(n,x)</code>  Chebyshev polynomial of 1st kind
+</li>
+<li><code>ChebyshevPoly2(n,x)</code>  Chebyshev polynomial of 2nd kind
+</li>
+<li><code>HermitePoly(n,x)</code>  Hermite polynomial (physics)
+</li>
+<li><code>HermitePoly2(n,x)</code>  Hermite polynomial (probability)
+</li>
+<li><code>LaguerrePoly(n,x)</code>  Laguerre polynomomial <strong>multiplied</strong> by <code>factorial(n)</code>
+</li>
+<li><code>DicksonPoly(x,n,alpha)</code>  Dickson polynomial of 1st type <a href="fam">not orthog</a>
+</li>
+<li><code>DicksonPoly2(x,n,alpha)</code>  Dickson polynomial of 2nd type <a href="fam">not orthog</a>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation</h2>
+
+<p>
+Some of the Chebyshev functions are not used, but I left them there
+in case they ever become useful.
+</p>
+
+</section>
+<section id="toc5">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+The dispatch functions for Hermite polynomials have not been tested;
+so I do not know if the criterion for choosing between "explicit" and
+"iterative" implementations actually makes any sense.
+</p>
+
+</section>
+<section id="toc6">
+<h2>Main changes</h2>
+
+<p>
+<strong>2017</strong>
+</p>
+
+<ul>
+<li>October (v0.99560): first release
+<p></p>
+<strong>2018</strong>
+</li>
+<li>November (v0.99610): added DicksonPoly
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

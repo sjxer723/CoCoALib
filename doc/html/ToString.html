@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      ToString</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      ToString</h1>
+<h2>      &copy;  2011,2014  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+    </li>
+    <li><a href="#toc3">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc4">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc5">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-ToString1.C">ex-ToString1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-ToString2.C">ex-ToString2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+These functions are to help visualize integer and rational numbers in
+a more comprehensible format (as a decimal <code>string</code>).  The <code>SigFig</code>
+argument is optional; its default value is 5.
+</p>
+
+<ul>
+<li><code>ToString(N)</code>  converts <code>N</code> to a (decimal) string.
+<p></p>
+</li>
+<li><code>FloatStr(N, SigFig)</code> convert the number <code>N</code> into a string choosing
+   between "decimal" format and "scientific" format.  The default value for
+   <code>SigFig</code> is 5.
+<p></p>
+</li>
+<li><code>ScientificStr(N, SigFig)</code> convert the number <code>N</code> into a string of the
+  form mantissa times power-of-ten, with <code>SigFig</code> digits in the mantissa.
+  Note that trailing zeroes are not removed from the mantissa.
+<p></p>
+</li>
+<li><code>DecimalStr(N, DecPlaces)</code> convert the number <code>N</code> into a decimal string
+  with <code>DecPlaces</code> digits after the decimal point.  The default value for
+  <code>DecPlaces</code> is 3.
+</li>
+</ul>
+
+<p>
+Note: for values with large numerator or denominator it is quicker to convert
+the value to a <code>RingElem</code> belonging to a <a href="RingTwinFloat.html"><code>RingTwinFloat</code></a> and then print
+the result.  This approach offers less control over the output, and no
+guarantee of correct rounding.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Maintainer documentation</h2>
+
+<p>
+The function <code>ScientificStr</code> gives the clearest guarantees about the
+format used, but also produces the least humanly readable result.  It
+uses <code>MantissaAndExponent10</code> to do the conversion.
+</p>
+<p>
+The function <code>FloatStr</code> is supposed to be the best general choice.
+It passes its args to <code>ScientificStr</code> in two situations: if the
+number is so large that padding would be needed before the decimal
+point; if the number is so small that the <code>ScientificStr</code> format
+would be shorter (<em>i.e.</em> if the exponent is less than -8).
+</p>
+<p>
+The function <code>DecimalStr</code> is Anna's preferred choice.  It uses
+<code>ToString</code> to convert to decimal.
+</p>
+
+</section>
+<section id="toc4">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+These functions cannot be applied directly to a machine integer; to call
+them you have to convert explicitly into a <a href="BigInt.html"><code>BigInt</code></a> (or <a href="BigRat.html"><code>BigRat</code></a>).
+</p>
+<p>
+The switch-over in <code>FloatStr</code> to scientific notation for "large"
+numbers is not ideal; in C the "g" format chooses the shorter between
+float and scientific formats.  Is it worth the doing the same here?
+</p>
+<p>
+Anna says an older version of <code>DecimalStr</code> would suppress trailing zeroes
+if the result is exact (<em>e.g.</em> <code>DecimalStr(5/4,9)</code> would produce <code>1.25</code>
+rather than <code>1.250000000</code>.  Is this a good idea?
+</p>
+<p>
+These fns are too slow if <code>N</code> is a very large integer (or if numerator
+and/or denominator are very large).  Converting to an <code>mpf_t</code> and
+printing that would be much faster (except in delicate rounding cases).
+</p>
+
+</section>
+<section id="toc5">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>April (v0.99533): reorganized, renamed <code>FloatStr</code> to <code>ScientificStr</code>,
+   added new <code>FloatStr</code>
+<p></p>
+<strong>2011</strong>
+</li>
+<li>February (v0.9943): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

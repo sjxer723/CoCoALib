@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      RingWeyl</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      RingWeyl</h1>
+<h2>      &copy;  2005,2012 John Abbott and Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+      <ul>
+      <li><a href="#examples">Examples</a>
+      </li>
+      </ul>
+
+    <ul>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc5">Bugs, shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section~A~>
+<h2></h2>
+<section id="examples">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-RingWeyl1.C">ex-RingWeyl1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-RingWeyl2.C">ex-RingWeyl2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-RingWeyl3.C">ex-RingWeyl3.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-RingWeyl4.C">ex-RingWeyl4.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-RingWeyl5.C">ex-RingWeyl5.C</a>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+The class RingWeylImpl implements a Weyl algebra.
+</p>
+<p>
+Note that Weyl algebras are noncommutative.
+</p>
+
+<section id="constructors">
+<h3>Constructors</h3>
+
+<ul>
+<li><code>NewWeylAlgebra(CoeffRing, NumTrueIndets, ElimIndets)</code>
+</li>
+<li><code>NewWeylAlgebra(CoeffRing, names, ElimIndets)</code>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation</h2>
+
+<p>
+This first version implements the Weyl algebra by using a normal
+polynomial ring internally (<code>myReprRing</code>) for manipulating the
+elements, and simply doing the right thing for products (instead of
+passing them directly onto <code>myReprRing</code>).
+</p>
+
+</section>
+<section id="toc5">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+This documentation is extremely incomplete (time and energy are running out).
+</p>
+<p>
+This version was produced in a considerable hurry, and worked by miracle.
+</p>
+<p>
+There should be scope for some <em>optimization</em>, and perhaps some cleaning.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

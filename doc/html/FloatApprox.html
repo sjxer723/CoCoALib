@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      FloatApprox</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      FloatApprox</h1>
+<h2>      &copy;  2014-2015  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Pseudo-constructors for binary representation</a>
+      </li>
+      <li><a href="#constructors">Pseudo-constructors for decimal representation</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-FloatApprox1.C">ex-FloatApprox1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+These functions determine a "floating point" approximation to an
+integer or rational.  The base of the representation is either 2 or 10.
+</p>
+<p>
+See also: <a href="ToString.html"><code>ToString</code></a> for functions producing readable numbers.
+</p>
+
+<section id="constructors">
+<h3>Pseudo-constructors for binary representation</h3>
+
+<ul>
+<li><code>MantissaAndExponent2(x,prec)</code> determine the <code>MantExp2</code> structure for <code>x</code> with precision <code>prec</code>
+</li>
+<li><code>FloatApprox(x,prec)</code> apply <code>MantissaAndExponent2</code> then convert the result into <code>BigRat</code>.
+</li>
+</ul>
+
+<p>
+The value of <code>prec</code> is the number of bits in the mantissa; if unspecified, it defaults to 53.
+</p>
+<p>
+A <code>MantExp2</code> structure contains 4 public data fields:
+</p>
+
+<ul>
+<li><code>mySign</code> an <code>int</code> having value -1 or 1
+</li>
+<li><code>myExponent</code> a <code>long</code>
+</li>
+<li><code>myMantissa</code> a <code>BigInt</code> (between <code>2^(prec-1)</code> and <code>2^prec-1</code>)
+</li>
+<li><code>myNumDigits</code> a <code>long</code> (just the value of  <code>prec</code>)
+</li>
+</ul>
+
+<p>
+As an exception if <code>x=0</code> then all fields are set to 0.
+</p>
+<p>
+The structure represents the value <code>mySign * (myMantissa/2^(myNumDigits-1)) * 2^myExponent</code>.
+</p>
+
+</section>
+<section id="constructors">
+<h3>Pseudo-constructors for decimal representation</h3>
+
+<ul>
+<li><code>MantissaAndExponent10(x,prec)</code> determine the <code>MantExp10</code> structure for <code>x</code> with precision <code>prec</code>
+</li>
+</ul>
+
+<p>
+The value of <code>prec</code> is the number of (decimal) digits in the mantissa;
+if unspecified, it defaults to 5.
+</p>
+<p>
+A <code>MantExp10</code> structure contains 4 public data fields:
+</p>
+
+<ul>
+<li><code>mySign</code> an <code>int</code> having value -1 or 1
+</li>
+<li><code>myExponent</code> a <code>long</code>
+</li>
+<li><code>myMantissa</code> a <code>BigInt</code> (between <code>10^(prec-1)</code> and <code>10^prec-1</code>)
+</li>
+<li><code>myNumDigits</code> a <code>long</code> (just the value of  <code>prec</code>)
+</li>
+</ul>
+
+<p>
+As an exception if <code>x=0</code> then all fields are set to 0.
+</p>
+<p>
+The structure represents the value <code>mySign * (myMantissa/10^(myNumDigits-1)) * 10^myExponent</code>.
+</p>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation</h2>
+
+<p>
+The implementation is simple rather than efficient.  The current design
+ensures that 0.5ulp is rounded consistently (currently towards zero).
+</p>
+<p>
+The only tricky parts were deciding how to round in the case of a tie,
+and correct behaviour when the mantissa "overflows".  I finally
+decided to delegate rounding to <code>RoundDiv</code>: it is easy to implement,
+and I wanted a solution which was symmetric about zero, so that the two
+<code>MantissaAndExponent</code> fns applied to <code>N</code> and to <code>-N</code> would always
+give the same result except for sign.
+</p>
+<p>
+Mantissa overflow requires special handling, but it's quite easy.
+</p>
+<p>
+Printing of a <code>MantExp2</code> or <code>MantExp10</code> structure is simple rather
+than elegant.
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Using <code>mpfr</code> would surely be better.
+</p>
+<p>
+The fields of a <code>MantExp2</code> and <code>MantExp10</code> are publicly accessible;
+I'm undecided whether it is really better to supply the obvious accessor fns.
+</p>
+<p>
+The conversion in <code>MantissaAndExponent10</code> is rather slow when the input
+number is large.
+</p>
+<p>
+In principle the call to <code>FloorLog2</code> could fail because of overflow;
+but in that case <code>FloorLog2</code> itself should report the problem.
+</p>
+<p>
+In principle a mantissa overflow could trigger an exponent overflow
+(<em>i.e.</em> if the exponent was already the largest possible long).
+</p>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>April (v0.99533): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      MatrixSpecial</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      MatrixSpecial</h1>
+<h2>      &copy;  2011,2016,2017  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for MatrixSpecial</a>
+      <ul>
+      <li><a href="#toc2">Examples</a>
+      </li>
+      <li><a href="#toc3">Special Matrices</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc5">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc6">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for MatrixSpecial</h2>
+
+<section id="toc2">
+<h3>Examples</h3>
+
+</section>
+<section id="toc3">
+<h3>Special Matrices</h3>
+
+<ul>
+<li><code>JacobianMat(f, indets)</code> --
+  where <code>f</code> (polynomials) and <code>indets</code> (indeterminates) are
+  vectors of <a href="RingElem.html"><code>RingElem</code></a>, all belonging to the same <a href="PolyRing.html"><code>PolyRing</code></a>.
+  The (i,j)-th element of the Jacobian matrix is defined as the
+  derivative of i-th function with respect to the j-th indeterminate.
+<p></p>
+  Throws if both <code>f</code> and <code>indets</code> are empty
+  (cannot determine the <a href="ring.html"><code>ring</code></a> for constructing the 0x0 <a href="matrix.html"><code>matrix</code></a>).
+<p></p>
+</li>
+<li><code>JacobianMat(f)</code> --
+  Jacobian matrix with respect to all indets in the ring.
+</li>
+</ul>
+
+<ul>
+<li><code>TensorMat(A, B)</code> --
+  where <code>A</code> and <code>B</code> are matrices with the same BaseRing.
+</li>
+</ul>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<td>a_11 B</td>
+<td>a_12 B</td>
+<td>...</td>
+<td>a_1c B</td>
+</tr>
+<tr>
+<td>a_21 B</td>
+<td>a_22 B</td>
+<td>...</td>
+<td>a_2c B</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>...</td>
+<td></td>
+</tr>
+<tr>
+<td>a_r1 B</td>
+<td>a_r2 B</td>
+<td>...</td>
+<td>a_rc B</td>
+</tr>
+</table>
+
+<ul>
+<li><code>LawrenceMat(A)</code> --
+  Lawrence lifting of the <code>matrix</code>  <code>A</code>.
+</li>
+</ul>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<td>A</td>
+<td>0</td>
+</tr>
+<tr>
+<td>I</td>
+<td>I</td>
+</tr>
+</table>
+
+<ul>
+<li><code>SylvesterMat(f,g,x)</code> -- create Sylvester matrix for polys <code>f</code> and <code>g</code> w.r.t. indeterminate <code>x</code>
+<p></p>
+</li>
+<li><code>HilbertMat(n)</code> -- create an <code>n</code>-by-<code>n</code> matrix over <code>QQ</code> whose <code>(i,j)</code> entry is 1/(i+j-1)
+<p></p>
+</li>
+<li><code>RandomUnimodularMat(R,n,niters)</code> -- create a random matrix with integer entries and determinant +1 or -1; last arg <code>niters</code> is optional (it defaults to <code>25*n</code>).
+<p></p>
+</li>
+<li><code>RandomSparseNonSing01Mat(R,n)</code> -- create a random sparse non-singular (0,1) matrix of size <code>n</code>-by-<code>n</code>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation</h2>
+
+</section>
+<section id="toc5">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Many special matrices are not yet implemented: (from the source file)
+</p>
+
+<ul>
+<li>VandermondeMatrix
+</li>
+<li>HessianMatrix
+</li>
+<li>HilbertInverseMatrix
+</li>
+<li>ToeplitzMatrix
+</li>
+<li>WronskianMatrix
+</li>
+</ul>
+
+</section>
+<section id="toc6">
+<h2>Main changes</h2>
+
+<p>
+<strong>2016</strong>
+</p>
+
+<ul>
+<li>November (v0.99544): added <code>RandomUnimodularMat</code>
+</li>
+</ul>
+
+<p>
+<strong>2011</strong>
+</p>
+
+<ul>
+<li>February (v0.9942): first release (<code>jacobian</code>)
+</li>
+<li>March (v0.9943): added <code>TensorMat</code>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      SocketStream</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      SocketStream</h1>
+<h2>      &copy;  2005,2010  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User Documentation for SocketStream</a>
+      <ul>
+      <li><a href="#toc2">General description</a>
+      </li>
+      <li><a href="#toc3">Example of Basic Use</a>
+      </li>
+      <li><a href="#toc4">Source for server.C</a>
+      </li>
+      <li><a href="#toc5">Source for client.C</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintenance notes for the SocketStream source code</a>
+    </li>
+    <li><a href="#toc7">Bugs, Shortcomings, etc</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User Documentation for SocketStream</h2>
+
+<section id="toc2">
+<h3>General description</h3>
+
+<p>
+A <code>SocketStream</code> is intended to be used for client-server socket
+connections.  The distinction between the two sorts of use is
+made explicit when the socket is created:
+</p>
+
+<ul>
+<li>the server end of a socket is created by specifying the port
+   number on which to listen for connexions
+</li>
+<li>the client end of a socket is created by specifying both the
+   machine name and port number to call
+</li>
+</ul>
+
+<p>
+In both cases the <code>SocketStream</code> object is an <code>iostream</code>, <em>i.e.</em> it supports
+both input and output.  Note that the constructor for a server end
+socket (<em>i.e.</em> one with just the port number as argument) will block until
+a connexion is received!
+</p>
+
+</section>
+<section id="toc3">
+<h3>Example of Basic Use</h3>
+
+<p>
+Here is a simple, and rather silly, example.  The server reads strings,
+and for each string read returns a string being the decimal
+representation of the length of the string received.  Don't forget to
+start the server first, and then run the client (otherwise the client
+will complain about connexion refused).
+</p>
+
+</section>
+<section id="toc4">
+<h3>Source for server.C</h3>
+
+<pre>
+#include &lt;string&gt;
+#include "CoCoA/SocketStreambuf.C"
+
+int main()
+{
+  CoCoA::SocketStream s(8000); // server socket -- waits for a call
+
+  while (s)
+  {
+    std::string str;
+    s &gt;&gt; str;
+    if (!s) break;
+    std::cout &lt;&lt; "Read the string: " &lt;&lt; str &lt;&lt; std::endl;
+    s &lt;&lt; str.size() &lt;&lt; std::endl;
+  }
+
+  std::cout &lt;&lt; "REACHED EOF -- QUITTING" &lt;&lt; std::endl;
+  return 0;
+</pre>
+
+</section>
+<section id="toc5">
+<h3>Source for client.C</h3>
+
+<pre>
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include "CoCoA/SocketStreambuf.C"
+
+void process(const std::string&amp; str, std::iostream&amp; s)
+{
+  s &lt;&lt; str &lt;&lt; endl;
+  std::string result;
+  s &gt;&gt; result;
+  std::cout &lt;&lt; '"' &lt;&lt; str &lt;&lt; "\" transformed into \"" &lt;&lt; result &lt;&lt; '"' &lt;&lt; std::endl;
+}
+
+int main()
+{
+  CoCoA::SocketStream s("point", 8000); // client socket
+  
+  process("String1", s);
+  process("String2", s);
+  process("archeopteryx", s);
+  process("asuccessionofnonwhitespacecharacters", s);
+
+  return 0;
+}
+</pre>
+
+</section>
+</section>
+<section id="toc6">
+<h2>Maintenance notes for the SocketStream source code</h2>
+
+<p>
+As mentioned below, most of this code was written by copying from other
+reliable sources -- I don't really understand how it all works.  For the
+<code>streambuf</code> code refer to Josuttis's excellent book.  I do not know any
+formal reference for the "low-level" C code which uses the socket
+functions of the C library.
+</p>
+<p>
+<code>SocketStreambuf::ourUngetSize</code> is a lower bound on how much one can "go
+backwards" using the <code>ungetc</code> function.
+<code>SocketStreambuf::ourInputBufferSize</code> is the size of the internal input
+byte buffer, so the maximum number of characters which can be read in
+a single call to "recv" is the difference between <code>ourInputBufferSize</code>
+and <code>ourUngetSize</code> (currently 99996 bytes).
+</p>
+<p>
+The constructor for a server size <code>SocketStream</code> internally calls "fork"
+when a connexion is received -- the constructor completes only in the
+child, the parent process waits for further connexions.
+</p>
+
+</section>
+<section id="toc7">
+<h2>Bugs, Shortcomings, etc</h2>
+
+<p>
+I do not like having to include <code>&lt;cstdio&gt;</code> just to get the
+preprocessor macro <code>EOF</code>
+</p>
+<p>
+ERROR HANDLING NEEDS TO BE RECONSIDERED.
+Error handling is probably not correct: too great a tendency to throw
+exceptions instead of simply putting the iostream into an "anomalous
+state".  Not sure what is the accepted C++ approach.
+</p>
+<p>
+The values for the constants <code>SocketStreambuf::ourInputBufferSize</code>
+and <code>SocketStreambuf::ourUngetSize</code> are rather arbitrary.
+</p>
+<p>
+Most of the code has been "ripped off": either from Daniele's C source,
+or from Josuttis's book.  I have felt free to make (wholesale) changes.
+</p>
+<p>
+Maintainer documentation is largely absent.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

@@ -1,0 +1,57 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>MoebiusFn</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#MoebiusFn">up</a> <a href="cmdmoebius.html">previous</a>  <a href="cmdmonic.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>MoebiusFn<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+Moebius function mu on the whole numbers</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+MoebiusFn(N: INT): INT</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+This function returns the value of the Moebius function mu at the point
+<tt><b style="background:#bbeeee">N</b></tt>. It represents the sum of the primitive <tt><b style="background:#bbeeee">N</b></tt>-th roots
+of unity and is always -1, 0, or 1.
+<br><br><br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/ MoebiusFn(5);
+-1
+/**/ MoebiusFn(8);
+0
+/**/ MoebiusFn(10);
+1
+</pre></td></tr></table>
+
+</div>
+
+</body>
+</html>

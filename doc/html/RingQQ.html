@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      RingQQ</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      RingQQ</h1>
+<h2>      &copy;  2005,2007,2012  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for RingQQ</a>
+      <ul>
+      <li><a href="#examples">Examples</a>
+      </li>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#query">Query</a>
+      </li>
+      <li><a href="#operations">Operations on RingQQ</a>
+      </li>
+      <li><a href="#homomorphisms">Homomorphisms</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation for the class RingQQImpl</a>
+    </li>
+    <li><a href="#toc8">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for RingQQ</h2>
+
+<p>
+The call <code>RingQQ()</code> produces the CoCoA <a href="ring.html"><code>ring</code></a> which represents QQ, the
+field of rational numbers.  Calling <code>RingQQ()</code> several times will
+always produce the same unique CoCoA <a href="ring.html"><code>ring</code></a> representing QQ.
+</p>
+<p>
+Strictly, there is a limit on the size of elements you can create, but
+the limit is typically high enough not to be bothersome.
+</p>
+<p>
+<code>RingQQ</code> is the <a href="FractionField.html"><code>FractionField</code></a> of <a href="RingZZ.html"><code>RingZZ</code></a>;
+</p>
+<p>
+See <a href="RingElem.html"><code>RingElem</code></a> for operations on its elements.
+</p>
+<p>
+If you wish to compute purely with rationals (without exploiting
+CoCoALib's <a href="ring.html"><code>ring</code></a>s) then see the documentation in <a href="BigRat.html"><code>BigRat</code></a>. 
+</p>
+
+<section id="examples">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-RingQQ1.C">ex-RingQQ1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<ul>
+<li><code>RingQQ()</code> -- produces the CoCoA <a href="ring.html"><code>ring</code></a> which represents QQ.
+   Calling <code>RingQQ()</code> several times will always produce the same unique
+   ring in CoCoALib.
+</li>
+</ul>
+
+</section>
+<section id="query">
+<h3>Query</h3>
+
+<p>
+Let <code>R</code> be a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>IsQQ(R)</code> -- says whether <code>R</code> is actually <code>RingQQ()</code>
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations on RingQQ</h3>
+
+<p>
+See <a href="FractionField.html#operations"><code>FractionField</code> operations</a>.
+</p>
+
+</section>
+<section id="homomorphisms">
+<h3>Homomorphisms</h3>
+
+<p>
+Let <code>S</code> be a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>NewQQEmbeddingHom(S)</code> -- creates the (partial) homomorphism QQ --&gt; <code>S</code>
+                           (but see also <a href="CanonicalHom.html"><code>CanonicalHom</code></a>).
+                           QQ argument is implicit because there is a
+                           unique copy
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation for the class RingQQImpl</h2>
+
+<p>
+The function <code>RingQQ()</code> simply returns the unique instance of the
+CoCoALib <a href="ring.html"><code>ring</code></a> representing QQ.  This instance is managed by
+<a href="GlobalManager.html"><code>GlobalManager</code></a>, see its documentation.
+</p>
+<p>
+The function <code>MakeUniqueInstanceOfRingQQ</code> is the only function which can
+call the ctor of <code>RingQQImpl</code>.  The only function which is supposed to
+call <code>MakeUniqueInstanceOfRingQQ</code> is the ctor of <a href="GlobalManager.html"><code>GlobalManager</code></a>.  I have
+discouraged others from calling <code>MakeUniqueInstanceOfRingQQ</code> by not putting
+it in the header file <code>RingQQ.H</code> -- see bugs section in <a href="GlobalManager.html"><code>GlobalManager</code></a>.
+</p>
+<p>
+<code>RingQQImpl</code> is the implementation of the field of rational numbers
+following the scheme laid by <code>RingBase</code> and <code>FractionFieldBase</code>.  Almost
+all member functions are trivial: indeed, virtually all the work is done by
+the GMP library.  Once you have understood how <code>RingZZImpl</code> works, the
+implementation here should be easy to follow.
+</p>
+<p>
+The implementation of <code>RingQQImpl::InducedHomImpl::myApply</code> turns out to
+be a bit lengthy, but I do not see how to improve it.  Since partial
+homomorphisms can be built, <code>myApply</code> maps numerator and denominator then
+must check that their images can be divided.  I cannot reuse the
+implementation of <code>FractionFieldImpl::InducedHomImpl::myApply</code> because
+there is no equivalent of <code>RefNum</code> and <code>RefDen</code> in <code>RingQQImpl</code>.
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+This code is probably not <em>exception safe</em>; I do not know what the
+<code>mpq_*</code> functions do when there is insufficient memory to proceed.
+Making the code "exception safe" could well be non-trivial: I suspect
+a sort of <code>auto_ptr</code> to an <code>mpq_t</code> value might be needed.
+</p>
+<p>
+How to check that induced homomorphisms are vaguely sensible??
+e.g. given ZZ-&gt;ZZ[x] ker=0, but cannot induce QQ-&gt;ZZ[x]; so it is not
+sufficient simply to check that the kernel is zero.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      PPMonoid</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      PPMonoid</h1>
+<h2>      &copy;  2005-2007,2010,2013-2014,2020   John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for the classes PPMonoid, PPMonoidElem and PPMonoidBase</a>
+      <ul>
+      <li><a href="#toc2">Examples</a>
+      </li>
+      <li><a href="#toc3">Operations PPMonoids</a>
+        <ul>
+        <li><a href="#toc4">Pseudo-constructors of PPMonoid</a>
+        </li>
+        <li><a href="#operations">Operations</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc6">Summary of functions for PPMonoidElems</a>
+        <ul>
+        <li><a href="#toc7">Operations on collections of PPMonoidElem</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc8">Library Contributor Documentation</a>
+      <ul>
+      <li><a href="#toc9">To add a new type of concrete PPMonoid class</a>
+      </li>
+      <li><a href="#toc10">To add a new member function to PPMonoidBase</a>
+      </li>
+      <li><a href="#toc11">Calculating directly with raw PPs</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc12">Maintainer documentation for PPMonoid, PPMonoidElem, and PPMonoidBase</a>
+        <ul>
+        <li><a href="#toc13">Thread-safety and CoCoA_THREADSAFE_HACK</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc14">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for the classes PPMonoid, PPMonoidElem and PPMonoidBase</h2>
+
+<p>
+The classes <code>PPMonoid</code> and <code>PPMonoidElem</code> are analogous to <a href="ring.html"><code>ring</code></a> and
+<code>RingElem</code>.  A <code>PPMonoid</code> represents a (multiplicative) power product
+monoid with grading and compatible total arithmetic ordering; a
+<code>PPMonoidElem</code> represents an element of a <code>PPMonoid</code>, <em>i.e.</em>
+a power product.
+</p>
+<p>
+<code>PPMonoid</code> and <code>PPMonoidElem</code> are used inside the implementation of
+<a href="SparsePolyRing.html"><code>SparsePolyRing</code></a> (multivariate polynomial rings).
+</p>
+<p>
+You do not have to deal directly with <code>PPMonoid</code> unless you want to
+work solely with power-products, or use some particular implementation
+for a specific need in your <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a> -- <em>e.g.</em> huge
+exponents, very sparse power-products, fast ordering or fast access to
+exponents.
+</p>
+<p>
+The implementations of <code>PPMonoid</code>s are optimized for different uses:
+</p>
+
+<ul>
+<li><code>PPMonoidEv</code>:   stores the <em>Exponent vector</em>;
+               it is good for accessing the exponents, but slow for ordering;
+               with optional 3rd arg <code>BigExps</code> the exponents are stored as <a href="BigInt.html"><code>BigInt</code></a>'s
+</li>
+<li><code>PPMonoidOv</code>:   stores the <em>Order vector</em>;
+               it is good for ordering, but slow for accessing the exponents;
+               multiplication and comparison are fast; GCD/LCM are slow.
+<p></p>
+</li>
+<li><code>PPMonoidEvOv</code>: stores the <em>Exponent vector</em> and the <em>Order vector</em>;
+               it is good for accessing the exponents and for ordering   
+               but uses more memory and takes more time to assign.    
+</li>
+</ul>
+
+<section id="toc2">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PPMonoidElem1.C">ex-PPMonoidElem1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PPMonoidElem2.C">ex-PPMonoidElem2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Operations PPMonoids</h3>
+
+<p>
+Recall that every <code>PPMonoid</code> is graded, and has a degree-compatible total
+arithmetical ordering; the grading and ordering must be specified when the
+<code>PPMonoid</code> is created.  For convenient input and output, also the names
+of the indeterminates generating the monoid must be specified when the
+monoid is created.
+</p>
+<p>
+If you expect to use large exponents then you should use only the special
+<code>PPMonoid</code> created by <code>PPMonoidBigEv</code>.
+The other <code>PPMonoid</code>s should usually be fine for exponents up to 1000 or
+more; the true limit depends on the specific monoid, the number of
+indeterminates, and the <a href="PPOrdering.html"><code>PPOrdering</code></a>.  At the moment there is no way to
+find out what the true limit is (see <em>Bugs</em> section), and no warning
+is given should the limit be exceeded: you just get a wrong answer.
+</p>
+
+<section id="toc4">
+<h4>Pseudo-constructors of PPMonoid</h4>
+
+<p>
+To create a <code>PPMonoid</code> use the function <code>NewPPMonoid</code> (the default
+currently chooses <code>PPMonoidEv</code>).  To create a <code>PPMonoid</code> object of
+a specific type use one of the pseudo-constructors related to the
+concrete monoid classes:
+</p>
+<p>
+Given <code>PPO</code> a <a href="PPOrdering.html"><code>PPOrdering</code></a> or <code>PPOrderingCtor</code> (<em>i.e.</em> <code>lex</code>, <code>StdDegLex</code>, or <code>StdDegRevLex</code>), and <code>IndetNames</code> a <code>vector</code> of <a href="symbol.html"><code>symbol</code></a>
+</p>
+
+<ul>
+<li><code>NewPPMonoid(IndetNames, PPO)</code> -- same as <code>NewPPMonoidEv</code>
+</li>
+<li><code>NewPPMonoidEv(IndetNames, PPO)</code>
+</li>
+<li><code>NewPPMonoidEv(IndetNames, PPO, PPExpSize::big)</code> -- <code>PPExpSize::big</code> is just an enum member.
+</li>
+<li><code>NewPPMonoidOv(IndetNames, PPO)</code>
+</li>
+<li><code>NewPPMonoidEvOv(IndetNames, PPO)</code>
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h4>Operations</h4>
+
+<ul>
+<li><code>cout &lt;&lt; PPM</code>     -- print <code>PPM</code> on <code>cout</code>
+</li>
+<li><code>NumIndets(PPM)</code>  -- number of indeterminates
+</li>
+<li><code>ordering(PPM)</code>   -- the <a href="PPOrdering.html"><code>PPOrdering</code></a> inherent in <code>PPM</code>
+</li>
+<li><code>OrdMat(PPM)</code> --   a matrix defining the ordering used in <code>PPM</code>
+</li>
+<li><code>GradingDim(PPM)</code> -- the dimension of the grading (zero if ungraded)
+</li>
+<li><code>GradingMat(PPM)</code> --  the matrix defining the grading
+</li>
+<li><code>symbols(PPM)</code>    -- <code>std::vector</code> of the <a href="symbol.html"><code>symbol</code></a>s in <code>PPM</code> (<em>i.e.</em> names of the indets in order: <code>k</code>-th entry is <code>IndetSymbol(PP,k)</code>)
+</li>
+<li><code>IndetSymbol(PPM, k)</code> -- the <a href="symbol.html"><code>symbol</code></a> for the <code>k</code>-th indeterminate
+</li>
+<li><code>PPM1 == PPM2</code>    -- true iff <code>PPM1</code> and <code>PPM2</code> are identical (<em>i.e.</em> same addr) 
+</li>
+<li><code>PPM1 != PPM2</code>    -- true unless <code>PPM1</code> and <code>PPM2</code> are identical
+</li>
+<li><code>IsPPMonoidOv(PPM)</code> -- true iff <code>PPM</code> is internally implemented as a <code>PPMonoidOv</code>
+</li>
+</ul>
+
+<p>
+These pseudo-constructors are described in the section about <code>PPMonoidElem</code>s
+</p>
+
+<ul>
+<li><code>one(PPM)</code>
+</li>
+<li><code>indet(PPM, k)</code>
+</li>
+<li><code>IndetPower(PPM, k, exp)</code>
+</li>
+<li><code>indets(PPM)</code>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc6">
+<h3>Summary of functions for PPMonoidElems</h3>
+
+<p>
+See also some example programs in the <code>CoCoALib/examples/</code> directory.
+</p>
+<p>
+When a new object of type <code>PPMonoidElem</code> is created the monoid to which it
+belongs must be specified either explicitly as a constructor argument, or
+implicitly as the monoid associated with some constructor argument.  Once
+the <code>PPMonoidElem</code> object has been created it is not possible to make it
+belong to any other monoid.  Comparison and arithmetic between objects of
+type <code>PPMonoidElem</code> is permitted only if they belong to the same identical
+monoid.
+</p>
+<p>
+<strong>Note</strong>: when writing a function which has an argument of type <code>PPMonoidElem</code>,
+you should specify the argument type as <code>ConstRefPPMonoidElem</code>, or
+<code>RefPPMonoidElem</code> if you want to modify its value.
+</p>
+<p>
+Let <code>PPM</code> be a <code>PPMonoid</code>; for convenience, in comments we shall use x[i] to
+refer to the i-th indeterminate in <code>PPM</code>.  Let <code>pp</code> be a non-const
+<code>PPMonoidElem</code>, and <code>pp1</code> and <code>pp2</code> be <code>const PPMonoidElem</code> (all belonging to <code>PPM</code>).
+Let <code>expv</code> be a <code>vector&lt;long&gt;</code> of size equal to the number of indeterminates.
+</p>
+
+<ul>
+<li><code>PPMonoidElem t(PPM)</code> -- create new PP in <code>PPM</code>, value is 1
+</li>
+<li><code>PPMonoidElem t(PPM, expv)</code> -- create new PP in <code>PPM</code>, value is product x[i]^expv[i]
+</li>
+<li><code>PPMonoidElem t(pp1)</code> -- create a new copy of <code>pp1</code>, belongs to same PPMonoid as <code>pp1</code>
+</li>
+<li><code>one(PPM)</code>      -- the 1 belonging to <code>PPM</code>
+</li>
+<li><code>indet(PPM, i)</code> -- create a new copy of x[i] the i-th indeterminate of <code>PPM</code>
+</li>
+<li><code>IndetPower(PPM, i, n)</code> -- create x[i]^n, <code>n</code>-th power of <code>i</code>-th indeterminate of <code>PPM</code>
+</li>
+<li><code>indets(PPM)</code>   -- <code>std::vector</code> (reference) whose n-th entry is n-th indet as a <code>PPMonoidElem</code>
+<p></p>
+</li>
+<li><code>owner(pp1)</code> -- returns the <code>PPMonoid</code> to which <code>pp1</code> belongs
+<p></p>
+</li>
+<li><code>IsOne(pp1)</code>  -- returns true iff <code>pp1</code> = 1
+<p></p>
+</li>
+<li><code>IndetsIn(pp1)</code> -- returns <code>vector&lt;long&gt; V</code> such that <code>k</code> is in <code>V</code> iff the <code>k</code>-th indet divides <code>pp1</code>
+</li>
+<li><code>IsIndet(i, pp1)</code> -- returns true iff <code>pp1</code> is an indet; if true, puts index of indet into <code>i</code>
+</li>
+<li><code>IsIndetPosPower(i, N, pp1)</code> -- returns true iff <code>pp1</code> is a positive power of some indet;
+   when the result is true (signed long) <code>i</code> and (<a href="BigInt.html"><code>BigInt</code></a>) <code>N</code> are set so that
+   <code>pp1 == IndetPower(owner(pp), i, N);</code>  (otherwise unchanged)
+   if <code>pp1</code> == 1 then the function throws <code>ERR::BadArg</code>
+</li>
+<li><code>IsIndetPosPower(i, n, pp1)</code> -- same as above, where <code>n</code> is long
+<p></p>
+</li>
+<li><code>cmp(pp1, pp2)</code> -- compare <code>pp1</code> with <code>pp2</code> using inherent ordering;
+                result is integer &lt;0 if <code>pp1 &lt; pp2</code>, =0 if <code>pp1 == pp2</code>, and &gt;0 if <code>pp1 &gt; pp2</code>
+</li>
+<li><code>pp1 == pp2</code> -- the six standard comparison operators...
+</li>
+<li><code>pp1 != pp2</code> --   ...
+</li>
+<li><code>pp1 &lt;  pp2</code> --   ... (inequalities use the ordering inherent in <code>PPM</code>)
+</li>
+<li><code>pp1 &lt;= pp2</code> --   ...
+</li>
+<li><code>pp1 &gt;  pp2</code> --   ...
+</li>
+<li><code>pp1 &gt;= pp2</code> --   ...
+<p></p>
+</li>
+<li><code>pp1 * pp2</code>  -- product of <code>pp1</code> and <code>pp2</code>
+</li>
+<li><code>pp1 / pp2</code>  -- quotient of <code>pp1</code> by <code>pp2</code>, quotient <strong>must</strong> be exact
+                              (see the function <code>IsDivisible</code> below)
+</li>
+<li><code>colon(pp1, pp2)</code> -- <em>colon quotient</em> of <code>pp1</code> by <code>pp2</code>, <em>i.e.</em> <code>pp1/gcd(pp1,pp2)</code>
+</li>
+<li><code>gcd(pp1, pp2)</code> -- gcd of <code>pp1</code> and <code>pp2</code>
+</li>
+<li><code>lcm(pp1, pp2)</code> -- lcm of <code>pp1</code> and <code>pp2</code>
+</li>
+<li><code>radical(pp1)</code> -- radical of <code>pp1</code>
+</li>
+<li><code>power(pp1, n)</code> -- <code>n</code>-th power of <code>pp1</code> (NB: you <strong>cannot</strong> use <code>pp1^n</code>, see below)
+</li>
+<li><code>PowerOverflowCheck(pp1, n)</code> -- throws <code>ExpTooBig</code> if overflow would occur computing <code>power(pp1,n)</code>
+</li>
+<li><code>IsCoprime(pp1, pp2)</code>   -- tests whether <code>pp1</code> and <code>pp2</code> are coprime
+</li>
+<li><code>IsDivisible(pp1, pp2)</code> -- tests whether <code>pp1</code> is divisible by <code>pp2</code>
+</li>
+<li><code>IsSqFree(pp1)</code> -- test whether <code>pp1</code> is squarefree, <em>i.e.</em> if <code>pp1 == radical(pp1)</code>
+</li>
+<li><code>AssignOne(pp)</code> -- sets <code>pp = 1</code>
+</li>
+<li><code>swap(pp, pp_other)</code> -- swaps the values of <code>pp</code> and <code>pp_other</code>
+</li>
+<li><code>pp  = pp1</code> -- assignment (<code>pp</code> and <code>pp1</code> must belong to same PPMonoid)
+</li>
+<li><code>pp *= pp1</code> -- same as <code>pp = pp * pp1</code>
+</li>
+<li><code>pp /= pp1</code> -- same as <code>pp = pp / pp1</code>
+</li>
+<li><code>StdDeg(pp1)</code> -- standard degree of <code>pp1</code>; result is of type <code>long</code>
+</li>
+<li><code>wdeg(pp1)</code> -- weighted degree of <code>pp1</code> (using specified grading); result is of type <a href="degree.html"><code>degree</code></a>
+</li>
+<li><code>CmpWDeg(pp1, pp2)</code> -- result is integer &lt;0 =0 &gt;0 according as
+                           <code>wdeg(pp1)</code> &lt; = &gt; <code>wdeg(pp2)</code>;
+                           order on weighted degrees is lex, see <a href="degree.html"><code>degree</code></a>
+</li>
+<li><code>CmpWDegPartial(pp1, pp2, i)</code> -- result is integer &lt;0 =0 &gt;0 as
+             <code>CmpWDeg</code> wrt the first <code>i</code> components of the weighted degree
+</li>
+<li><code>exponent(pp1, i)</code>    -- exponent of x[i] in <code>pp1</code> (result is a <code>long</code>)
+</li>
+<li><code>BigExponent(pp1, i)</code> -- exponent of x[i] in <code>pp1</code> (result is a <a href="BigInt.html"><code>BigInt</code></a>)
+</li>
+<li><code>exponents(expv, pp)</code> -- fills vector (of long) <code>expv</code> so that <code>expv[i] = exponent(pp, i)</code> for i=0,..,NumIndets(PPM)-1
+</li>
+<li><code>BigExponents(expv, pp)</code> -- fills vector (of BigInt) <code>expv</code> so that <code>expv[i] = BigExponent(pp, i)</code> for i=0,..,NumIndets(PPM)-1
+</li>
+<li><code>cout &lt;&lt; pp1</code> -- print out the value of <code>pp1</code>
+</li>
+</ul>
+
+<section id="toc7">
+<h4>Operations on collections of PPMonoidElem</h4>
+
+<ul>
+<li><code>IsFactorClosed(S)</code>  -- says whether the <code>std::vector&lt;PPMonoidElem&gt;</code> S is factor closed; error if S is empty.
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+<section id="toc8">
+<h2>Library Contributor Documentation</h2>
+
+<p>
+This section comprises two parts: the first is about creating a new type
+of PP monoid; the second comments about calling the member functions of
+<code>PPMonoidBase</code> directly.
+</p>
+
+<section id="toc9">
+<h3>To add a new type of concrete PPMonoid class</h3>
+
+<p>
+My first suggestion is to look at the code implementing <code>PPMonoidEv</code>.
+This is a simple PP monoid implementation: the values are represented as
+C arrays of exponents.  Initially you should ignore the class <code>CmpBase</code>
+and those derived from it; they are simply to permit fast comparison of
+PPs in certain special cases.
+</p>
+<p>
+First, a note about "philosophy".  As far as we can tell, the programming
+language C++ does not have a built-in type system sufficiently flexible
+(and efficient) for our needs, consequently we have to build our own type
+system on top of what C++ offers.  The way we have chosen to do this is as
+follows (note that the overall scheme used here is similar to that used for
+rings and their elements).
+</p>
+<p>
+To fit into CoCoALib your new class must be derived from <code>PPMonoidBase</code>.
+Remember that any operation on elements of your PP monoid will be effected
+by calling a member function of your new monoid class.
+</p>
+<p>
+The monoid must be a cartesian power of N, the natural numbers, with the
+monoid operation (called "multiplication") being vector addition -- the
+vector should be thought of as the vector of exponents in a power product.
+The monoid must have a total arithmetic ordering; often this will be specified
+when the monoid is created.  The class <a href="PPOrdering.html"><code>PPOrdering</code></a> represents the possible
+orderings.
+</p>
+<p>
+Here is a summary of the member functions which must be implemented.  All
+the functions may be called for a <strong>const</strong> <code>PPMonoid</code>, for brevity the <code>const</code>
+qualifier is omitted.  I use two abbreviations:
+</p>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<td><code>RawPP</code></td>
+<td class="center">is short for  <code>PPMonoidElemRawPtr</code></td>
+</tr>
+<tr>
+<td><code>ConstRawPP</code></td>
+<td class="right">is short for  <code>PPMonoidElemConstRawPtr</code></td>
+</tr>
+</table>
+
+<p>
+<strong>Note</strong>: all arithmetic functions must tolerate argument aliasing (<em>i.e.</em> any
+pair of arguments may be identical).
+</p>
+<p>
+<strong>Constructors</strong>: these all allocate memory which must eventually be freed (by
+calling <code>myDelete</code>); the result is a pointer to the memory allocated.
+</p>
+
+<ul>
+<li><code>PPMonoidElemRawPtr PPMonoidBase::myNew()</code>
+   -- initialize pp to the identity
+</li>
+<li><code>PPMonoidElemRawPtr PPMonoidBase::myNew(const vector&lt;int&gt;&amp; expv)</code>
+   -- initialize pp from exponent vector <code>expv</code>
+</li>
+<li><code>PPMonoidElemRawPtr PPMonoidBase::myNew(const RawPP&amp; pp1)</code>
+  -- initialize pp from <code>pp1</code>
+</li>
+</ul>
+
+<p>
+<strong>Destructor</strong>: there is only one of these, its argument must be initialized
+</p>
+
+<ul>
+<li><code>void PPMonoidBase::myDelete(PPMonoidElemRawPtr pp)</code>
+  -- destroy <code>pp</code>, frees memory
+</li>
+</ul>
+
+<p>
+<strong>Assignment</strong> etc:
+</p>
+
+<ul>
+<li><code>void PPMonoidBase::mySwap(RawPP pp1, RawPP pp2)</code>
+  -- swap the values of <code>pp1</code> and <code>pp2</code>
+</li>
+<li><code>void PPMonoidBase::myAssign(RawPP pp, ConstRawPP pp1)</code>
+  -- assign the value of <code>pp1</code> to <code>pp</code>
+</li>
+<li><code>void PPMonoidBase::myAssign(RawPP pp, const vector&lt;int&gt;&amp; expv)</code>
+  -- assign to <code>pp</code> the PP with exponent vector <code>expv</code>
+</li>
+</ul>
+
+<p>
+<strong>Arithmetic</strong>: in all cases the first arg is where the answer is placed,
+            aliasing is permitted (<em>i.e.</em> arguments need not be distinct);
+            <code>myDiv</code> result is <strong>undefined</strong> if the quotient does not exist!
+</p>
+
+<ul>
+<li><code>const PPMonoidElem&amp; myOne()</code>
+  -- reference to 1 in the monoid
+</li>
+<li><code>void myMul(RawPP pp, ConstRawPP pp1, ConstRawPP pp2)</code>
+  -- effects pp = pp1*pp2
+</li>
+<li><code>void myMulIndetPower(RawPtr pp, long i, unsigned long exp)</code>
+  -- effects pp *= indet(i)^exp
+</li>
+<li><code>void myDiv(RawPP pp, ConstRawPP pp1, ConstRawPP pp2)</code>
+  -- effects pp = pp1/pp2 (if it exists)
+</li>
+<li><code>void myColon(RawPP pp, ConstRawPP pp1, Const RawPP pp2)</code>
+  -- effects pp = pp1/gcd(pp1,pp2)
+</li>
+<li><code>void myGcd(RawPP pp, ConstRawPP pp1, ConstRawPP pp2)</code>
+  -- effects pp = gcd(pp1, pp2)
+</li>
+<li><code>void myLcm(RawPP pp, ConstRawPP pp1, ConstRawPP pp2)</code>
+  -- effects pp = lcm(pp1, pp2)
+</li>
+<li><code>void myPower(RawPP pp, ConstRawPP pp1, int exp)</code>
+  -- effects pp = pp1^exp
+</li>
+<li><code>void myPowerOverflowCheck(ConstRawPP pp1, int exp)</code>
+  -- throws <code>ExpTooBig</code> if <code>myPower(pp,exp)</code> would overflow exponent range
+</li>
+</ul>
+
+<p>
+<strong>Comparison and testing</strong>:
+   each PP monoid has associated with it a <strong>term ordering</strong>, <em>i.e.</em> a total
+   ordering which respects the monoid operation (multiplication)
+</p>
+
+<ul>
+<li><code>bool myIsCoprime(ConstRawPP pp1, ConstRawPP pp2)</code>
+  -- true iff gcd(pp1, pp2) is 1
+</li>
+<li><code>bool myIsDivisible(ConstRawPP t1, ConstRawPP t2)</code>
+  -- true iff t1 is divisible by t2
+</li>
+<li><code>int myCmp(ConstRawPP t1, ConstRawPP t2)</code>
+  -- result is &lt;0, =0, &gt;0 according as t1 &lt;,=,&gt; t2
+</li>
+<li>NYI <code>int myHomogCmp(ConstRawPP t1, ConstRawPP t2)</code>
+  -- as cmp, but assumes t1 and t2 have the same degree
+</li>
+</ul>
+
+<p>
+Sundries:
+</p>
+
+<ul>
+<li><code>degree myDeg(ConstRawPP t)</code>
+  -- total degree
+</li>
+<li><code>long myExponent(ConstRawPtr rawpp, long i)</code>
+  -- exponent of i-th indet in pp
+</li>
+<li><code>void myBigExponent(BigInt&amp; EXP, ConstRawPtr rawpp, long i)</code>
+  -- EXP = degree of i-th indet in pp
+</li>
+<li><code>void myExponents(vector&lt;long&gt;&amp; expv, ConstRawPP t)</code>
+  -- get exponents, put them in expv
+</li>
+<li><code>void myBigExponents(vector&lt;BigInt&gt;&amp; expv, ConstRawPP t)</code>
+  -- get exponents, put them in expv
+</li>
+<li><code>ostream&amp; myOutput(ostream&amp; out, const RawPP&amp; t)</code>
+  -- prints t on out; default defn in PPMonoid.C
+</li>
+</ul>
+
+<p>
+Query functions:
+</p>
+
+<ul>
+<li><code>long myNumIndets()</code>
+   -- number of indeterminates generating the monoid
+</li>
+<li><code>const symbol&amp; myIndetName(long var)</code>
+   -- name of indet with index var
+</li>
+</ul>
+
+</section>
+<section id="toc10">
+<h3>To add a new member function to PPMonoidBase</h3>
+
+<p>
+You will have to edit <code>PPMonoid.H</code> and possibly <code>PPMonoid.C</code> (<em>e.g.</em> if there is
+to be a default definition).  Arguments representing PPs should be of type
+<code>RawPP</code> if they may be modified, or of type <code>ConstRawPP</code> if they are read-only.
+See also the Coding Conventions about names of member functions.
+</p>
+<p>
+If you do add a new pure virtual member function, you will have to add
+definitions to all the existing concrete PP monoid classes (otherwise they
+will become uninstantiable).  Don't forget to update the documentation too!
+</p>
+
+</section>
+<section id="toc11">
+<h3>Calculating directly with raw PPs</h3>
+
+<p>
+Values of type <code>PPMonoidElem</code> are intended to be simple and safe to use
+but with some performance penalty.  There is also a "fast, ugly, unsafe"
+option which we shall describe here.
+</p>
+<p>
+The most important fact to heed is that a <code>PPMonoidElemRawPtr</code> value is <strong>not</strong>
+a C++ object -- it does not generally know enough about itself even to
+destroy itself.  This places a considerable responsibility on the
+programmer, and probably makes it difficult to write exception clean code.
+You really must view the performance issue as paramount if you plan to use
+raw PPs!  In any case the gain in speed will likely be only slight.
+</p>
+<p>
+The model for creation/destruction and use of raw PPs is as follows:
+(NB see <em>Bugs</em> section about exception-safety)
+-  (1) an uninitialized raw PP is acquired from the system;
+-  (2) the raw PP is initialized by calling an initialization function (typically called <code>myNew</code>) -- this will generally acquire further resources;
+-  (3) now the RawPP may be used for i/o, arithmetic, and so forth;
+-  (4) finally, when the value is no longer required the extra resources
+     acquired during initialization should be released by calling the <code>myDelete</code>
+     function -- failure to call <code>myDelete</code> will probably result in a memory leak.
+</p>
+<p>
+Here is some pseudo C++ code to give an idea
+</p>
+
+<pre>
+  const PPMonoid&amp; M = ...; // A PPMonoid from somewhere
+
+  PPMonoidElemRawPtr t;    // A wrapped opaque pointer; initially points into hyperspace.
+
+  t = M-&gt;myNew();          // Allocate resources for a new PP belonging to M;
+                           // there are two other myNew functions.
+  .... operations on t; always via a member function of the monoid M ...
+
+  M-&gt;myDelete(t);          // "destroy" the value t held; t points into hyperspace again.
+</pre>
+
+<p>
+NOTE: the only functions which take a pointer into hyperspace are <code>PPMonoidBase::myNew</code>;
+      many functions, <em>e.g.</em> <code>PPMonoidBase::myMul</code>, write their result into the first argument
+      and require that that first argument be already allocated/initialized.
+</p>
+<p>
+NOTE: if an exception is thrown after <code>M-&gt;myNew</code> and before <code>M-&gt;myDelete</code> then
+      there will be a memory leak (unless you correctly add a <code>try...catch</code> block).
+      If <code>t</code> is just to hold a temporary local
+      value then it is better to create a full <code>PPMonoidElem</code> and then let <code>t</code>
+      be its <code>RawPtr</code>; this should avoid memory leaks.
+</p>
+
+</section>
+</section>
+<section id="toc12">
+<h2>Maintainer documentation for PPMonoid, PPMonoidElem, and PPMonoidBase</h2>
+
+<p>
+See subsection below about thread-safety in <code>PPMonoidOV</code>.
+</p>
+<p>
+The general structure here mirrors that of rings and their elements, so
+you may find it helpful to read ring.txt if the following seems too
+opaque.  At first sight the design may seem complex (because it
+comprises several classes), but there's no need to be afraid.
+</p>
+<p>
+The class <code>PPMonoid</code> is a reference counting smart pointer to an object
+derived from <code>PPMonoidBase</code>.  This means that making copies of a
+<code>PPMonoid</code> is very cheap, and that it is easy to tell if two <code>PPMonoid</code>s
+are identical.  Assignment of <code>PPMonoid</code>s is disabled because I am not
+sure whether it is useful/meaningful.  <code>operator-&gt;</code> allows member
+functions of <code>PPMonoidBase</code> to be called using a simple syntax.
+</p>
+<p>
+The class <code>PPMonoidBase</code> is what specifies the class interface for each
+concrete PP monoid implementation, i.e. the operations that it must offer.
+It includes an intrusive reference count for compatibility with
+<code>PPMonoid</code>.  Since it is inconceivable to have a PP monoid without an
+ordering, there is a data member for memorizing the inherent <code>PPOrdering</code>.
+This data member is <code>protected</code> so that it is accessible only to friends
+and derived classes.
+</p>
+<p>
+The function <code>PPMonoidBase::myOutput</code> for printing PPs has a reasonable
+default definition.
+</p>
+<p>
+The situation for elements of a PP monoid could easily appear horrendously
+complicated.  The basic idea is that a PP monoid element comprises two
+components: one indicating the <code>PPMonoid</code> to which the value belongs, and
+the other indicating the actual value.  This allows the user to employ a
+notationally convenient syntax for many operations -- the emphasis is on
+notational convenience rather than ultimate run-time efficiency.
+</p>
+<p>
+For an element of a PP monoid, the owning <code>PPMonoid</code> is specified during
+creation and remains fixed throughout the life of the object; in contrast
+the value may be varied (if C++ const rules permit).  The value is
+indicated by an opaque pointer (essentially a wrapped <code>void*</code>): only the
+owning <code>PPMonoid</code> knows how to interpret the data pointed to, and so all
+operations on the value are effected by member functions of the owning
+<code>PPMonoid</code>.
+</p>
+<p>
+I do not like the idea of having naked <code>void*</code> values in programs: it is
+too easy to get confused about what is pointing to what.  Since the
+value part of a <code>PPMonoidElem</code> is an opaque pointer (morally a <code>void*</code>),
+I chose to wrap it in a lightweight class; actually there are two classes
+depending on whether the pointed to value is <code>const</code> or not.  These
+classes are <code>PPMonoidElemRawPtr</code> and <code>PPMonoidElemConstRawPtr</code>; they
+are opaque pointers pointing to a value belonging to some concrete PP
+monoid (someone else must keep track of precisely which PP monoid is the
+owner).
+</p>
+<p>
+The constructors for <code>PPMonoidElemRawPtr</code> and <code>PPMonoidElemConstRawPtr</code>
+are <code>explicit</code> to avoid potentially risky automatic conversion of any
+old pointer into one of these types.  The naked pointer may be accessed
+via the member functions <code>myRawPtr</code>.  Only implementors of new PP
+monoid classes are likely to find these two opaque pointer classes useful.
+</p>
+<p>
+I now return to the classes for representing fully qualified PPs.
+There are three very similar yet distinct classes for elements of PP
+monoids; the distinction is to keep track of constness and ownership.
+I have used inheritance to allow natural automatic conversion among
+these three classes (analogously to <code>RingElem</code>, <code>ConstRefRingElem</code>)
+</p>
+
+<ul>
+<li>A <code>PPMonoidElem</code> is the owner of its value; the value will be deleted
+  when the object ceases to exist.
+</li>
+<li>A <code>RefPPMonoidElem</code> is not the owner of its value, but the value may be
+  changed (and the owner of the value will see the change too).
+</li>
+<li>A <code>ConstRefPPMonoidElem</code> is not the owner of its value, and its value
+  may not be changed (through this reference).
+</li>
+</ul>
+
+<p>
+The data layout is determined in <code>ConstRefPPMonoidElem</code>, and the more
+permissive classes inherit the data members.  I have deliberately used a
+non-constant <code>PPMonoidElemRawPtr</code> for the value pointer as it is easier for
+the class <code>ConstRefPPMonoidElem</code> to add in constness appropriately than it
+is for the other two classes to remove it.  The four assignment operators
+must all be defined since C++ does not allow polymorphism in the destination
+object (e.g. because of potential problems with slicing).  Ideally it would
+be enough to define assignment just from a <code>ConstRefPPMonoidElem</code>, but I
+have to define also the "homogeneous" assignment operator since the default
+definition would not work properly.  It is a bit tedious to have four copies
+of the relevant code (but it is only a handful of lines each time).
+</p>
+<p>
+By convention the member functions of <code>PPMonoidBase</code> which operate on
+raw PP values assume that the values are valid (e.g. belong to the same
+PP monoid, division is exact in <code>myDiv</code>).  The validity of the arguments
+is checked by the syntactically nice equivalent operations (see the code
+in PPMonoid.C).  This permits a programmer to choose between safe clean
+code (with nice syntax) or faster unsafe code (albeit with uglier syntax).
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc13">
+<h4>Thread-safety and CoCoA_THREADSAFE_HACK</h4>
+
+<p>
+The impl in <code>PPMonoidOV</code> using the CPP flag <code>CoCoA_THREADSAFETY_HACK</code>
+to select between two impl strategies.  If the CPP flag is not set, then
+"single-threaded" code is compiled which uses some "global" buffers to
+gain speed; if the flag is set then buffers are allocated locally in
+several functions.
+</p>
+
+</section>
+</section>
+</section>
+<section id="toc14">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+The section on "Advanced Use" is a bit out of date and too long.
+</p>
+
+<ul>
+<li>(1) Should more operations on <code>PPMonoidElem</code>s be inlined?
+    With the current design, since speed is not so important for <code>PPMonoidElem</code>s.
+<p></p>
+</li>
+<li>(2) We would like a way of performing divisibility tests faster when
+    there are few indeterminates and relatively high degrees.  In this
+    case the DivMask is useless.  The "gonnet" example is slow because
+    it entails many divisibility tests.  One suggestion would be to
+    maintain a "randomly weighted" degree and use that as a simple
+    heuristic for deciding quickly some cases.
+<p></p>
+</li>
+<li>(3) I've fixed the various arithmetic functions for <code>PPMonoidElem</code>s so
+    that they are obviously exception safe, BUT they now make an extra
+    copy of the computed value (as it is returned from a local variable
+    to the caller).  Here is an idea for avoiding that extra copy.
+    Create a new type (say PPMonoidElem_local) which offers just raw(..)
+    and a function export(..) which allows the return mechanism to
+    create a full <code>PPMonoidElem</code> (just by copying pointers) and empty
+    out the PPMonoidElem_local.  If the PPMonoidElem_local is not
+    empty then it can destroy the value held within it.  By not
+    attempting to make PPMonoidElem_locals behave like full
+    PPMonoidElems I save a lot of "useless" function definitions.
+    Indeed the "export" function need not exist: an implicit ctor for
+    a PPMonoidElem from a PPMonoidElem_local could do all the work.
+    I'll wait to see profiling information before considering implementing.
+<p></p>
+</li>
+<li>(4) Is assignment for <code>PPMonoid</code>s likely to be useful to anyone?
+    I prefer to forbid it, as I suspect a program needing to use it
+    is really suffering from poor design...
+<p></p>
+</li>
+<li>(5) I have chosen not to use <code>operator^</code> for computing powers
+    because of a significant risk of misunderstanding between
+    programmer and compiler.  The syntax/grammar of C++ cannot be
+    changed, and <code>operator^</code> binds less tightly than (binary)
+    <code>operator*</code>, so any expression of the form <code>a*b^c</code> will be
+    parsed as <code>(a*b)^c</code>; this is almost certainly not what the
+    programmer intended.  To avoid such problems of misunderstanding I
+    have preferred not to define <code>operator^</code>; it seems too dangerous.
+<p></p>
+</li>
+<li>(6) The absence of a <code>deg</code> function for <code>PPMonoidElem</code>s is deliberate;
+    you should choose either <code>StdDeg</code> or <code>wdeg</code> according to the type
+    of degree you want to compute.  This is unnatural; is it a bug?
+<p></p>
+</li>
+<li>(7) I have deliberately not made the destructors for <code>ConstRefPPMonoidElem</code>
+    and its descendants virtual.  This is marginally risky: it might be
+    possible to leak memory if you convert a raw pointer to <code>PPMonoidElem</code>
+    into a raw pointer to <code>ConstRefPPMonoidElem</code>; of course, if you do this
+    you're asking for trouble anyway.
+<p></p>
+</li>
+<li>(8) Should <code>exponents</code> give an error if the values exceed the limits for <code>long</code>?
+<p></p>
+</li>
+<li>(9) Offer the user some means of checking for and handling exponent overflow.
+<p></p>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

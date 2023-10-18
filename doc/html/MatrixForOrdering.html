@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      MatrixForOrdering</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      MatrixForOrdering</h1>
+<h2>      &copy;  2008,2015 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User Documentation</a>
+      <ul>
+      <li><a href="#examples">Examples</a>
+      </li>
+      <li><a href="#constructors">PseudoConstructors</a>
+      </li>
+      <li><a href="#queries">Queries</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer Documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User Documentation</h2>
+
+<p>
+This is very preliminary documentation.  These functions are about matrices
+which define term orderings.  They expect and return matrices over <a href="RingZZ.html"><code>RingZZ</code></a>.
+</p>
+
+<section id="examples">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-OrderingGrading1.C">ex-OrderingGrading1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="constructors">
+<h3>PseudoConstructors</h3>
+
+<ul>
+<li><code>MakeTermOrdMat(ConstMatrixView M)</code> -- produce a matrix (with non-neg
+  integer entries and having same number of columns as <code>M</code>) which
+  defines a term ordering refining the partial ordering defined by the
+  input matrix <code>M</code>; error if this cannot be done.
+<p></p>
+</li>
+<li><code>MakeTermOrdMat(ConstMatrixView M, MachineInt GrDim)</code> -- 
+  Same as <code>MakeTermOrdMat(M)</code> except that the first <code>GrDim</code> rows of the
+  output matrix are equal to the first <code>GrDim</code> rows of <code>M</code>.
+<p></p>
+</li>
+<li><code>LexMat(MachineInt n)</code>  returns a <code>ConstMatrix</code> for "lex" ordering
+</li>
+<li><code>StdDegLexMat(MachineInt n)</code>  returns a <code>ConstMatrix</code> for "DegLex" ordering
+</li>
+<li><code>StdDegRevLexMat(MachineInt n)</code>  returns a <code>ConstMatrix</code> for "DegRevLex" orderig
+</li>
+<li><code>XelMat(MachineInt n)</code>  returns a <code>ConstMatrix</code> for "Xel" ordering
+</li>
+<li><code>RevLexMat(MachineInt n)</code>  returns a <code>ConstMatrix</code> for "RevLex" ordering (not a term order!)
+<p></p>
+</li>
+<li><code>ElimMat(IndetsToElim, NumIndets)</code>  -- returns a matrix defining
+  an elimination ordering for <code>IndetsToElim</code>.
+<p></p>
+</li>
+<li><code>ElimMat(IndetsToElim, GradingM)</code>  -- returns a matrix defining
+  an elimination ordering for <code>IndetsToElim</code> compatible with the grading in <code>GradingM</code>.
+<p></p>
+</li>
+<li><code>ElimHomogMat(IndetsToElim, GradingM)</code>  -- returns a matrix defining
+   an elimination ordering for <code>IndetsToElim</code> with the added knowledge
+   that it will be used with an ideal homogeneous wrt <code>GradingM</code> (non-trivial)
+</li>
+</ul>
+
+</section>
+<section id="queries">
+<h3>Queries</h3>
+
+<p>
+Let <code>M</code> be a matrix over <a href="RingZZ.html"><code>RingZZ</code></a> or <a href="RingQQ.html"><code>RingQQ</code></a> with integer entries.
+</p>
+
+<ul>
+<li><code>IsTermOrdering(M)</code>    -- true iff matrix <code>M</code> defines a term ordering
+<p></p>
+</li>
+<li><code>IsPositiveGrading(M)</code> -- true iff <code>M</code> defines a positive grading 
+  (<em>i.e.</em> no null columns and first non-zero entry in each column is positive)
+<p></p>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer Documentation</h2>
+
+<p>
+The impl for <code>LexMat</code> is trivial: it is just an <code>IdentityMat</code>.
+Now that <code>ConstMatrix</code> is available, the impls for <code>XelMatImpl</code>,
+<code>RevLexImpl</code>, <code>StdDegLex</code> and <code>StdDegRevLex</code> are quite
+straightforward (but a bit lengthy).
+</p>
+<p>
+Currently we use the "sparse" matrix for <code>StdDevRevLex</code>; we may later
+change it to the non-neg matrix.
+</p>
+<p>
+<code>IsTermOrdering</code> is essentially the same as testing <code>IsPositiveGrading</code>
+on the whole matrix; this is what the impl does!
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+Doc is woefully incomplete.
+</p>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2022</strong>
+</p>
+
+<ul>
+<li>Feb (v0.99720):
+ <ul>
+ <li><code>MakeTermOrd</code> has been renamed <code>MakeTermOrdMat</code>
+-
+ <p></p>
+<strong>2019</strong>
+ </li>
+ </ul>
+</li>
+<li>Sep (v0.99602):
+ <ul>
+ <li><code>IsNonNegGrading(M)</code> is now hidden in anonymous namespace
+-
+ <p></p>
+<strong>2016</strong>
+ </li>
+ </ul>
+</li>
+<li>Sep (v0.9944):
+ <ul>
+ <li>old <code>HomogElimMat</code> has been renamed <code>ElimHomogMat</code>
+-
+ <p></p>
+<strong>2015</strong>
+ </li>
+ </ul>
+</li>
+<li>Nov (v0.9940):
+ <ul>
+ <li>new impls for <code>LexMat</code>, <code>XelMat</code>, <code>RevLexMat</code>, <code>StdDegLexMat</code> and <code>StdDegRevLexMat</code> (names are now coherent with their counterparts in CoCoA-5)
+ </li>
+ <li>replaced several "complete-to-order" fns by a single fn.
+-
+ <p></p>
+<strong>2009</strong>
+ </li>
+ </ul>
+</li>
+<li>Sept: Naming convention noq respected ("Matrix" should have been "Mat")
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

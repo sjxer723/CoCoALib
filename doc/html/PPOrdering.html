@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      PPOrdering</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      PPOrdering</h1>
+<h2>      &copy;  2005,2014,2021,2022  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Pseudo-constructors</a>
+        <ul>
+        <li><a href="#PPOrderingCtor">Convenience constructors</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#queries">Queries</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation for PPOrdering</a>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PPMonoidElem2.C">ex-PPMonoidElem2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-OrderingGrading1.C">ex-OrderingGrading1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+An object of the class <code>PPOrdering</code> represents an <em>arithmetic</em> ordering on
+the (multiplicative) monoid of power products, <em>i.e.</em> such that the
+ordering respects the monoid operation (<em>viz.</em> s &lt; t =&gt; r*s &lt; r*t for all
+r,s,t in the monoid).
+</p>
+<p>
+In CoCoALib orderings and gradings are intimately linked -- for gradings
+see also <a href="degree.html"><code>degree</code></a>.  If you want to use an ordering to compare power
+products then see <a href="PPMonoid.html"><code>PPMonoid</code></a>.
+</p>
+
+<section id="constructors">
+<h3>Pseudo-constructors</h3>
+
+<p>
+Currently, the most typical use for a <code>PPOrdering</code> object is as an
+argument to a constructor of a concrete <a href="PPMonoid.html"><code>PPMonoid</code></a> or <a href="PolyRing.html"><code>PolyRing</code></a>,
+so see below <strong>Convenience constructors</strong>.
+</p>
+<p>
+These are the functions which create new <code>PPOrdering</code>s:
+</p>
+
+<ul>
+<li><code>lex(NumIndets)</code> -- GradingDim = 0
+</li>
+<li><code>xel(NumIndets)</code> -- GradingDim = 0
+</li>
+<li><code>StdDegLex(NumIndets)</code> -- GradingDim = 1
+</li>
+<li><code>StdDegRevLex(NumIndets)</code> -- GradingDim = 1
+</li>
+<li><code>NewMatrixOrdering(OrderMatrix, GradingDim)</code>
+</li>
+</ul>
+
+<p>
+The first three create respectively <code>lex</code>, <code>StdDegLex</code> and
+<code>StdDegRevLex</code> orderings on the given number of indeterminates.
+Note the use of <code>Std</code> in the names to emphasise that they are only for
+standard graded polynomial rings (<em>i.e.</em> each indet has degree 1).
+</p>
+<p>
+The last function creates a <code>PPOrdering</code> given a matrix.  <code>GradingDim</code>
+specifies how many of the rows of <code>OrderMatrix</code> are to be taken as
+specifying the grading.  Then entries of the given matrix must be integers
+(and the ring must have characteristic zero).
+</p>
+
+<section id="PPOrderingCtor">
+<h4>Convenience constructors</h4>
+
+<p>
+For convenience there is also the class <code>PPOrderingCtor</code> which provides
+a handy interface for creating <a href="PPMonoid.html"><code>PPMonoid</code></a> and <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a>, so that
+<code>lex</code>, <code>xel</code>, <code>StdDegLex</code>, <code>StdDegRevLex</code> may be used as shortcuts instead
+of the proper constructors, <em>e.g.</em>
+</p>
+
+<pre>
+ NewPolyRing(RingQQ(), symbols("a","b","c","d"), lex);
+</pre>
+
+<p>
+is the same as
+</p>
+
+<pre>
+ NewPolyRing(RingQQ(), symbols("a","b","c","d"), lex(4));
+</pre>
+
+</section>
+</section>
+<section id="queries">
+<h3>Queries</h3>
+
+<ul>
+<li><code>IsStdGraded(PPO)</code>      -- true iff <code>PPO</code> is standard graded (or "degree compatible")
+</li>
+<li><code>IsLex(PPO)</code>            -- true iff <code>PPO</code> is implemented as lex
+</li>
+<li><code>IsXel(PPO)</code>            -- true iff <code>PPO</code> is implemented as xel
+</li>
+<li><code>IsStdDegLex(PPO)</code>      -- true iff <code>PPO</code> is implemented as StdDegLex
+</li>
+<li><code>IsStdDegRevLex(PPO)</code>   -- true iff <code>PPO</code> is implemented as StdDegRevLex
+</li>
+<li><code>IsMatrixOrdering(PPO)</code> -- true iff <code>PPO</code> is implemented as MatrixOrdering
+</li>
+<li><code>IsTermOrdering(PPO)</code>   -- true iff <code>PPO</code> is a term ordering
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+The operations on a <code>PPOrdering</code> object are:
+</p>
+
+<ul>
+<li><code>out &lt;&lt; PPO</code> --       output the <code>PPO</code> object to channel <code>out</code>
+</li>
+<li><code>NumIndets(PPO)</code> --   number of indeterminates the ordering is intended for
+</li>
+<li><code>OrdMat(PPO)</code> --   a (constant) matrix defining the ordering
+</li>
+<li><code>GradingDim(PPO)</code> --  the dimension of the grading associated to the ordering
+</li>
+<li><code>GradingMat(PPO)</code> --  the matrix defining the grading associated to the ordering
+</li>
+</ul>
+
+<p>
+CoCoALib supports graded polynomial rings with the restriction that
+the grading be compatible with the PP ordering: <em>i.e.</em> the grading
+comprises simply the first <code>k</code> entries of the <em>order vector</em>.  The
+<code>GradingDim</code> is merely the integer <code>k</code> (which may be zero if there
+is no grading).
+</p>
+<p>
+A normal CoCoA library user need know no more than this about <code>PPOrdering</code>s.
+CoCoA Library contributors and the curious should read on.
+</p>
+
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation for PPOrdering</h2>
+
+<p>
+A <code>PPOrdering</code> is just a smart pointer to an instance of a class
+derived from <code>PPOrderingBase</code>; so <code>PPOrdering</code> is a simple
+reference counting smart-pointer class, while <code>PPOrderingBase</code> hosts
+the intrusive reference count (so that every concrete derived class
+will inherit it).
+</p>
+<p>
+There are four concrete <code>PPOrdering</code>s in the namespace <code>CoCoA::PPO</code>.  The
+implementations are all simple and straightforward except for the matrix
+ordering which is a little longer and messier but still easy enough to
+follow.
+</p>
+<p>
+The class <code>PPOrderingCtor</code> is just a simple "trick" to allow for
+a convenient user interface.  The mem fn <code>operator()</code>, with arg the
+actual number of indets, is used to generate an actual ordering.
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+We need better ways to compose <code>PPOrderings</code>, <em>i.e.</em> to build new ones
+starting from existing ones.  Max knows the sorts of operation needed
+here.  Something similar to CoCoA4's <code>BlockMatrix</code> command is needed.
+</p>
+<p>
+2021-02-21: added <code>xel</code>
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      bool3</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      bool3</h1>
+<h2>      &copy;  2005  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for bool3</a>
+      <ul>
+      <li><a href="#examples">Examples</a>
+      </li>
+      <li><a href="#Constructors">Constructors</a>
+      </li>
+      <li><a href="#queries">Queries</a>
+      </li>
+      <li><a href="#operations">Operations on bool3</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintainer documentation for bool3</a>
+    </li>
+    <li><a href="#toc7">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for bool3</h2>
+
+<p>
+The class called <code>bool3</code> implements a three-valued boolean: the
+possible values represent the notions <em>false</em>, <em>uncertain</em> and
+<em>true</em>.  A variable of type <code>bool3</code> has a default initial value of
+<em>uncertain</em>.  To avoid problems with reserved words the three truth
+values are actually called:
+</p>
+
+<table style="margin-left: auto; margin-right: auto;">
+<tr>
+<td><code>true3</code></td>
+</tr>
+<tr>
+<td><code>false3</code></td>
+</tr>
+<tr>
+<td><code>uncertain3</code></td>
+</tr>
+</table>
+
+<section id="examples">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-bool3.C">ex-bool3.C</a>
+</li>
+</ul>
+
+</section>
+<section id="Constructors">
+<h3>Constructors</h3>
+
+<ul>
+<li><code>bool3()</code>       -- is the same as <code>uncertain3</code>
+</li>
+<li><code>bool3(true)</code>   -- is the same as <code>true3</code>
+</li>
+<li><code>bool3(false)</code>  -- is the same as <code>false3</code>
+</li>
+</ul>
+
+<p>
+To convert a normal <code>bool</code> to a <code>bool3</code> value, you must call
+the ctor explicitly.
+</p>
+<p>
+For convenience, a variable of type <code>bool3</code> may be assigned a C++
+<code>bool</code> value (<em>e.g.</em> <code>bool3  b3 = true;</code>) in which case <code>true</code>
+maps to <code>true3</code> and <code>false</code> to <code>false3</code>.
+</p>
+
+</section>
+<section id="queries">
+<h3>Queries</h3>
+
+<p>
+There are three functions for testing the value of a <code>bool3</code> expression:
+(note that these functions return a C++ <code>bool</code> value)
+</p>
+
+<ul>
+<li><code>IsTrue3(expr)</code>       -- true iff <code>expr</code> is <code>true3</code>
+</li>
+<li><code>IsFalse3(expr)</code>      -- true iff <code>expr</code> is <code>false3</code>
+</li>
+<li><code>IsUncertain3(expr)</code>  -- true iff <code>expr</code> is <code>uncertain3</code>
+</li>
+</ul>
+
+<p>
+These functions are the only way of <em>"converting"</em> a <code>bool3</code> to a
+standard C++ <code>bool</code> value -- there is no automatic conversion from a
+<code>bool3</code> value to a standard C++ <code>bool</code>.
+</p>
+
+</section>
+<section id="operations">
+<h3>Operations on bool3</h3>
+
+<p>
+There are <strong>no arithmetic operations</strong> on <code>bool3</code> values.  There is
+also <strong>no equality test</strong>.
+</p>
+<p>
+<code>bool3</code> values may be printed in the usual way.  The printed forms are:
+<code>true3</code> and  <code>false3</code> and  <code>uncertain3</code>.
+</p>
+
+</section>
+</section>
+<section id="toc6">
+<h2>Maintainer documentation for bool3</h2>
+
+<p>
+The implementation is very simple.  The only point to watch is that the
+order of the constants in the enum <code>TruthValueSet</code> was chosen to allow a
+simple implementation of the function <code>cmp</code> (which is currently removed;
+see <em>Bugs and Shortcomings</em> below).  If you change the order, you will
+have to change the definition of <code>cmp</code>.
+</p>
+<p>
+All functions/operations are implemented inline except for I/O.
+I have avoided const-ref arguments since it is surely cheaper simply to
+copy the enum value.
+</p>
+
+</section>
+<section id="toc7">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+I made the <code>bool3</code> ctor from <code>bool</code> explicit; if conversion from
+<code>bool</code> to <code>bool3</code> is automatic then machine integer values match
+<code>bool3</code> as well as they match <code>MachineInt</code> --  be careful.
+</p>
+<p>
+Boolean arithmetic operations are not defined since we have not needed
+them so far.  It would be a simple matter, but I prefer to wait until
+there is a real need for such operations.
+</p>
+<p>
+There was also a function <code>cmp</code> for comparing two <code>bool3</code> values:
+</p>
+
+<pre>
+ cmp(b1, b2)  returns an int &lt;0, =0 or &gt;0 according as b1 &lt;,=,&gt; b2
+</pre>
+
+<p>
+(assuming this ordering: false3 &lt; uncertain3 &lt; true3)
+</p>
+
+<pre>
+&gt;     friend int cmp(bool3 lhs, bool3 rhs); // must be friend function
+&gt;   inline int cmp(bool3 lhs, bool3 rhs)
+&gt;   {
+&gt;     return lhs.myTruthValue - rhs.myTruthValue;
+&gt;   }
+</pre>
+
+<p>
+I do feel quite uneasy about disagreeing with BOOST's <code>tribool</code> design, but
+their example of a three-way <em>if</em> statement looks to me to be a recipe for
+programmer grief -- one has to suppress the <em>law of the excluded middle</em> to
+read their code without finding it odd and surprising.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

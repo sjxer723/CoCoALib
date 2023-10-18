@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      time</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      time</h1>
+<h2>      &copy;  2005,2020  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for CpuTime, ElapsedTime and RealTime</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for CpuTime</a>
+    </li>
+    <li><a href="#toc3">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for CpuTime, ElapsedTime and RealTime</h2>
+
+<p>
+<code>CpuTime()</code> returns a <code>double</code> whose value is the user CPU usage in
+seconds since the start of the program (<em>i.e.</em> the amount of time the
+processor has dedicated to your computation -- this may be rather less than
+the real elapsed time if the computer is also busy with other tasks).  For
+instance, to find out how long <code>func()</code> takes to execute you can do the
+following:
+</p>
+
+<pre>
+int main()
+{
+  double t0 = CpuTime();
+  func();
+  cout &lt;&lt; "Time taken (in seconds) is " &lt;&lt; CpuTime()-t0 &lt;&lt; endl;
+  return 0;
+}
+</pre>
+
+<p>
+<code>ElapsedTime()</code> returns a <code>double</code> being the number of seconds elapsed
+since the program was started (more-or-less).
+</p>
+<p>
+The function <code>RealTime()</code> returns a <code>double</code> whose value is the number
+of seconds elapsed since some fixed point in the past (on Unix/Linux boxes
+this is typically 1st January 1970, sometimes called "the epoch").
+</p>
+<p>
+<strong>WARNING</strong> we cannot guarantee the accuracy of these functions;
+as a rule of thumb you should regard time differences as having an
+imprecision of around 2% plus up to 0.2 seconds of unknown variation.
+So using these functions to measure a time difference less than 1 second
+is likely to produce a value with quite a large relative error.
+</p>
+<p>
+As a convenience there is also the function <code>DateTime(long&amp; date, long&amp; time)</code>
+which stores in <code>date</code> and <code>time</code> the current date and time
+represented as decimal integers having the formats <code>yyyymmdd</code> &amp; <code>hhmmss</code>
+respectively.  Example:
+</p>
+
+<pre>
+    long date, time_unused;
+    DateTime(date, time_unused);
+    int YearToday = date/10000;
+    int MonthToday = (date/100)%100;
+    int DayToday = date%100;
+</pre>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for CpuTime</h2>
+
+<p>
+It works on GNU/Linux and MacOSX.  I hope someone else will deal with the
+portability issues.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+2020-12-18: added <code>ElapsedTime</code> (should be portable).
+</p>
+<p>
+Might not work on Microsoft platforms -- maybe this is really a feature?
+</p>
+<p>
+I ignore the return values of <code>getrusage</code> and <code>gettimeofday</code>; I'd be
+amazed if they could signal errors, but perhaps the code ought to check?
+</p>
+<p>
+BOOST has probably solved this; apparently Bruno has a solution too.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

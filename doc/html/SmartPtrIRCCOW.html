@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      SmartPtrIRCCOW</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      SmartPtrIRCCOW</h1>
+<h2>      &copy;  2010 John Abbott, Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for files SmartPtrIRCCOW</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for files SmartPtrIRCCOW</a>
+    </li>
+    <li><a href="#toc3">Bugs, Shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc4">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for files SmartPtrIRCCOW</h2>
+
+<p>
+The name <code>SmartPtrIRCCOW</code> stands for
+  <em>Smart Pointer with Intrusive Reference Count and Copy-on-write</em>.
+(or <em>Lazy Copy</em>).
+</p>
+<p>
+It is very similar to <a href="SmartPtrIRC.html"><code>SmartPtrIRC</code></a>, where two cooperating classes
+are <code>SmartPtrIRCCOW</code> and <code>IntrusiveReferenceCountCOWBase</code>, but
+also allows assigning, copying, and modifying.
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for files SmartPtrIRCCOW</h2>
+
+<p>
+The abstract class <code>IntrusiveReferenceCountCOWBase</code> inherits from
+<code>IntrusiveReferenceCount</code> (see documentation for <a href="SmartPtrIRC.html"><code>SmartPtrIRC</code></a>),
+with an additional pure virtual function <code>myClone</code> which must be
+implemented by the concrete class returning a deep copy of the object.
+</p>
+<p>
+The template class <code>SmartPtrIRCCOW&lt;T&gt;</code> is implemented with one data member:
+</p>
+
+<pre>
+ private:     SmartPtrIRC&lt;T&gt; mySmartPtr;
+</pre>
+
+<p>
+Which does (almost) all the work.
+The core for the <em>copy-on-write</em> behaviour is the member function:
+</p>
+
+<pre>
+ private:     void myDetach()
+</pre>
+
+<p>
+which (if necessary) makes a new deep copy with reference count 1 and
+decrements the reference count of the original object.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+</section>
+<section id="toc4">
+<h2>Main changes</h2>
+
+<p>
+<strong>2010</strong>
+</p>
+
+<ul>
+<li><code>0.9938</code> first version July 2010 (experimental)
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

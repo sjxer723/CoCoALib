@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      OpenMath</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      OpenMath</h1>
+<h2>      &copy;  2006  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for OpenMath</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for OpenMath</a>
+    </li>
+    <li><a href="#toc3">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for OpenMath</h2>
+
+<p>
+These files offer two types: <code>OpenMathOutput</code> for sending data in OpenMath format,
+and <code>OpenMathInput</code> for receiving data sent in OpenMath format.  Since OpenMath
+specifies more than one encoding, you must specify which encoding is to be used
+when creating one of these input/output channels.  Here are two (ugly) examples:
+</p>
+
+<pre>
+  OpenMathOutput OMOut(new OpenMathOutputXML(cout));
+  OpenMathInput OMIn(new OpenMathInputXML(cin));
+</pre>
+
+<p>
+These commands say that the XML encoding is to be used, and that <code>cin</code>/<code>cout</code> as
+the data transport mediums.  Once created, these OpenMath i/o channels can be
+used analogously to the standard C++ i/o channels.
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for OpenMath</h2>
+
+<p>
+<code>OpenMathInput</code> and <code>OpenMathOutput</code> use the template class <a href="SmartPtrIRC.html"><code>SmartPtrIRC</code></a> as their
+implementations.  They are reference counting "smart pointers" (but I'm not sure
+why, perhaps just for simplicity?).
+</p>
+<p>
+There are six different <code>operator&lt;&lt;</code> for built in integer types because I
+needed at least two (one for <code>long</code> and one for <code>unsigned long</code>) and the
+compiler complained about ambiguities for other integral types because it
+could have converted equally well to either <code>long</code> or <code>unsigned long</code>.
+There are only two corresponding member functions, as the implementations
+of <code>operator&lt;&lt;</code> cast to either <code>long</code> or <code>unsigned long</code>.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+Use <code>boost::shared_ptr</code> instead of <a href="SmartPtrIRC.html"><code>SmartPtrIRC</code></a>?
+</p>
+<p>
+Documentation woefully incomplete.  Actually the whole implementation needs a
+thorough revision, perhaps in collaboration with some others who are attemtping
+to implement OpenMath.
+</p>
+<p>
+Code written hastily, so incomplete, largely untested, does not follow the
+coding standards (esp. member fn names).
+</p>
+<p>
+Need a safer way to send "brackets" (e.g. OpenMath apply begin and end tokens).
+</p>
+<p>
+Should <code>OpenMathSymbol</code> have ctors with one <code>string</code> and one <code>char*</code>?
+</p>
+<p>
+OpenMath attributes completely ignored.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

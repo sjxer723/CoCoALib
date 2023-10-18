@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      RingZZ</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      RingZZ</h1>
+<h2>      &copy;  2005,2007,2012  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for RingZZ</a>
+      <ul>
+      <li><a href="#examples">Examples</a>
+      </li>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#query">Query</a>
+      </li>
+      <li><a href="#homomorphisms">Homomorphisms</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintainer documentation for the class RingZZImpl</a>
+    </li>
+    <li><a href="#toc7">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for RingZZ</h2>
+
+<p>
+The call <code>RingZZ()</code> produces the CoCoA <a href="ring.html"><code>ring</code></a> which represents ZZ, the
+ring of integers.  Calling <code>RingZZ()</code> several times will always produce
+the same unique CoCoA <a href="ring.html"><code>ring</code></a> representing ZZ.
+</p>
+<p>
+Strictly, there is a limit on the size of elements you can create, but
+the limit is typically high enough not to be bothersome.
+</p>
+<p>
+See <a href="RingElem.html"><code>RingElem</code></a> for operations on its elements.
+</p>
+<p>
+Efficiency of arithmetic on elements of <code>RingZZ()</code> should be reasonable
+rather than spectacular.  If you wish to compute purely with integers
+(without exploiting CoCoALib's rings) then see the documentation in
+<a href="BigInt.html"><code>BigInt</code></a>.
+</p>
+
+<section id="examples">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-RingZZ1.C">ex-RingZZ1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<ul>
+<li><code>RingZZ()</code> -- produces the CoCoA <a href="ring.html"><code>ring</code></a> which represents ZZ.
+   Calling <code>RingZZ()</code> several times will always produce the same unique
+   ring in CoCoALib.
+</li>
+</ul>
+
+</section>
+<section id="query">
+<h3>Query</h3>
+
+<p>
+Let <code>R</code> be a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>IsZZ(R)</code> -- says whether <code>R</code> is actually <code>RingZZ()</code>
+</li>
+</ul>
+
+</section>
+<section id="homomorphisms">
+<h3>Homomorphisms</h3>
+
+<p>
+Let <code>S</code> be a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>NewZZEmbeddingHom(S)</code> -- creates the homomorphism ZZ --&gt; <code>S</code>
+                             (but see also <a href="CanonicalHom.html"><code>CanonicalHom</code></a>).
+                            ZZ argument is implicit because there is a
+                            unique copy
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc6">
+<h2>Maintainer documentation for the class RingZZImpl</h2>
+
+<p>
+The function <code>RingZZ()</code> simply returns the unique instance of the
+CoCoALib <a href="ring.html"><code>ring</code></a> representing ZZ.  This instance is managed by
+<a href="GlobalManager.html"><code>GlobalManager</code></a>, see its documentation.
+</p>
+<p>
+The function <code>MakeUniqueInstanceOfRingZZ</code> is the only function which can
+call the ctor of <code>RingZZImpl</code>.  The only function which is supposed to
+call <code>MakeUniqueInstanceOfRingZZ</code> is the ctor of <a href="GlobalManager.html"><code>GlobalManager</code></a>.  I have
+discouraged others from calling <code>MakeUniqueInstanceOfRingZZ</code> by not putting
+it in the header file <code>RingZZ.H</code> -- see bugs section in <a href="GlobalManager.html"><code>GlobalManager</code></a>.
+</p>
+<p>
+The class <code>RingZZImpl</code> is really very simple.  It may look daunting and
+complex because it inherits lots of virtual functions from <code>RingBase</code>.
+It contains just three data members: a <code>MemPool</code> for managing the storage
+of the <code>mpz_t</code> headers, and pointers to the ring's own zero and one elements.
+</p>
+<p>
+The member functions for arithmetic are all quite simple.  The only
+minor difficulty is in the function <code>AsMPZ</code> which gets at the <code>mpz_t</code>
+hidden inside a <code>RingElemRawPtr</code>.  I have decided to stick with the C
+interface to GMP for the moment (even though GMP 4 does offer a C++
+interface).  This appears to be more a personal choice than a technical
+one.
+</p>
+<p>
+Recall (from <a href="ring.html"><code>ring</code></a>) that arithmetic on ring elements always passes
+via the virtual member functions of the concrete rings, and that these
+expect arguments to be of type <code>RawPtr</code> or <code>ConstRawPtr</code>.  The arguments
+are pointers to the <code>mpz_t</code> headers which reside in a region of memory
+controlled by the <a href="MemPool.html"><code>MemPool</code></a> belonging to the <code>RingZZImpl</code> class.
+</p>
+<p>
+Given that the <code>mpz_t</code> values must live on the free store, we use a <a href="MemPool.html"><code>MemPool</code></a>
+to handle the space for their headers (which are of fixed size).  Note that
+this <a href="MemPool.html"><code>MemPool</code></a> is NOT what handles the memory used for the digits (or limbs)
+of the GMP integer values!  Currently limb space is handled by whatever is
+the default allocator (<code>malloc</code>, I suppose).
+</p>
+<p>
+The data members <code>myZeroPtr</code> and <code>myOnePtr</code> just hold <code>auto_ptr</code>s to the zero
+and one elements of the <code>RingZZImpl</code>.  I used an <code>auto_ptr</code> to avoid having
+to worry about freeing it in the destructor; the zero and one values cannot be
+<code>RingElem</code>s because their creation must be deferred.  I opted not to store the
+values in <code>RingElem</code> fields to avoid any possible problem due to a "race
+condition" where elements of the ring would be constructed before the
+body of the constructor of the ring had begun execution (might be OK
+anyway, but could easily lead to hair-raising bugs (<em>e.g.</em> in the dtor)).
+</p>
+
+</section>
+<section id="toc7">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+This code is probably not <em>exception safe</em>; I do not know what the
+<code>mpz_*</code> functions do when there is insufficient memory to proceed.
+Making the code "exception safe" could well be non-trivial: I suspect
+a sort of <code>auto_ptr</code> to an <code>mpz_t</code> value might be needed.
+</p>
+<p>
+Should I switch to the C++ interface for GMP integers?
+</p>
+<p>
+It is a shame that the <code>mpz_t</code> headers are "out of line".  How much this may
+affect run-time performance I don't know.
+</p>
+<p>
+Generation of random elements in <code>RingZZ</code> is not possible (yet???).
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

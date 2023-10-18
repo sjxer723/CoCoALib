@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      BigInt</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      BigInt</h1>
+<h2>      &copy;  2005,2007,2010,2011,2018  John Abbott  and Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#toc3">Generalities</a>
+      </li>
+      <li><a href="#toc4">The Functions Available For Use</a>
+        <ul>
+        <li><a href="#toc5">Constructors</a>
+        </li>
+        <li><a href="#operations">Operations</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer Documentation</a>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc9">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-BigInt1.C">ex-BigInt1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-BigInt2.C">ex-BigInt2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-BigInt3.C">ex-BigInt3.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-GMPAllocator1.C">ex-GMPAllocator1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-GMPAllocator2.C">ex-GMPAllocator2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+<strong>IMPORTANT NOTE:</strong>
+</p>
+
+<ul>
+<li><strong>see <a href="BigIntOps.html"><code>BigIntOps</code></a> for basic operations on values of type <code>BigInt</code></strong>
+</li>
+<li><strong>see <a href="NumTheory.html"><code>NumTheory</code></a> for more advanced operations</strong>
+</li>
+</ul>
+
+<section id="toc3">
+<h3>Generalities</h3>
+
+<p>
+The class <code>BigInt</code> is intended to represent integers of practically
+unlimited range.  CoCoALib relies on an external library for handling big
+integers: currently it is based on GMP, the <strong><em>GNU multiple precision</em></strong>
+library.  This CoCoALib code simply forms the interface to the underlying
+big integer library.
+</p>
+<p>
+Computations with <code>BigInt</code> values do not suffer from overflow, but
+they are significantly slower than with machine integers.  All
+<code>BigInt</code> values are stored on the heap.
+</p>
+<p>
+It is important not to confuse values of type <code>BigInt</code> with values of type
+<a href="RingElem.html"><code>RingElem</code></a> which happen to belong to the ring <a href="RingZZ.html"><code>RingZZ</code></a>.  In summary, the
+operations available for <a href="RingElem.html"><code>RingElem</code></a> are those applicable to elements of
+any ordered commutative ring, whereas the range of operations on <code>BigInt</code>
+values is wider (since we have explicit knowledge of the type).
+</p>
+<p>
+See <a href="BigRat.html"><code>BigRat</code></a> for representing and handling rational numbers.
+</p>
+
+</section>
+<section id="toc4">
+<h3>The Functions Available For Use</h3>
+
+<section id="toc5">
+<h4>Constructors</h4>
+
+<p>
+ A value of type <code>BigInt</code> may be created from:
+</p>
+
+<ul>
+<li><code>BigInt()</code>  the value is zero
+</li>
+<li><code>BigInt(n)</code>  where <code>n</code> is a machine integer
+</li>
+<li><code>BigInt(N)</code>  where <code>N</code> is another value of type <code>BigInt</code> (its value is copied)
+</li>
+<li><code>BigIntFromString(str)</code> where <code>str</code> a string containing the decimal digits (optionally preceded by a minus sign); leading and trailing whitespace is allowed
+</li>
+<li><code>BigIntFromMPZ(ptr)</code>  where <code>ptr</code> is a GMP <code>mpz_t</code> value
+</li>
+</ul>
+
+<p>
+Note that we use pseudo-ctors for constructing from a <code>string</code> or an <code>mpz_t</code> (this is to avoid problems of ambiguity with <code>BigInt(0)</code> since <code>0</code> can be viewed in C++ as a null-pointer).
+</p>
+<p>
+Note: No direct constructor for creating a <code>BigInt</code> from a <code>char*</code> is
+provided, however C++ will automatically convert a <code>char*</code> into a
+<code>std::string</code>, so you can still use a C-string if you want.
+</p>
+
+</section>
+<section id="operations">
+<h4>Operations</h4>
+
+<p>
+<strong>IMPORTANT NOTE</strong>
+</p>
+
+<ul>
+<li><strong>see <a href="BigIntOps.html"><code>BigIntOps</code></a> for basic operations on values of type <code>BigInt</code></strong>
+</li>
+<li><strong>see <a href="NumTheory.html"><code>NumTheory</code></a> for more advanced operations</strong>
+</li>
+</ul>
+
+<ol>
+<li>Functions violating encapsulation
+  <ul>
+  <li><code>mpzref(n)</code>  -- this gives a (const) reference to the <code>mpz_t</code>
+                      value inside a <code>BigInt</code> object.
+                      You should use this accessor very sparingly (but
+                      it is handy for calling GMP functions directly).
+  </li>
+  </ul>
+</li>
+</ol>
+
+</section>
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer Documentation</h2>
+
+<p>
+The implementation is structurally very simple, just rather long and
+tedious.  The value of a <code>BigInt</code> object is represented as an <code>mpz_t</code>;
+this is a private data member, but to facilitate interfacing with code
+which uses <code>mpz_t</code> values directly I have supplied the two functions
+called <code>mpzref</code> which allow access to this data member.
+</p>
+<p>
+The output function turned out to be trickier than one might guess.
+Part of the problem was wanting to respect the <code>ostream</code> settings.
+</p>
+<p>
+Of course, input is a mess.  Nothing clever here.
+</p>
+<p>
+Check also the documentation for <a href="MachineInt.html"><code>MachineInt</code></a> to understand how
+that class is used.
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Currently functions which return <code>BigInt</code> values will copy the result (upon
+each return) -- an attempt to avoid the waste with proxy classes caused a
+problem see <a href="../../src/tests/test-bug4.C">test-bug4.C</a>  Move semantics in C++11 should solve this.
+</p>
+<p>
+The official GMP interface (<code>mpz_class</code>) is certainly more efficient;
+should CoCoALib eventually switch to using <code>mpz_class</code>?
+It seems most unlikely that GMP will be displaced from its
+position as the foremost library for big integer arithmetic, so
+such explicit dependence on it should not matter.
+</p>
+<p>
+No bit operations: bit setting and checking, and/or/xor/not.
+</p>
+<p>
+The code is long, tedious and unilluminating.  Are there any volunteers
+to improve it?
+</p>
+
+</section>
+<section id="toc9">
+<h2>Main changes</h2>
+
+<p>
+<strong>2018</strong>
+</p>
+
+<ul>
+<li>April:
+ <ul>
+ <li>removed ctors from <code>string</code> and <code>mpq_t</code>; replaced them by pseudo-ctors.
+   This means that <code>BigInt(0)</code> now works as expected (previously it worked
+   thanks to a dodgy hack).
+-
+ <p></p>
+<strong>2012</strong>
+ </li>
+ </ul>
+</li>
+<li>May (v0.9951):
+ <ul>
+ <li>moved common operations on <a href="BigInt.html"><code>BigInt</code></a> and <a href="MachineInt.html"><code>MachineInt</code></a>
+   together into <code>IntOperations</code>
+-
+ <p></p>
+<strong>2011</strong>
+ </li>
+ </ul>
+</li>
+<li>August (v0.9950):
+ <ul>
+ <li>class <code>ZZ</code> renamed into <code>BigInt</code>:
+   avoid confusion with <a href="RingZZ.html"><code>RingZZ</code></a> and its name in CoCoA system
+ </li>
+ <li><code>random</code> has changed (was <code>random(lo,hi)</code>): see <a href="random.html"><code>random</code></a>
+ </li>
+ </ul>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

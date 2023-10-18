@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      MatrixOps</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      MatrixOps</h1>
+<h2>      &copy;  2009,2012,2019,2020  John Abbott and Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for MatrixOps</a>
+      <ul>
+      <li><a href="#toc2">Matrix accessors</a>
+      </li>
+      <li><a href="#toc3">Matrix Arithmetic</a>
+      </li>
+      <li><a href="#toc4">Matrix norms</a>
+      </li>
+      <li><a href="#toc5">Sundry functions</a>
+        <ul>
+        <li><a href="#toc6">Further sundry functions</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation for MatrixOps</a>
+    </li>
+    <li><a href="#toc8">Bugs, Shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc9">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for MatrixOps</h2>
+
+<p>
+<code>MatrixOps</code> gathers together a number of operations on matrices; in
+most cases these operations are happy to accept a <code>MatrixView</code>
+(see <a href="MatrixView.html"><code>MatrixView</code></a>) as argument.
+</p>
+<p>
+When not specified, a matrix argument is of type <code>ConstMatrixView</code>.
+</p>
+
+<section id="toc2">
+<h3>Matrix accessors</h3>
+
+<ul>
+<li><code>M[i,j]</code> read the <code>(i,j)</code>-entry of matrix <code>M</code>
+</li>
+<li><code>SetEntry(M,i,j, val)</code>  set the <code>(i,j)</code>-entry of matrix <code>M</code>
+</li>
+<li><code>GetRow(M,i)</code>  return the <code>i</code>-th row of <code>M</code> as a <code>vector&lt;RingElem&gt;</code>
+</li>
+<li><code>GetCol(M,j)</code>  return the <code>j</code>-th col of <code>M</code> as a <code>vector&lt;RingElem&gt;</code>
+</li>
+<li><code>GetRows(M)</code>  return the rows of <code>M</code> as a <code>vector&lt;vector&lt;RingElem&gt;&gt;</code>
+</li>
+<li><code>GetCols(M)</code>  return the cols of <code>M</code> as a <code>vector&lt;vector&lt;RingElem&gt;&gt;</code>
+</li>
+<li><code>FlattenByRows(M)</code>  return entries of <code>M</code> in a <code>vector&lt;RingElem&gt;</code> in order 1st row, 2nd row, etc
+</li>
+<li><code>FlattenByCols(M)</code>  return entries of <code>M</code> in a <code>vector&lt;RingElem&gt;</code> in order 1st col, 2nd col, etc
+<p></p>
+Note that <code>GetRow</code>, <code>GetCol</code>, <code>GetRows</code>, <code>GetCols</code>, <code>FlattenByRows</code> and <code>FlattenByCols</code> make copies of the matrix entries.
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Matrix Arithmetic</h3>
+
+<p>
+There are two ways of multiplying two matrices together.  The infix
+operators return a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>; the procedural version may be
+slightly faster than the infix operator.
+</p>
+
+<ul>
+<li><code>mul(matrix&amp; lhs, M1, M2)</code> -- a procedure equivalent to <code>lhs = M1*M2;</code>, note that <code>lhs</code> might be a <code>SparseMatrix</code> <strong>(not yet implemented)</strong>
+</li>
+<li><code>operator*(M1, M2)</code>  -- the product <code>M1*M2</code>
+</li>
+<li><code>operator+(M1, M2)</code>  -- the sum <code>M1+M2</code>
+</li>
+<li><code>operator-(M1, M2)</code>  -- the difference <code>M1-M2</code>
+</li>
+<li><code>power(M, n)</code>  compute <code>n</code>-th power of <code>M</code>; if <code>n</code> is negative then <code>M</code> must be invertible
+</li>
+<li><code>operator*(n, M1)</code>   -- scalar multiple of <code>M1</code> by <code>n</code> (integer or RingElem)
+</li>
+<li><code>operator*(M1, n)</code>   -- scalar multiple of <code>M1</code> by <code>n</code> (integer or RingElem)
+</li>
+<li><code>operator/(M1, n)</code>   -- scalar multiple of <code>M1</code> by <code>1/n</code> (where <code>n</code> is integer or RingElem)
+</li>
+<li><code>operator-(M1)</code>      -- scalar multiple of <code>M1</code> by -1
+</li>
+</ul>
+
+</section>
+<section id="toc4">
+<h3>Matrix norms</h3>
+
+<p>
+Here are some matrix norms.  The result is an element of the ring
+containing the matrix elements.  Note that <code>FrobeniusNormSq</code> gives the
+<strong>square</strong> of the Frobenius norm (so that the value surely lies in the
+same ring).
+</p>
+
+<ul>
+<li><code>FrobeniusNormSq(M)</code>  -- the <strong>square</strong> of the Frobenius norm
+</li>
+<li><code>OperatorNormInfinity(M)</code> -- the infinity norm, ring must be ordered
+</li>
+<li><code>OperatorNorm1(M)</code> -- the one norm, ring must be ordered
+</li>
+</ul>
+
+</section>
+<section id="toc5">
+<h3>Sundry functions</h3>
+
+<p>
+Here are some fairly standard functions on matrices.
+</p>
+
+<ul>
+<li><code>det(M)</code>      -- determinant of <code>M</code> (M must be square)
+</li>
+<li><code>IsZeroDet(M)</code>  -- equivalent to <code>IsZero(det(M))</code> (but may be faster)
+</li>
+<li><code>HadamardBoundSq(M)</code> -- computes row and column bounds in a <code>struct</code> (fields <code>myRowBound</code> and <code>myColBound</code>)
+</li>
+<li><code>rk(M)</code>       -- rank of <code>M</code> (the base ring must be an integral domain)
+</li>
+<li><code>inverse(M)</code>  -- inverse of <code>M</code> as a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>
+</li>
+<li><code>adj(M)</code>      -- classical adjoint of <code>M</code> as a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>; sometimes called "adjugate".
+</li>
+<li><code>rref(M)</code> -- compute a reduced row echelon form of <code>M</code> (orig. matrix is unchanged); matrix must be over a field
+</li>
+<li><code>PseudoInverse(M)</code> -- PseudoInverse of <code>M</code> as a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>.
+                   I suspect that it requires that the matrix be of full rank.
+</li>
+<li><code>LinSolve(M,rhs)</code>  -- solve for <code>x</code> the linear system <code>M*x = rhs</code>; result is a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>; if no soln exists, result is the 0-by-0 matrix
+</li>
+<li><code>LinKer(M)</code>  -- solve for <code>x</code> the linear system <code>M*x = 0</code>; returns a <a href="DenseMatrix.html"><code>DenseMatrix</code></a> whose columns are a base for <code>ker(M)</code>
+</li>
+<li><code>LinKerZZ(M)</code>  -- solve for <code>x</code> the linear system <code>M*x = 0</code>; returns a <a href="DenseMatrix.html"><code>DenseMatrix</code></a> whose columns are a ZZ-base for integer points in <code>ker(M)</code>
+</li>
+</ul>
+
+<section id="toc6">
+<h4>Further sundry functions</h4>
+
+<p>
+Here are some standard operations where the method used is specified explicitly.
+It would usually be better to use the generic operations above, as those should
+automatically select the most appropriate method for the given matrix.
+</p>
+
+<ul>
+<li><code>det2x2(M)</code>  -- only for 2x2 matrices
+</li>
+<li><code>det3x3(M)</code>  -- only for 3x3 matrices
+</li>
+<li><code>det4x4(M)</code>  -- only for 4x4 matrices
+</li>
+<li><code>det5x5(M)</code>  -- only for 5x5 matrices
+</li>
+<li><code>DetByGauss(M)</code> -- matrix must be over an integral domain
+</li>
+<li><code>RankByGauss(std::vector&lt;long&gt;&amp; IndepRows, M)</code>
+</li>
+<li><code>InverseByGauss(M)</code> -- some restrictions (needs gcd)
+</li>
+<li><code>AdjointByDetOfMinors(M)</code>
+</li>
+<li><code>AdjointByInverse(M)</code> --  base ring must be integral domain
+</li>
+<li><code>LinSolveByGauss(M,rhs)</code> -- solve a linear system using gaussian elimination
+                    (base ring must be a field), result is a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>
+</li>
+<li><code>LinSolveByHNF(M,rhs)</code> -- solve a linear system using Hermite NormalForm
+                    (base ring must be a PID), result is a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>
+</li>
+<li><code>LinSolveByModuleRepr(M,rhs)</code> -- solve a linear system using module element representation, result is a <a href="DenseMatrix.html"><code>DenseMatrix</code></a>
+</li>
+</ul>
+
+<ul>
+<li><code>void GrammSchmidtRows(MatrixView&amp; M)</code>  -- NYI
+</li>
+<li><code>void GrammSchmidtRows(MatrixView&amp; M, long row)</code>  -- NYI
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation for MatrixOps</h2>
+
+<p>
+Most impls are quite straightforward.
+</p>
+<p>
+<code>power</code> is slightly clever with its iterative impl of binary powering.
+</p>
+<p>
+<code>LinSolveByGauss</code> is a little complicated because it tries to handle all
+cases (<em>e.g.</em> full rank or not, square or more rows than cols or more cols than rows)
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+Can we make a common "gaussian elimination" impl which is called by the
+various algorithms needing it, rather than having several separate
+implementations?
+</p>
+<p>
+Is the procedure <code>mul</code> really any faster than the infix operator?
+</p>
+
+</section>
+<section id="toc9">
+<h2>Main changes</h2>
+
+<p>
+<strong>2012</strong>
+</p>
+
+<ul>
+<li>June: Added negation, multiplication and division of a matrix by a scalar.
+</li>
+<li>April: Added LinSolve family (incl. LinSolveByGauss, LinSolveByHNF, LinSolveByModuleRepr)
+</li>
+</ul>
+
+<p>
+<strong>2011</strong>
+</p>
+
+<ul>
+<li>May: Added power fn for matrices: cannot yet handle negative powers.
+</li>
+<li>March: added multiplication by RingElem
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

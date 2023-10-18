@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      FreeModule</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      FreeModule</h1>
+<h2>      &copy;  2005,2022  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation for the class FreeModule</a>
+    </li>
+    <li><a href="#toc3">Maintainer documentation for the classes FreeModule and FreeModuleImpl</a>
+    </li>
+    <li><a href="#toc4">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-module1.C">ex-module1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation for the class FreeModule</h2>
+
+<p>
+For normal use there are only a few functions of interest:
+</p>
+
+<dl>
+<dt> <code>NewFreeModule(R, NumCompts)</code></dt><dd>
+    creates an object of type FGModule representing the free module of
+    dimension NumCompts over the ring R.
+<p></p>
+</dd>
+<dt> <code>FreeModule(M)</code></dt><dd>
+    where M is a module; if M is genuinely a FreeModule then that FreeModule
+    is returned otherwise an error is generated.
+<p></p>
+</dd>
+<dt> <code>IsFreeModule(M)</code></dt><dd>
+    true iff the module M is genuinely a FreeModule.
+<p></p>
+</dd>
+<dt> <code>CanonicalBasis(M)</code></dt><dd>
+    returns a read-only <code>vector</code> whose entry with index <code>k</code>
+    contains the <code>k</code>-th unit vector (all coords 0 except <code>k</code>-th;
+    recall that indexes start from 0).
+</dd>
+</dl>
+
+<dl>
+<dt> <code>NewFreeModule(R, NumCompts, shifts)</code></dt><dd>
+    creates an object of type FGModule representing the free module of
+    dimension NumCompts over the ring R.  R must be a PolyRing, and
+    shifts is a vector&lt;degree&gt; containing NumCompts elements, the i-th
+    element being the shift applied to degrees of values in the i-th
+    component.  For example: ?????
+</dd>
+</dl>
+
+</section>
+<section id="toc3">
+<h2>Maintainer documentation for the classes FreeModule and FreeModuleImpl</h2>
+
+<p>
+I shall suppose that the maintainer documentation for modules and
+FGModules has already been read and digested.  It could also be helpful
+to have read ring.txt since the "design philosophy" here imitates that
+used for rings.
+</p>
+<p>
+As one would expect, FreeModule is simple a reference counting smart
+pointer class to a FreeModuleImpl object.
+</p>
+<p>
+FreeModuleImpl turns out to be a little more complex than one might
+naively guess.  The extra complexity arises from two causes: one is
+compatibility with the general structure of modules, and the other is
+that a FreeModule manages the memory used to represent the values of
+ModuleElems belonging to itself.
+</p>
+<p>
+GradedFreeModuleImpl is derived from FreeModuleImpl and allows
+storing and using ordering and shifts: it requires a SparsePolyRing
+as BaseRing.  It provides these functions for FreeModule:
+</p>
+
+<pre>
+  FreeModule NewFreeModule(const ring&amp; P, const ModuleTermOrdering&amp; O);
+  bool IsGradedFreeModule(const module&amp; M);
+</pre>
+
+<p>
+The following functions are defined only if FreeModule is implemented as GradedFreeModuleImpl
+</p>
+
+<pre>
+  const std::vector&lt;degree&gt;&amp; shifts(const FreeModule&amp; M);
+  const ModuleTermOrdering&amp; ordering(const FreeModule&amp; M);
+  long LPos(const ModuleElem&amp; v);
+  degree wdeg(const ModuleElem&amp; v);
+  int CmpWDeg(const ModuleElem&amp; v1, const ModuleElem&amp; v2);
+  ConstRefPPMonoidElem LPP(const ModuleElem&amp; v);
+  bool IsHomog(const ModuleElem&amp; v);
+</pre>
+
+</section>
+<section id="toc4">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+Documentation rather incomplete.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

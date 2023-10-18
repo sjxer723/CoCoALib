@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      BigRatInterval</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      BigRatInterval</h1>
+<h2>      &copy;  2018 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#queries">Queries and views</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc7">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc8">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-BigRatInterval1.C">ex-BigRatInterval1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+<code>BigRatInterval</code> is designed to represent (finite, non-empty) intervals
+with <a href="BigRat.html"><code>BigRat</code></a> rational end points.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<ul>
+<li><code>BigRatInterval(lwb, upb)</code> creates an interval with lower end point <code>lwb</code>
+    and upper end point <code>upb</code>; gives error if <code>lwb &gt; upb</code>
+</li>
+</ul>
+
+</section>
+<section id="queries">
+<h3>Queries and views</h3>
+
+<p>
+Let <code>I</code> be a <a href="BigRatInterval.html"><code>BigRatInterval</code></a>
+</p>
+
+<ul>
+<li><code>min(I)</code> -- gives the lower end point of <code>I</code>
+</li>
+<li><code>max(I)</code> -- gives the upper end point of <code>I</code>
+</li>
+<li><code>width(I)</code> -- gives the width of <code>I</code> as a <a href="BigRat.html"><code>BigRat</code></a>
+</li>
+<li><code>IsZeroInside(I)</code> -- true iff <code>min(I) &lt; 0 and max(I) &gt; 0</code>
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+Basic interval arithmetic operations between two intervals <code>I1</code> and <code>I2</code>:
+</p>
+
+<ul>
+<li><code>I1 + I2</code>
+</li>
+<li><code>I1 - I2</code>
+</li>
+<li><code>I1 * I2</code>
+</li>
+<li><code>I1 / I2</code>  gives error if <code>I2</code> contains 0
+</li>
+<li><code>merge(I1, I2)</code>  union, but error if <code>I1</code> and <code>I2</code> are disjoint.
+</li>
+<li><code>square(I1)</code>  like <code>I1*I1</code> but ensures lower bound is non-negative.
+</li>
+<li><code>soften(I1)</code> widen <code>I1</code> to make its end points nicer numbers (PROTOTYPE!)
+</li>
+</ul>
+
+<p>
+Basic arithmetic operations between an interval <code>I</code> and a rational <code>q</code>:
+</p>
+
+<ul>
+<li><code>I + q</code>  and <code>q + I</code>
+</li>
+<li><code>I - q</code>  and <code>q - I</code>
+</li>
+<li><code>I * q</code>  and <code>q * I</code>
+</li>
+</ul>
+
+<p>
+Division is not yet supported!
+</p>
+
+</section>
+</section>
+<section id="toc6">
+<h2>Maintainer documentation</h2>
+
+<p>
+I have preferred simplicity over efficiency for this first version.
+</p>
+
+</section>
+<section id="toc7">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Not efficient!
+</p>
+<p>
+What should the interface to <code>soften</code> be?  Is there a better fn name?
+</p>
+
+</section>
+<section id="toc8">
+<h2>Main changes</h2>
+
+<p>
+<strong>2018</strong>
+</p>
+
+<ul>
+<li>April (v0.99563):  first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

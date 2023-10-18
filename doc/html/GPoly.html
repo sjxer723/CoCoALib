@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      GPoly</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      GPoly</h1>
+<h2>      &copy;  2006 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for the class GPoly</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for the class GPoly</a>
+      <ul>
+      <li><a href="#toc3">Old logs</a>
+        <ul>
+        <li><a href="#toc4">GPoly.H</a>
+        </li>
+        <li><a href="#toc5">reduce.C</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for the class GPoly</h2>
+
+<p>
+This part should be written by Massimo Caboara
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for the class GPoly</h2>
+
+<p>
+Also this part should be written by Massimo Caboara, but, as I am
+the author and maintainer of the reduction code, I write some notes
+here.
+</p>
+<p>
+A GPoly contains some member fields which often depend solely on the
+field myPolyValue: myLen, myWDeg, myLPPwMask, myComponent
+After a reduction we change the value of myPolyValue and the above
+fields can be updated accordingly calling:
+ myUpdateLenLPPDegComp();
+NB: if myPolyValue is 0 the fields myWDeg, myLPPwMask, myComponent are
+unreliable (intrinsicly undefined).
+</p>
+
+<section id="toc3">
+<h3>Old logs</h3>
+
+<section id="toc4">
+<h4>GPoly.H</h4>
+
+<pre>
+ // Revision 1.14  2006/03/21 13:41:52  cocoa
+ // -- changed: removed typedef before enum CoeffEncoding::type
+</pre>
+
+</section>
+<section id="toc5">
+<h4>reduce.C</h4>
+
+<pre>
+ // Revision 1.20  2006/05/02 14:38:15  cocoa
+ // -- changed "and,or,not" to "&amp;&amp;,||,!" because of M$Windoze (by M.Abshoff)
+ //
+ // Revision 1.19  2006/04/27 13:35:57  cocoa
+ // -- reverted: using CmpLPP no faster that comparing LPP()
+ //
+ // Revision 1.18  2006/04/27 11:32:03  cocoa
+ // -- improved myReduceTail using CmpLPP
+ //
+ // Revision 1.17  2006/04/12 17:00:20  cocoa
+ // -- changed: myReduceTail does nothing if ( LPP(*this) &lt; LPP(g) )
+ //     ==&gt;  great speedup on 6x7-4_h
+ //
+ // Revision 1.12  2006/03/17 18:17:16  cocoa
+ // -- changed: use of ReductionCog for reduction (major cleanup)
+ //
+ // Revision 1.5  2004/03/04 11:38:28  cocoa
+ // -- updated code for Borel reductors:
+ //    "reduce" first checks for myBorelReductors and updates them when needed
+</pre>
+
+</section>
+</section>
+</section>
+</section>
+</div>
+</article></body></html>

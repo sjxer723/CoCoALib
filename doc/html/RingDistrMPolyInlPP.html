@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>    RingDistMPolyInlPP</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>    RingDistMPolyInlPP</h1>
+<h2>      &copy;  2014 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    <li><a href="#toc8">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-empty.C">ex-empty.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+<code>RingDistrMPolyInlPP</code> implements a ring of distributed multivariate
+polynomials: you may think of the elements as being ordered lists of
+coefficient and power product pairs (with the additional guarantee
+that the coefficients are non-zero, and that the power products are
+all distinct.  The best way to create a <code>RingDistrMPolyInlPP</code> is to use
+the function <code>NewPolyRing_DMPI</code> (see <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a>)
+</p>
+<p>
+A <code>RingDistrMPolyInlPP</code> is a concrete instance of a <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a>.
+</p>
+<p>
+Internally polynomials have a "compact" representation: the power products
+are held "in-line".  To allow this the <a href="PPMonoid.html"><code>PPMonoid</code></a> must be of type <code>PPMonoidOv</code>.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<p>
+There is a single ctor which is normally called by one of the pseudo-ctors
+called <code>NewPolyRing_DMPI</code>.
+</p>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+See <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a> and <a href="PolyRing.html"><code>PolyRing</code></a> for operations.
+</p>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation</h2>
+
+<p>
+Most of the real work is delegated to <a href="DistrMPolyInlPP.html"><code>DistrMPolyInlPP</code></a>; pratically all
+member fns forward to <code>DistrMPolyInlPP</code>.
+</p>
+<p>
+Note that the <code>PPM</code> must be of type <code>PPMonoidOv</code>!
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>January (v0.99531): first documentation
+</li>
+</ul>
+
+</section>
+<section id="toc8">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>Jan (v0.99531): added ability to create a <code>RingDistMPolyInlPP</code> with
+  specified PPMonoid.
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

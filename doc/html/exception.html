@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      exception</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      exception</h1>
+<h2>      &copy;  2015,2021  John Abbott  &amp;  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#queries">Queries and views</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-error1.C">ex-error1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+All exceptions thrown by CoCoALib are of a type derived from <code>CoCoA::exception</code>.
+</p>
+<p>
+An object of type <code>CoCoA::exception</code> contains just 2 fields: a <code>message</code> and
+a <code>context</code> (which may be empty).  The intention is that the <code>message</code>
+indicates what caused the exception, while <code>context</code> may indicate where
+the exception was thrown from (or it may be empty).
+</p>
+<p>
+Note that <code>CoCoA::exception</code> deliberately does not derive from <code>std::exception</code>.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<p>
+There are two constructors:
+</p>
+
+<ul>
+<li><code>exception(mesg)</code>  specify the message but no context (<em>i.e.</em> empty string)
+</li>
+<li><code>exception(mesg, where)</code>  specify the message and a context
+</li>
+</ul>
+
+</section>
+<section id="queries">
+<h3>Queries and views</h3>
+
+<p>
+Let <code>E</code> be an object of type <code>exception</code>
+</p>
+
+<ul>
+<li><code>message(E)</code>  gives the message inside <code>E</code> as a <code>std::string</code>
+</li>
+<li><code>context(E)</code>  gives the context info inside <code>E</code> as a <code>std::string</code>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation</h2>
+
+<p>
+The class is very simple: it contains just two string data members,
+and two accessor functions.
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Params are now <code>std::string</code> rather than <code>const std::string&amp;</code>
+because that should be more efficient (sometimes) thanks to move-ctor:
+the supplied arg is a copy, so can be moved into the data-structure.
+</p>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2021</strong>
+</p>
+
+<ul>
+<li>November (v0.99718): changed ctor args to <code>std::string</code> (previously <code>const std::string&amp;</code>)
+</li>
+</ul>
+
+<p>
+<strong>2015</strong>
+</p>
+
+<ul>
+<li>July (v0.99536): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

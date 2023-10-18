@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      module</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      module</h1>
+<h2>      &copy;  2005,2009  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for the classes module, ModuleBase, ModuleElem</a>
+        <ul>
+        <li><a href="#toc2">Functions on ModuleElems</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc3">Maintainer documentation for the classes module, and ModuleElem</a>
+        <ul>
+        <li><a href="#toc4">(2.1) Member functions for operations on raw values  [IGNORE THIS -- OUT OF DATE]</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc5">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for the classes module, ModuleBase, ModuleElem</h2>
+
+<p>
+You may also wish to look at the documentation for <a href="FGModule.html"><code>FGModule</code></a>
+the type which represents (explicitly) Finitely Generated Modules.
+</p>
+<p>
+The classes <code>module</code>, <code>ModuleBase</code> and <code>ModuleElem</code> are closely linked
+together (analogously to the triple <code>ring</code>, <code>RingBase</code> and <code>RingElem</code>).
+</p>
+<p>
+The class <code>module</code> is a reference counting smart pointer to an object of
+type derived from <code>ModuleBase</code>; all concrete types for representing modules
+are derived from <code>ModuleBase</code>.  For a library implementor the class
+<code>ModuleBase</code> defines the minimal interface which every concrete module
+class must offer; indeed the concrete class must be derived from
+<code>ModuleBase</code>.
+</p>
+<p>
+A user of CoCoALib who does not wish to add to the library need
+know only what it is in this section.
+</p>
+<p>
+Analogously to <code>ring</code>s and <code>RingElem</code>s, every <code>ModuleElem</code> belongs to some
+<code>module</code>.  So before you can compute with <code>ModuleElem</code>s you must create the
+<code>module</code>(s) which contain them.
+</p>
+<p>
+To create a <code>module</code> you must a pseudo-constructor for one of the concrete
+module classes (refer to their documentation for details): <em>e.g.</em>
+</p>
+
+<pre>
+ NewFreeModule(R, n)   -- create a new FreeModule of n components over R
+</pre>
+
+<p>
+The functions which one may apply directly to a module are:
+</p>
+
+<pre>
+  NumCompts(M) -- the number of components an element of M has
+  RingOf(M)  -- the base ring of M (i.e. M is a module over this ring)
+  gens(M)      -- a read only C++ vector containing the generators of M
+  zero(M)      -- a read only ModuleElem which is the zero of M
+  M1 == M2     -- are the two modules identical (same repr in memory)?
+  M1 != M2     -- opposite of M1 == M2
+</pre>
+
+<p>
+As you can see there is not a lot one can do to a module.  Primarily
+they exist to "give the correct type" to module elements; internally
+they play a crucial role in applying operations to module elements.  A
+C++ value of type <code>ModuleElem</code> represents an element of some concrete
+module.  The module to which the value belongs is called the <code>owner</code> of
+that value.  The owner of an object of type <code>ModuleElem</code> must be specified
+(explicitly or implicitly) when it is created, and cannot be changed
+during the lifetime of the object; the value it contains may, however,
+be changed (C++ const rules permitting).
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc2">
+<h4>Functions on ModuleElems</h4>
+
+<p>
+Let <code>v</code> be a non-const <code>ModuleElem</code>, and <code>v1, v2</code> be <code>const ModuleElems</code> all
+belonging to the same concrete module <code>M</code>.  Let <code>R</code> be the base ring of <code>M</code>,
+and <code>r</code> a const element of <code>R</code>.  Then we summarize the possible operations
+using C++ syntax:
+</p>
+
+<pre>
+owner(v1)   // gives the module to which v1 belongs
+
+-v1                                       // Usual arithmetic operations
+v1 + v2                    v1 - v2        // between ModuleElems and
+r * v1                     v1 * r         // RingElems.
+                           v1 / r
+v = v1
+v += v1                    v -= v1
+v *= r                     v /= r
+v1 == v2                   v1 != v2
+IsZero(v1)                 cout &lt;&lt; v1
+
+v[pos]  // throws if the module is not FGModule 
+</pre>
+
+<p>
+In every case it is an error to combine/compare <code>ModuleElems</code> belonging to
+different modules.  As you would expect, instead of multiplying or dividing
+by a <a href="RingElem.html"><code>RingElem</code></a> you may also multiply or divide by a machine integer, a
+<a href="BigInt.html"><code>BigInt</code></a> or a <a href="BigRat.html"><code>BigRat</code></a>.
+</p>
+
+</section>
+</section>
+</section>
+<section id="toc3">
+<h2>Maintainer documentation for the classes module, and ModuleElem</h2>
+
+<p>
+I shall suppose that the user documentation has already been read and
+digested.  It could also be helpful to have read the documentation for
+<a href="ring.html"><code>ring</code></a> since the design philosophy here imitates that used for rings.
+</p>
+<p>
+The class <code>module</code> is simply a reference counting smart pointer class to a
+concrete module (<em>i.e.</em> an object belonging to a class derived from
+<code>ModuleBase</code>).
+</p>
+<p>
+A <code>ModuleElem</code>, like a <code>RingElem</code>, comprises two components: one specifying
+the algebraic structure to which the value belongs, and the other being
+an opaque representation of the value which can be correctly interpreted
+only by the owning module.  The data members are:
+</p>
+
+<pre>
+  module myM;             // the module to which the ModuleElem belongs
+  ModuleRawValue myValue; // "opaque" representation of the value,
+                          // concrete modules must "import" this value.
+</pre>
+
+<p>
+The design philosophy for modules follows closely that used for rings.  This means
+that every operation on <code>ModuleElem</code>s is actually effected by calling
+the appropriate member function of the owning <code>module</code>.  These member
+functions expect raw values as input.  A normal <code>ModuleElem</code> stores
+within itself both the identity of the <code>module</code> to which it belongs and
+its value as an element of that particular module -- we call the first
+datum the <code>owner</code> and the second datum the <code>RawValue</code>.  A RawValue can
+be correctly interpreted only if supplied as argument to a member
+function of the owning module -- calling module member functions for
+an incompatible concrete module and RawValue will very likely have
+grave consequences (officially stated as <em>undefined behaviour</em>, and
+most probably perceived as a program crash).
+</p>
+<p>
+The member functions of a module <strong>do not check</strong> their arguments for being
+sensible.  This decision is largely just a design policy imitating
+that used for rings, but may also lead to some slight beneficial effect
+on run-time performance.  It does naturally imply that the programmer
+bears a considerable burden of responsibility.
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc4">
+<h4>(2.1) Member functions for operations on raw values  [IGNORE THIS -- OUT OF DATE]</h4>
+
+<p>
+For ring elements (especially those in a small finite field), noticeable
+speed gains arise from using directly raw values and ring member
+functions.  For modules the analogous effect exists in theory but will
+likely be negligible in practice.  Nevertheless we list here the member
+functions of a module; this list will be useful to library authors who
+wish to create their own concrete module classes.
+</p>
+<p>
+Let <code>v</code> be a non-const RawValue, and <code>v1, v2</code> const RawValues belonging to <code>M</code>.
+Let <code>r</code> be a RingBase::RawValue belonging to the base ring of <code>M</code>.
+</p>
+
+<pre>
+M.myNumCompts()
+M.myRing()
+M.myGens()        -- returns a const ref to a C++ vector of module:elems
+M.myZero()        -- returns a const ref to a ModuleElem
+
+M.myNew(v)       -- allocates resources, apply only to uninitialized RawValue
+M.myNew(v, v1)   -- allocates resources, apply only to uninitialized RawValue
+M.myDelete(v)    -- releases resources
+M.mySwap(v, w)
+M.myAssign(v, v1)
+M.myNegate(v, v1)
+M.myAdd(v, v1, v2)
+M.mySub(v, v1, v2)
+M.myMul(v, r, v1)
+M.myDiv(v, r, v1) -- NOTE funny arg order!
+M.myOutput(out, v1)
+M.myOutputSelf(out)
+M.myIsZero(v1)
+M.myIsEqual(v1, v2)
+</pre>
+
+</section>
+</section>
+</section>
+<section id="toc5">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+This code is too new, largely untried/untested.  As soon as it gets
+some use, there will be some material to put here :-)
+</p>
+<p>
+The documentation is very incomplete.  Will be fixed (eventually).
+Maintainer documentation is incompleter than user doc.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

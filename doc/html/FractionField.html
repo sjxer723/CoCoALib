@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      FractionField</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      FractionField</h1>
+<h2>      &copy;  2005,2012 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for FractionField</a>
+      <ul>
+      <li><a href="#toc2">Examples</a>
+      </li>
+      <li><a href="#constructors">Pseudo-constructors</a>
+      </li>
+      <li><a href="#query">Query and cast</a>
+      </li>
+      <li><a href="#operations">Operations on FractionField</a>
+      </li>
+      <li><a href="#homomorphisms">Homomorphisms</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation for FractionField, FractionFieldBase, FractionFieldImpl</a>
+    </li>
+    <li><a href="#toc8">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for FractionField</h2>
+
+<p>
+A <code>FractionField</code> is an abstract class (inheriting from <a href="ring.html"><code>ring</code></a>)
+representing a fraction field of an effective GCD domain.
+</p>
+<p>
+See <a href="RingElem.html#FractionField"><code>RingElem</code> FractionField</a> for operations on its elements.
+</p>
+
+<section id="toc2">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-RingQ1.C">ex-RingQQ1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyRing1.C">ex-PolyRing1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-RingHom5.C">ex-RingHom5.C</a>
+</li>
+</ul>
+
+</section>
+<section id="constructors">
+<h3>Pseudo-constructors</h3>
+
+<ul>
+<li><code>NewFractionField(R)</code> -- creates a new <a href="ring.html"><code>ring</code></a>, more precisely a 
+   <code>FractionField</code>, whose elements are formal fractions of elements of
+   <code>R</code> (where <code>R</code> is a true GCD domain, see <code>IsTrueGCDDomain</code> in <a href="ring.html"><code>ring</code></a>).
+</li>
+<li><code>RingQQ()</code> -- produces the CoCoA <a href="ring.html"><code>ring</code></a> which represents QQ, the
+   field of rational numbers, fraction field of <a href="RingZZ.html"><code>RingZZ</code></a>.
+   Calling <code>RingQQ()</code> several times will always produce the same unique
+   ring in CoCoALib.
+</li>
+<li><code>FractionField(R)</code> -- sort of downcast the ring <code>R</code> to a fraction field;
+will throw an <code>ErrorInfo</code> object with code <code>ERR::NotFracField</code> if needed.
+</li>
+</ul>
+
+</section>
+<section id="query">
+<h3>Query and cast</h3>
+
+<p>
+Let <code>S</code> be a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>IsFractionField(S)</code> -- <code>true</code> iff <code>S</code> is actually a <code>FractionField</code>
+</li>
+<li><code>FractionFieldPtr(S)</code> -- pointer to the fraction field impl (for calling mem fns);
+will throw an <code>ErrorInfo</code> object with code <code>ERR::NotFracField</code> if needed.
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations on FractionField</h3>
+
+<p>
+In addition to the standard <a href="ring.html#operations"><code>ring</code> operations</a>, a <code>FractionField</code>
+may be used in other functions.
+</p>
+<p>
+Let <code>FrF</code> be a <code>FractionField</code>
+built as <code>NewFractionField(R)</code> with <code>R</code> a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>BaseRing(FrF)</code> -- the <a href="ring.html"><code>ring</code></a> it is the <code>FractionField</code> of --
+                       an identical copy of <code>R</code>, not merely an isomorphic
+                       <a href="ring.html"><code>ring</code></a>.
+</li>
+</ul>
+
+</section>
+<section id="homomorphisms">
+<h3>Homomorphisms</h3>
+
+<ul>
+<li><code>EmbeddingHom(FrF)</code> -- <code>BaseRing(FrF)</code> --&gt; <code>FrF</code>
+</li>
+<li><code>InducedHom(FrF, phi)</code> -- phi: <code>BaseRing(K)</code> --&gt; <code>codomain(phi)</code>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation for FractionField, FractionFieldBase, FractionFieldImpl</h2>
+
+<p>
+The class <code>FractionField</code> is wholly analogous to the class <a href="ring.html"><code>ring</code></a>,
+<em>i.e.</em> a reference counting smart pointer.  The only difference is that
+<code>FractionField</code> knows that the <code>myRingPtr</code> data member actually points to
+an instance of a class derived from <code>FractionFieldBase</code> (and so can
+safely apply a <code>static_cast</code> when the pointer value is accessed).
+</p>
+<p>
+<code>FractionFieldBase</code> is an abstract class derived from <code>RingBase</code>.
+It adds a few pure virtual functions to those contained in <code>RingBase</code>:
+</p>
+
+<pre>
+virtual const ring&amp; myBaseRing() const;
+virtual ConstRawPtr myRawNum(ConstRawPtr rawq) const; // NB result belongs to BaseRing!!
+virtual ConstRawPtr myRawDen(ConstRawPtr rawq) const; // NB result belongs to BaseRing!!
+virtual const RingHom&amp; myEmbeddingHom() const;
+virtual RingHom myInducedHomCtor(const RingHom&amp; phi) const;
+</pre>
+
+<p>
+<code>myBaseRing</code> returns a reference to the <a href="ring.html"><code>ring</code></a> (guaranteed to be an effective GCD
+domain) supplied to the constructor.
+</p>
+<p>
+<code>myRawNum</code> (resp. <code>myRawDen</code>) produces a raw pointer to a value belonging to
+<code>BaseRing</code> ( and *NOT* to the <code>FractionField</code>!); these two functions *practically*
+*oblige* the implementation of <code>FractionField</code> to represent a value as a pair of
+raw values "belonging" to the <code>BaseRing</code>.  Note that, while the value belongs to
+<code>BaseRing</code>, the resources are owned by the <code>FractionField</code>!!
+</p>
+<p>
+<code>EmbeddingHom</code> returns the embedding homomorphism from the <code>BaseRing</code> into
+the <code>FractionField</code>; it actually returns a reference to a fixed homomorpism
+held internally.
+</p>
+<p>
+<code>InducedHom</code> creates a new homomorpism from the <code>FractionField</code> to another
+<a href="ring.html"><code>ring</code></a> S given a homomorpism from the <code>BaseRing</code> to S.
+</p>
+<p>
+<code>FractionFieldImpl</code> implements a general fraction field.  Its
+elements are just pairs of <code>RawValue</code>s belonging to the <code>BaseRing</code>
+(see the struct <code>FractionFieldElem</code>).  For this implementation the
+emphasis was clearly on simplicity over speed (at least partly because
+we do not expect <code>FractionFieldImpl</code> to be used much).  For polynomials
+whose coefficients lie in a <code>FractionField</code> we plan to implement a
+specific <a href="ring.html"><code>ring</code></a> which uses a common denominator representation for
+the whole polynomial.  If you want to make this code faster, see some
+of the comments in the bugs section.
+</p>
+<p>
+Important: while fractions are guaranteed to be reduced (<em>i.e.</em> no
+common factor exists between numerator and denominator), it is rather
+hard to ensure that they are <em>canonical</em> since in general we can
+multiply numerator and denominator by any unit.  See a <strong>bug comment</strong>
+about normalizing units.
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+The functions <code>myNew</code> are not <em>exception safe</em>: memory would be leaked if
+space for the numerator were successfully allocated while allocation for
+the denominator failed -- nobody would clean up the resources consumed
+by the numerator.  Probably need a sort of <code>auto_ptr</code> for holding
+temporary bits of a value.
+</p>
+<p>
+Should partial homomorphisms be allowed: <em>e.g.</em> from QQ to ZZ/(3)?
+Mathematically it is a bit dodgy, but in practice all works
+out fine provided you don't divide by zero.  I think it would be too
+useful (<em>e.g.</em> for chinese remaindering methods) to be banned.
+Given phi:ZZ-&gt;ZZ[x]  it might be risky to induce QQ-&gt;ZZ[x];
+note that ker(phi)=0, so this is not a sufficient criterion!
+</p>
+<p>
+Currently you can make a <code>FractionField</code> only from a ring satisfying
+<code>IsTrueGCDDomain</code>; in principle one could create a <code>FractionFieldImpl</code>
+of any integral domain (it just wouldn't be possible to cancel factors
+without a GCD -- so probably not terribly practical).  I'll wait until
+someone really needs it before allowing it.
+</p>
+<p>
+It is not clear how to make the denominator positive when the GCD domain
+is ZZ (so the fraction field is QQ).  In general we would need the GCD domain
+to supply a <em>normalizing unit</em>: such a function could return 1 unless we
+have some special desire to normalize the denominator in a particular way.
+HERE'S A CONUNDRUM: FractionField(Q[x]) -- all rationals are units, and
+so we could end up with horrible representations like (22/7)/(22/7)
+instead of just 1.  MUST FIX THIS!!
+</p>
+<p>
+The printing function is TERRIBLE!
+</p>
+
+<dl>
+<dt>FASTER + and -</dt><dd>
+  Addition and subtraction can be done better:
+  let h be the GCD of the two denominators,
+  suppose we want to compute  a/bh + c/dh
+  (where gcd(a,bh) = gcd(c, dh) = gcd(b,d) = 1
+   <em>i.e.</em> h = gcd(B,D) where B,D are the denoms)
+  If h = 1 then there is no cancellation,
+  o/w gcd(ad+bc, bdh) = gcd(ad+bc, h), so we can use a simpler
+  gcd computation to find the common factor.
+<p></p>
+</dd>
+<dt>FASTER * and /</dt><dd>
+  Multiplication and division can also be made a little faster by simplifying
+  the GCD computation a bit.  The two cases are essentially the same, so I
+  shall consider just multiplication.  Assuming inputs are already reduced
+  (<em>i.e.</em> there is no common factor between numerator and denominator).
+  To compute (a/b)*(c/d), first calculate h1 = gcd(a, d) and h2 = gcd(b, c).
+  The result is then: num = (a/h1)*(c/h2)  &amp;  den = (b/h2)*(d/h1)
+  and this is guaranteed to be in reduced form.
+</dd>
+</dl>
+
+<p>
+<code>myIsRational</code> is incomplete: it will fail to recognise rationals whose
+numerator and denominator have been multiplied by non-trivial units.  BAD BUG!
+Ironically <code>myIsInteger</code> does work correctly.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

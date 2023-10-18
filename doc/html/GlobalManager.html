@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      GlobalManager</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      GlobalManager</h1>
+<h2>      &copy;  2007,2009-2012,2015,2016,2021  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User Documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+        <ul>
+        <li><a href="#toc4">Specifying the memory manager for BigInt values</a>
+        </li>
+        <li><a href="#toc5">Specifying the printing convention for modular integers</a>
+        </li>
+        <li><a href="#toc6">Permitting the use of obsolescent functions</a>
+        </li>
+        <li><a href="#toc7">Combining several global settings</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#cleanup">CLEAN-UP FAILURE (at program end)</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      <li><a href="#RegisteringGlobals">Registering Global Variables</a>
+      </li>
+      <li><a href="#toc11">The Purpose of the GlobalManager</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc12">Maintainer Documentation</a>
+      <ul>
+      <li><a href="#toc13">GMPMemMgr</a>
+      </li>
+      <li><a href="#toc14">GlobalSettings</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc15">Bugs, Shortcomings, etc</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-empty.C">ex-empty.C</a>  -- recommended structure for a program using CoCoALib
+</li>
+<li><a href="../../examples/index.html#ex-GMPAllocator1.C">ex-GMPAllocator1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-GMPAllocator2.C">ex-GMPAllocator2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-obsolescent.C">ex-obsolescent.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User Documentation</h2>
+
+<p>
+A <code>GlobalManager</code> object does some very simple management of global values
+and settings used by CoCoALib.  You <strong>must create exactly one</strong> object of
+type <code>GlobalManager</code> <strong>before</strong> using any other feature of CoCoALib.
+Conversely, the <code>GlobalManager</code> object must be destroyed only <strong>after</strong>
+you have completely finished using CoCoALib values and operations.  An easy
+way to achieve this is to create a local variable of type <code>GlobalManager</code>
+at the start of a top level procedure (<em>e.g.</em> <code>main</code>) -- see the
+CoCoALib example programs listed above.
+</p>
+<p>
+<strong>Shortcut:</strong> most likely you will want to use one of the following at the start
+of your top-level procedure:
+</p>
+
+<pre>
+  GlobalManager CoCoAFoundations;                    // use default settings
+  GlobalManager CoCoAFoundations(UseNonNegResidues); // printing preference
+  GlobalManager CoCoAFoundations(UseGMPAllocator);   // faster but NOT THREADSAFE!
+</pre>
+
+<p>
+<strong>Important Notes</strong>
+</p>
+
+<ul>
+<li>the ctor for <code>GlobalManager</code> is <strong>NOT THREADSAFE</strong>; it is the user's responsibility to avoid trying to create several instances simultaneously.
+</li>
+<li>if you see a message about "CLEAN-UP FAILURE", see the relevant section below (<a href="GlobalManager.html#cleanup"><code>GlobalManager</code> cleanup</a>).
+</li>
+<li>if you really must put CoCoALib values in global variables, consider registering them for timely destruction (see <a href="GlobalManager.html#RegisteringGlobals"><code>GlobalManager</code> RegisteringGlobals</a>).
+</li>
+</ul>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<p>
+The ctor for a <code>GlobalManager</code> has one (optional) argument.  This
+argument is used to specify the global settings, namely
+</p>
+
+<ol>
+<li>the type of memory manager to use for GMP values (namely big integers and rationals), and
+</li>
+<li>the printing convention for elements of rings of the form ZZ/m, <em>viz.</em> least non-negative residues or least magnitude (symmetric) residues.
+</li>
+</ol>
+
+<p>
+The current defaults are to use the system memory mananger and symmetric residues.
+</p>
+
+<section id="toc4">
+<h4>Specifying the memory manager for BigInt values</h4>
+
+<p>
+CoCoALib <a href="BigInt.html"><code>BigInt</code></a> values are implemented using the GMP library which
+needs to have access to a memory manager.  There are three possibilities
+for specifying the memory manager for GMP:
+</p>
+
+<ul>
+<li><code>UseSystemAllocatorForGMP</code> (<strong>default</strong>) to use the system memory manager (<em>i.e.</em> <code>malloc</code>)
+</li>
+<li><code>UseGMPAllocator</code> to use the "faster" CoCoALib custom memory manager
+</li>
+<li><code>UseGMPAllocator(sz)</code> to use the CoCoALib custom memory manager with a slice size of <em>sz</em> bytes
+</li>
+</ul>
+
+<p>
+<strong>IMPORTANT</strong> Be very careful with <code>UseGMPAllocator</code>:
+</p>
+
+<ul>
+<li>if your program is multi-threaded or
+</li>
+<li>if you store GMP values in global variables or
+</li>
+<li>if your program uses another library which depends on GMP
+</li>
+<li>make sure you do any global set-up for the other library(s) before creating <code>CoCoA::GlobalManager</code> (because its ctor does create some GMP values).
+</li>
+</ul>
+
+</section>
+<section id="toc5">
+<h4>Specifying the printing convention for modular integers</h4>
+
+<p>
+CoCoALib lets you choose between two conventions for printing
+elements of rings of the form ZZ/m:
+</p>
+
+<ul>
+<li><code>UseSymmResidues</code> (<strong>default</strong>) symmetric residues (if <code>m</code> is even, the residue <code>m/2</code> is printed as positive)
+</li>
+<li><code>UseNonNegResidues</code> least non-negative residues (<em>i.e.</em> from <code>0</code> to <code>m-1</code>)
+</li>
+</ul>
+
+<p>
+You may ask CoCoALib which convention has been chosen
+using  <code>DefaultResidueRepr()</code> see <a href="GlobalManager.html#operations"><code>GlobalManager</code> operations</a> below.
+</p>
+
+</section>
+<section id="toc6">
+<h4>Permitting the use of obsolescent functions</h4>
+
+<p>
+CoCoALib is actively evolving, and occasionally a function in an older version has
+to be changed (<em>e.g.</em> renamed, change of args).  These functions are placed in
+a special file for obsolescent functions; so you can keep using (temporarily!)
+these functions in your code, you can include the special header file
+<code>CoCoA/obsolescent.H</code> in addition to <code>CoCoA/library.H</code>, and then you must
+tell the <code>GlobalManager</code> to allow the functions to be called.
+</p>
+
+<ul>
+<li><code>AllowObsolescentFns</code> calling an obsolescent function is allowed (and prints a logging message)
+</li>
+<li><code>ForbidObsolescentFns</code> calling an obsolescent function will throw an error (<code>ERR::OBSOLESCENT</code>)
+</li>
+</ul>
+
+<p>
+The default is <code>ForbidObsolescentFns</code>.
+</p>
+
+</section>
+<section id="toc7">
+<h4>Combining several global settings</h4>
+
+<p>
+To specify more than one global setting the individual specifiers should be
+combined using <code>operator+</code>, like this:
+</p>
+
+<pre>
+GlobalManager CoCoAFoundations(UseNonNegResidues + UseGMPAllocator);
+</pre>
+
+<p>
+Combining incompatible or redundant specifiers will produce a run-time
+error: an exception of type <code>CoCoA::ErrorInfo</code> having <a href="error.html"><code>error</code></a> code
+<code>ERR::BadGlobalSettings</code>.
+</p>
+<p>
+Similarly an exception will be thrown if you attempt to create more than one
+live <code>GlobalManager</code> object.  The exception is of type <code>CoCoA::ErrorInfo</code>
+and has <a href="error.html"><code>error</code></a> code <code>ERR::GlobalManager2</code>.
+</p>
+
+</section>
+</section>
+<section id="cleanup">
+<h3>CLEAN-UP FAILURE (at program end)</h3>
+
+<p>
+The destructor for the <code>GlobalManager</code> destroys all registered globals,
+and then checks that all CoCoALib values have been destroyed; if not,
+then an error message is printed on <code>cerr</code> (NB, <strong>no exception is thrown</strong>
+since the code is inside a destructor); for debugging intercept the function
+<code>CoCoA::GlobalManager::DtorError</code> which is the one that prints the message.
+If a clean-up failure occurs then the function <code>CoCoA::GlobalManagerDtorFailed</code>
+will return <code>true</code> (otherwise <code>false</code>).
+</p>
+<p>
+It is possible that the program will crash after printing the error message.
+</p>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+Once the <code>GlobalManager</code> has been created you can use the following functions:
+</p>
+
+<ul>
+<li><code>DefaultResidueRepr()</code> -- returns <code>ResidueRepr::symmetric</code> or <code>ResidueRepr::NonNegative</code>
+</li>
+<li><code>GlobalRandomSource()</code> -- returns a global randomness source;
+  see <a href="random.html"><code>random</code></a> for a description of the permitted operations
+  on random source objects.
+</li>
+</ul>
+
+</section>
+<section id="RegisteringGlobals">
+<h3>Registering Global Variables</h3>
+
+<p>
+We advise using global variables as little as possible (because
+obscure problems can arise if you use CoCoALib together with another
+library which sets some global state).
+</p>
+<p>
+To help terminate cleanly a program using CoCoALib, you should
+register destructors for any global variables you use (which contain
+CoCoALib values).  There are two separate ways to do this:
+</p>
+
+<ol>
+<li><code>RegisterDtorForGlobal(dtor)</code> the dtor for <code>GlobalManager</code> will call <code>dtor</code>
+</li>
+<li><code>RegisterDtorForGlobal(dtor, ptr)</code> the dtor for <code>GlobalManager</code> will call <code>dtor(ptr)</code>
+</li>
+</ol>
+
+<p>
+These dtors are called in <strong>reverse order of registration</strong>.
+We recommend that you <strong>use the first form</strong> (which implies writing an explicit
+dtor fn for each global variable you use) since the second form may be removed
+in the future.
+</p>
+
+</section>
+<section id="toc11">
+<h3>The Purpose of the GlobalManager</h3>
+
+<p>
+The concept of <code>GlobalManager</code> was created to handle in a clean and
+coherent manner (almost) all global values used by CoCoALib; in particular
+it was prompted by the decision to make the ring of integers a global value
+(and also the field of rationals).  The tricky part was ensuring the
+orderly destruction of <a href="RingZZ.html"><code>RingZZ</code></a> and <a href="RingQQ.html"><code>RingQQ</code></a> before <code>main</code> exits.
+Recall that C++ normally destroys globals after <code>main</code> has completed, and
+that the order of destruction of globals cannot easily be governed;
+destroying values in the wrong order can cause to the program to crash just
+before it terminates.  Another advantage of forcing destruction before
+<code>main</code> exits is that it makes debugging very much simpler (<em>e.g.</em> the
+<a href="MemPool.html"><code>MemPool</code></a> object inside <code>RingZZImpl</code> will be destroyed while the input
+and output streams are still functioning, thus allowing the <a href="MemPool.html"><code>MemPool</code></a>
+destructor to report any anomalies).  And of course, it is simply good
+manners to clean up properly at the end of the program.
+</p>
+
+</section>
+</section>
+<section id="toc12">
+<h2>Maintainer Documentation</h2>
+
+<p>
+To implement the restriction that only one <code>GlobalManager</code> may exist
+at any one time, the first instruction in the ctor checks that the
+global variable <code>GlobalManager::ourGlobalDataPtr</code> is null.  If it is
+null, it is immediately set to point the object being constructed.  At
+the moment, this check is not threadsafe.
+</p>
+<p>
+The ctor for <code>GlobalManager</code> is fairly delicate: <em>e.g.</em> the functions
+it calls cannot use the functions <code>RingZZ()</code> and <code>RingQQ()</code> since
+they will not work before the <code>GlobalManager</code> is registered.
+</p>
+<p>
+The two functions <code>MakeUniqueCopyOfRingZZ</code> and <code>MakeUniqueCopyOfRingQQ</code>
+are supposed to be accessible only to the ctor of <code>GlobalManager</code>; they
+create the unique copies of those two rings which will be stored in the
+global data.  The functions are defined in <code>RingZZ.C</code> and <code>RingQQ.C</code>
+respectively but do not appear in the corresponding header files (thus
+making them "invisible" to other users).
+</p>
+<p>
+The dtor for <code>GlobalManager</code> checks that <code>RingZZ</code> and <code>RingQQ</code> are not
+referred to by any other values (<em>e.g.</em> ring elements which have been
+stored in global variables).  A rude message is printed on <code>cerr</code> if
+the reference counts are too high, and a program crash is likely once
+the <code>GlobalManager</code> has been destroyed.
+</p>
+
+<section id="toc13">
+<h3>GMPMemMgr</h3>
+
+<p>
+The <code>GMPMemMgr</code> class performs the necessary steps for setting the
+memory manager for GMP values.  At the moment there are essentially
+two choices: use the system memory manager, or use a <a href="MemPool.html"><code>MemPool</code></a> to handle
+the memory for small values.  The first parameter to the ctor for
+<code>GMPMemMgr</code> says which sort of memory manager to use.  If the system
+allocator is chosen, then the ctor does nothing (since the GMP default
+is the system manager); similarly nothing is done when the <code>GMPMemMgr</code>
+object is destroyed.  The second argument is completely ignored when
+the system allocator is chosen.
+</p>
+<p>
+The situation is more complicated if CoCoALib's custom allocator is to
+be used.  The second argument specifies the <em>slice size</em> (in bytes)
+which is to be used -- the implementation may automatically increase
+this value to the next convenient value (see also the documentation
+for <a href="MemPool.html"><code>MemPool</code></a>).  The slice size defines what a GMP <em>small value</em> is:
+it is a value whose GMP internal representation fits into a single slice.
+The memory for small values is managed by a (global) <code>MemPool</code>, while
+the memory for larger values is managed by the standard <code>malloc</code> family
+of functions.
+</p>
+<p>
+Since the only place a <code>GMPMemMgr</code> object appears is as a data field in a
+<code>GlobalManager</code>, we have an automatic guarantee that there will be at
+most one <code>GMPMemMgr</code> object in existence -- this fact is exploited
+(implicitly) in the ctor and dtor for <code>GMPMemMgr</code> when calling the GMP
+functions for setting the memory management functions.
+</p>
+<p>
+Of the <code>alloc/free/realloc</code> functions which are handed to GMP, only
+<code>CoCoA_GMP_realloc</code> displays any complication.  GMP limbs can be stored
+either in memory supplied by the <code>MemPool</code> belonging to a <code>GMPAllocator</code>
+object or in system allocated memory; a reallocation could cause the limbs
+to be moved from one sort of memory to the other.
+</p>
+
+</section>
+<section id="toc14">
+<h3>GlobalSettings</h3>
+
+<p>
+The <code>GlobalSettings</code> class serves only to allow a convenient syntax for
+specifying the parameters to the <code>GlobalManager</code> ctor.  The only mild
+complication is the <code>operator+</code> for combining the ctor parameters, where
+we must check that nonsensical or ambiguous combinations are not built.
+</p>
+
+</section>
+</section>
+<section id="toc15">
+<h2>Bugs, Shortcomings, etc</h2>
+
+<p>
+<strong>2010 Sept 30</strong>
+</p>
+
+<ul>
+<li>The private copies of <code>RingZZ</code> and <code>RingQQ</code> are now direct
+members, previously they were owned via <code>auto_ptr</code>s.  The new
+implementation feels cleaner, but has to include the definitions of
+<code>ring</code> and <code>FractionField</code> in the header file.
+<p></p>
+</li>
+<li>You cannot print out a <code>GlobalManager</code> object; is this really a bug?
+<p></p>
+</li>
+<li>Should the ctor for <code>GlobalManager</code> set the globals which control
+debugging and verbosity in <a href="MemPool.html"><code>MemPool</code></a>s?
+<p></p>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

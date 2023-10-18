@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      assert</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      assert</h1>
+<h2>      &copy;  2007,2021  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation for files assert.H and assert.C</a>
+      <ul>
+      <li><a href="#toc3">Debugging</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation for files assert.H and assert.C</a>
+    </li>
+    <li><a href="#toc5">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PolyIterator2.C">ex-PolyIterator2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation for files assert.H and assert.C</h2>
+
+<p>
+The file <code>assert.H</code> defines two preprocessor macros (ugh!):
+</p>
+
+<ul>
+<li><code>CoCoA_ASSERT_ALWAYS(cond)</code>  evaluates <code>cond</code> as a boolean; if <code>cond</code> is false, a message is sent to <code>cerr</code>, and an exception is thrown (<code>ERR::AssertFail</code>)
+</li>
+<li><code>CoCoA_ASSERT(cond)</code> if <code>CoCoA_DEBUG</code> is set then this is the same as <code>CoCoA_ASSERT_ALWAYS</code>; otherwise it does nothing.
+</li>
+</ul>
+
+<p>
+We use the macro <code>CoCoA_ASSERT_ALWAYS</code> in the CoCoALib tests.
+Many internal CoCoALib functions use <code>CoCoA_ASSERT</code> for extra arg checking
+when <code>CoCoA_DEBUG</code> is set.
+</p>
+<p>
+The <code>CoCoA_ASSERT</code> macro does absolutely nothing (not even evaluating its
+argument) unless the compilation flag <code>CoCoA_DEBUG</code> is set.  If that flag
+is set then the macro evaluates its argument to a boolean result which
+is then tested: if the result is true nothing further happens; if the
+result is false then the function <code>CoCoA::AssertionFailed</code> is called with
+some arguments indicating which <code>CoCoA_ASSERT</code> macro call obtained the false
+value.  The <code>AssertionFailed</code> function prints out an informative message on
+<code>std::cerr</code> and then throws a <code>CoCoA::ERR::AssertFail</code> exception.
+</p>
+
+<section id="toc3">
+<h3>Debugging</h3>
+
+<p>
+During debugging, a debugger can be used to intercept calls to the
+function <code>CoCoA::AssertionFailed</code> which will stop the program just before
+throwing the <code>CoCoA::ERR::AssertFail</code> exception.  This should enable one
+to find more easily the cause of the problem.
+</p>
+<p>
+For example, in <strong>gdb</strong> type
+</p>
+
+<pre>
+break CoCoA::AssertionFailed
+</pre>
+
+<p>
+and then go <code>up</code> (perhaps repeatedly) to the offending line.
+</p>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation for files assert.H and assert.C</h2>
+
+<p>
+The macro name <code>CoCoA_ASSERT</code> is rather cumbersome, but must contain the
+prefix <code>CoCoA_</code> since macro names cannot be placed in C++ namespaces.
+The two definitions of the macro (debugging and non-debugging cases)
+both look rather clumsy, but are done that way so that the macro expands
+into an expression which is syntactically a simple command.  The
+definition for the <code>ALWAYS</code> macro I took from <code>/usr/include/assert.h</code>.
+</p>
+<p>
+The purpose of the procedure <code>AssertionFailed</code> is explained above in the
+user documentation (to facilitate interception of failed assertions).  The
+procedure never returns; instead it throws a CoCoALib exception with code
+<code>ERR::AssertFail</code>.  Before throwing the exception it prints out a message
+on <code>std::cerr</code> summarising what the assertion was, and where it was.
+Note the non-standard way of throwing the CoCoA exception: this allows the
+<code>ErrorInfo</code> object to refer to the file and line where <code>CoCoA_ASSERT</code> was called
+(rather then to the line in <code>assert.C</code> where <code>CoCoA_THROW_ERROR</code> is called).
+The entire printed message is assembled into an <code>ostringstream</code> before being
+printed to ensure exception safety: either the whole message is printed or
+none of it is, since the printing step is an atomic operation.
+</p>
+
+</section>
+<section id="toc5">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+Is the exception safe implementation of <code>AssertionFailed</code> excessive?
+</p>
+<p>
+You have to use explicitly <code>#ifdef CoCoA_DEBUG</code> if you want to have a
+loop or any other non-trivial piece of code executed only when debugging
+it turned on.
+</p>
+<p>
+The following (simplified but real) code excerpt is mildly problematic:
+</p>
+
+<pre>
+{
+  bool OK = ....;
+  CoCoA_ASSERT(OK);
+}
+</pre>
+
+<p>
+When compiled without debugging (<em>i.e.</em> <code>CoCoA_DEBUG</code> is zero) the compiler
+(gcc-3) complains that the variable <code>OK</code> is unusued.  It does not appear
+to be possible to make the macro "depend on its argument" in the
+non-debugging case without incurring the run-time cost of evaluating the
+argument (if the argument is just a variable the cost is negligible, but
+if it is a more complex expression then the cost could be considerable).
+The solution adopted was to modify the calling code like this:
+</p>
+
+<pre>
+{
+  bool OK;
+  OK = ....;
+  CoCoA_ASSERT(OK);
+}
+</pre>
+
+<p>
+Note that the apparently simpler code below <strong>will not work</strong> if the elided
+code (<em>i.e.</em> the <code>....</code>) has a side effect since the elided code will not
+be called at all in the non-debugging case:
+</p>
+
+<pre>
+{
+  CoCoA_ASSERT(....);
+}
+</pre>
+
+<p>
+<strong>POSSIBLE SOLUTION</strong>: maybe <code>CoCoA_ASSERT</code> could compute <code>sizeof(...)</code> in the
+non-debugging case -- this should avoid evaluation of the argument, and
+will compile away to nothing.  <strong>DISADVANTAGE</strong> this may require extra
+include directives which could (in principle) be activated only if
+<code>CoCoA_DEBUG</code> is set.  Also it did not work well for <code>MatrixFpNonRed</code>
+because there are data-member which exist only if <code>CoCoA_DEBUG</code> is set.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

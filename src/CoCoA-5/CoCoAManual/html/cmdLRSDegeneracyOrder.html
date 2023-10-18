@@ -1,0 +1,78 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>LRSDegeneracyOrder</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#LRSDegeneracyOrder">up</a> <a href="cmdLPP.html">previous</a>  <a href="cmdLT.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>LRSDegeneracyOrder<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+the LRS degeneracy order of a polynomial</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+LRSDegeneracyOrder(f: RINGELEM):   INT
+LRSDegeneracyOrders(f: RINGELEM):   LIST of INT</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+If <tt><b style="background:#bbeeee">f</b></tt> is a univariate polynomial with rational coefficients <tt><b style="background:#bbeeee">LRSDegeneracyOrder</b></tt>
+returns the least LRS-degeneracy order of <tt><b style="background:#bbeeee">f</b></tt>, or 0 to mean that <tt><b style="background:#bbeeee">f</b></tt>
+is not LRS-degenerate.  Recall <tt><b style="background:#bbeeee">f</b></tt> is <tt><b style="background:#bbeeee">k</b></tt>-LRS-degenerate iff it has
+two distinct roots whose ratio is a primitive <tt><b style="background:#bbeeee">k</b></tt>-th root of unity.
+The function <tt><b style="background:#bbeeee">LRSDegeneracyOrders</b></tt> returns a list of all <tt><b style="background:#bbeeee">k</b></tt>;
+this function may take a long time.
+<br><br>
+Note: some polynomials are LRS-degenerate for several orders, for instance
+<tt><b style="background:#bbeeee">cyclotomic(3,x)*cyclotomic(5,x)</b></tt>.
+<br><br>
+In Cipu, Diouf, Mignotte the property was called just "degenerate".
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  use R ::= QQ[x];
+/**/  LRSDegeneracyOrder(x^6+3*x^5+6*x^4+6*x^3+9*x^2+9*x+3);
+18
+
+/**/  LRSDegeneracyOrder(x^2+x+2);
+0
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdIsLRSDegenerate.html">IsLRSDegenerate</A>
+<li><a href="cmdIsLRSDegenerateOrder.html">IsLRSDegenerateOrder</A>
+<li><a href="cmdcyclotomic.html">cyclotomic</A>
+<li><a href="cmdCyclotomicIndexCyclotomicTest.html">CyclotomicIndex, CyclotomicTest</A>
+</ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>IsLRSDegenerateOrder</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#IsLRSDegenerateOrder">up</a> <a href="cmdIsLRSDegenerate.html">previous</a>  <a href="cmdIsMaximal.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>IsLRSDegenerateOrder<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+checks the given polynomial for <tt><b style="background:#bbeeee">n</b></tt>-LRS-degeneracy</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+IsLRSDegenerateOrder(F: RINGELEM, n: INT): BOOL</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+This function takes the given polynomial <tt><b style="background:#bbeeee">F</b></tt> and checks the
+corresponding Linear Recurrence Sequence (LRS) for
+<tt><b style="background:#bbeeee">n</b></tt>-degeneracy.  A LRS is <tt><b style="background:#bbeeee">n</b></tt>-degenerate iff its
+characteristic polynomial <tt><b style="background:#bbeeee">F</b></tt> has two distinct roots whose
+quotient is a primitive <tt><b style="background:#bbeeee">n</b></tt>-th root of unity.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  use R ::= QQ[x];
+/**/  IsLRSDegenerateOrder(x^4 +3*x^3 -9*x +9, 6);
+true
+/**/  IsLRSDegenerateOrder(x^4 +3*x^3 -9*x +9, 3);
+false
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdcyclotomic.html">cyclotomic</A>
+<li><a href="cmdCyclotomicIndexCyclotomicTest.html">CyclotomicIndex, CyclotomicTest</A>
+<li><a href="cmdIsLRSDegenerate.html">IsLRSDegenerate</A>
+<li><a href="cmdLRSDegeneracyOrder.html">LRSDegeneracyOrder</A>
+</ul>
+</div>
+
+</body>
+</html>

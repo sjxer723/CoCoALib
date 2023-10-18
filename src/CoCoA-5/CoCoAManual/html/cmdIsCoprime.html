@@ -1,0 +1,77 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>IsCoprime</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#IsCoprime">up</a> <a href="cmdIsContained.html">previous</a>  <a href="cmdIsDefined.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>IsCoprime<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+checks if two elements are coprime</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+IsCoprime(F: INT, G: INT): BOOL
+IsCoprime(F: RINGELEM, G: RINGELEM): BOOL</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+<tt><b style="background:#bbeeee">IsCoprime</b></tt> applies to two integers says whether they are coprime.
+It can also be applied to two ring elements, which must belong to the
+same ring.  It works in the following situations:
+  -  they are elements of <tt><b style="background:#bbeeee">ZZ</b></tt>
+  -  they are <b>power-products</b> in a polynomial ring
+  -  they are in a polynomial ring whose coeff ring is a field.
+For polynomials over the integers, please compute the <A HREF="cmdgcd.html">
+    <tt>gcd</tt>
+  </A>, and
+check the result (via <A HREF="cmdIsInvertible.html">
+    <tt>IsInvertible</tt>
+  </A> or <A HREF="cmdIsConstant.html">
+    <tt>IsConstant</tt>
+  </A>).
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/ use QQ[x,y,z];
+/**/ IsCoprime(x*y, y*z);
+false
+/**/ IsCoprime(x*y, z);
+true
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdgcd.html">gcd</A>
+<li><a href="cmdIsDivisible.html">IsDivisible</A>
+</ul>
+</div>
+
+</body>
+</html>

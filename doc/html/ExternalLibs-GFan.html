@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      ExternalLibs-GFan</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      ExternalLibs-GFan</h1>
+<h2>      &copy;  2015 Anna Bigatti, Anders Nedergaard Jensen</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation</a>
+      <ul>
+      <li><a href="#toc2">Examples</a>
+      </li>
+      <li><a href="#toc3">Download and compile Gfan</a>
+        <ul>
+        <li><a href="#toc4">Compile cdd</a>
+        </li>
+        <li><a href="#toc5">Now compile gfanlib:</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc6">Compile CoCoALib with libgfan</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc9">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation</h2>
+
+<p>
+<strong>GFan</strong> is a tool for computations in ....
+</p>
+<p>
+Here we should include the manual for the gfanlib flags/functions,
+...
+</p>
+
+<section id="toc2">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-GFan1.C">ex-GFan1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Download and compile Gfan</h3>
+
+<table style="margin-left: auto; margin-right: auto;">
+<tr>
+<td><a href="http://home.math.au.dk/jensen/software/gfan/gfan.html">**gfan** website</a></td>
+</tr>
+<tr>
+<td><a href="http://www.inf.ethz.ch/personal/fukudak/cdd_home/">**cdd** website</a></td>
+</tr>
+</table>
+
+<section id="toc4">
+<h4>Compile cdd</h4>
+
+<p>
+if you are using a local installation of gmp, compile like this
+FATTO
+</p>
+
+<pre>
+./configure CFLAGS="-I/PATH/gmp  -L/PATH/gmp/.libs"
+make
+sudo make install
+</pre>
+
+<p>
+for local installation (not so sure...)
+</p>
+
+<pre>
+./configure prefix="/PATH/cddlib-0.94j" CFLAGS="-I/PATH/gmp  -L/PATH/gmp/.libs"
+make
+make install
+</pre>
+
+<p>
+For compatibility with GFan, header files should be (as they did in a
+previous version of cdd) in <code>include/cdd/</code>:
+</p>
+
+<pre>
+cd /usr/local/include
+mkdir cdd
+sudo mv cdd*.h setoper.h splitmix64.h   cdd
+</pre>
+
+</section>
+<section id="toc5">
+<h4>Now compile gfanlib:</h4>
+
+<pre>
+export CPPFLAGS="-I/usr/local/include/cdd"
+./configure
+</pre>
+
+<p>
+I get
+</p>
+
+<pre>
+configure: WARNING: cdd.h: present but cannot be compiled
+</pre>
+
+<p>
+and also
+</p>
+
+<pre>
+./configure: line 4526: ./config.status: Permission denied
+</pre>
+
+<p>
+but does not seem to matter!  Keep going!
+</p>
+
+<pre>
+make
+</pre>
+
+</section>
+</section>
+<section id="toc6">
+<h3>Compile CoCoALib with libgfan</h3>
+
+<p>
+Then configure and compile <strong>CoCoALib</strong> typing
+</p>
+
+<pre>
+cd CoCoALib-0.99
+./configure --with-libgfan=&lt;PATH&gt;/libgfan.a --with-libcddgmp=&lt;PATH&gt;/libcddgmp.a
+make
+</pre>
+
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation</h2>
+
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+</section>
+<section id="toc9">
+<h2>Main changes</h2>
+
+<p>
+<strong>2015</strong>
+</p>
+
+<ul>
+<li>September: first inclusion
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

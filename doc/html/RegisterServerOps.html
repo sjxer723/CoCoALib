@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      RegisterServerOps</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      RegisterServerOps</h1>
+<h2>      &copy;  2007-2009 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation</a>
+      <ul>
+      <li><a href="#toc2">Quick and easy way to add a single operation</a>
+      </li>
+      <li><a href="#toc3">Proper way to add a library</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Mantainer documentation</a>
+    </li>
+    <li><a href="#toc5">Main changes</a>
+      <ul>
+      <li><a href="#toc6">2009</a>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation</h2>
+
+<section id="toc2">
+<h3>Quick and easy way to add a single operation</h3>
+
+<p>
+When you want to have some operation accessible from CoCoA-4 you need
+to make these steps:
+</p>
+
+<ul>
+<li>integrate your operation into CoCoALib
+ <ul>
+ <li>make <code>TmpMyFile.[HC]</code>
+ </li>
+ <li>add  <code>TmpMyFile.C</code> to <code>src/AlgebraicCore/Makefile</code>
+ </li>
+ <li>add  <code>TmpMyFile.H</code> to <code>include/library.H</code>
+ </li>
+ </ul>
+</li>
+<li>make a <code>ServerOpBase</code> for it in <code>RegisterServerOpsUser.C</code>
+  (see <a href="ServerOp.html"><code>ServerOp</code></a>)
+</li>
+<li>register it in <code>RegisterServerOps.C</code> (see below)
+</li>
+</ul>
+
+<p>
+Register your ServerOpBase in <code>bool RegisterOps()</code> at the end of the file:
+</p>
+
+<pre>
+ void RegisterOp(const std::string&amp; s, ServerOp o);
+</pre>
+
+<p>
+where <code>s</code> is the "OpenMath name" of the operation for the
+communication with CoCoA-4 (used in cocoa5.cpkg).
+</p>
+<p>
+Properly, you need to choose 3 names for your operation:
+</p>
+
+<ul>
+<li>the <strong>CoCoALib name</strong> 
+    for the <code>ServerOp</code> (following the CoCoALib coding conventions)
+</li>
+<li>the <strong>"OpenMath" name</strong>
+    used only for computer communication
+</li>
+<li>the <strong>CoCoA-4 name</strong>
+    for the CoCoA-4 user (following the CoCoA-4 conventions and ending
+    with a "5" to mean <strong>CoCoA-5</strong>)
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Proper way to add a library</h3>
+
+<p>
+You should make a dedicated file <code>RegisterServerOpsMyOperations.C</code>
+(see, for example, <code>src/AlgebraicCore/RegisterServerOpsFrobby.C</code>)
+</p>
+<p>
+Then you should choose a meaningful name for the namespace of your
+operations (for example <code>CoCoAServerOperationsFromFrobby</code>) and
+define your own <code>RegisterOps</code> and copy the function <code>RegisterOpsOnce</code>:
+</p>
+
+<pre>
+  namespace NamespaceForMyOperations
+  {
+    bool RegisterOps()
+    {
+      RegisterOp("OpenMathName1", ServerOp(new CoCoALibName1()));
+      RegisterOp("OpenMathName2", ServerOp(new CoCoALibName2()));
+      ...
+      return true;
+    }
+
+
+    bool RegisterOpsOnce()
+    {
+      static bool EvalOnce = RegisterOps();
+      return EvalOnce;
+    }
+  }
+</pre>
+
+<p>
+Then add in <code>src/server/RegisterServerOps.H</code> the registration of your
+operations simply copying these lines:
+</p>
+
+<pre>
+  namespace NamespaceForMyOperations
+  {
+    bool RegisterOpsOnce();
+    bool GlobalDummyVar = RegisterOpsOnce();
+  }
+</pre>
+
+<p>
+or make a dedicated file <code>MyRegisterServerOps.H</code>
+(see, for example, <code>src/server/RegisterServerOpsFrobby.H</code>)
+and include it in <code>src/server/CoCoAServer.C</code>
+</p>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Mantainer documentation</h2>
+
+<p>
+How does this work?  When <code>CoCoAServer.C</code> is compiled the global
+variables are initialized.
+</p>
+<p>
+Therefore <code>NamespaceForMyOperations::GlobalDummyVar</code> which is
+declared in the included file <code>RegisterServerOps.H</code> is initialized
+by calling <code>NamespaceForMyOperations::RegisterOpsOnce()</code> with the
+<em>side effect</em> of registering your operations.
+</p>
+
+</section>
+<section id="toc5">
+<h2>Main changes</h2>
+
+<section id="toc6">
+<h3>2009</h3>
+
+<p>
+Cleaned up the documentation after integration of the Frobby library.
+</p>
+</section>
+</section>
+</section>
+</div>
+
+</article></body></html>

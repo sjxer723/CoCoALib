@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      BigRat</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      BigRat</h1>
+<h2>      &copy;  2009,2011,2014,2018,2021  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#toc3">Generalities</a>
+      </li>
+      <li><a href="#toc4">The Functions Available For Use</a>
+        <ul>
+        <li><a href="#toc5">Constructors</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintainer Documentation</a>
+    </li>
+    <li><a href="#toc7">Bugs, Shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc8">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-BigRat1.C">ex-BigRat1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+<strong>IMPORTANT NOTE:</strong>
+</p>
+
+<ul>
+<li><strong>see <a href="BigRatOps.html"><code>BigRatOps</code></a> for basic operations on values of type <code>BigRat</code></strong>
+</li>
+<li><strong>see <a href="NumTheory.html"><code>NumTheory</code></a> for more advanced operations</strong>
+</li>
+</ul>
+
+<section id="toc3">
+<h3>Generalities</h3>
+
+<p>
+The class <code>BigRat</code> is intended to represent (exact) rational numbers
+of practically unlimited range; it is currently based on the
+implementation in the GMP <em>multiple precision</em> library.  This code forms
+the interface between CoCoALib and the big integer/rational library
+upon which it relies.  It seems most unlikely that GMP will be
+displaced from its position as the foremost library of this type; as a
+consequence the class <code>BigRat</code> may eventually be replaced by GMP's
+own C++ interface.
+</p>
+<p>
+It is important not to confuse values of type <code>BigRat</code> with values of type
+<a href="RingElem.html"><code>RingElem</code></a> which happen to belong to the ring <a href="RingQQ.html"><code>RingQQ</code></a>.  The distinction
+is analogous to that between values of type <a href="BigInt.html"><code>BigInt</code></a> and value of type
+<a href="RingElem.html"><code>RingElem</code></a> which happen to belong to the ring <a href="RingZZ.html"><code>RingZZ</code></a>.  In summary, the
+operations available for <a href="RingElem.html"><code>RingElem</code></a> are those applicable to elements of
+any ordered commutative ring, whereas the range of operations on <code>BigRat</code>
+values is wider (since we have explicit knowledge of the type).
+</p>
+
+</section>
+<section id="toc4">
+<h3>The Functions Available For Use</h3>
+
+<section id="toc5">
+<h4>Constructors</h4>
+
+<p>
+ A value of type <code>BigRat</code> may be created from:
+</p>
+
+<ul>
+<li><code>BigRat()</code>  default ctor, the value is zero
+</li>
+<li><code>BigRat(n)</code> where <code>n</code> is an integer: <strong>warning: do not write</strong> <code>BigRat(2/3)</code>, it compiles but works unexpectedly!
+</li>
+<li><code>BigRat(q)</code>  where <code>q</code> is another value of type <code>BigRat</code>  (its value is copied)
+</li>
+<li><code>BigRat(n,d)</code>  where <code>n</code> and <code>d</code> are both integers (machine integers or
+  <a href="BigInt.html"><code>BigInt</code></a>s) specifying numerator and denominator in that order
+</li>
+<li><code>BigRat(BigRat::OneOverZero)</code>  create the "infinity" rational <code>1/0</code>  (will trigger
+    an error if you try to perform arithmetic with it, but you can access <code>num</code> and <code>den</code>)
+</li>
+<li><code>BigRatFromString(str)</code> where <code>str</code> is a string of the form <code>N</code> or <code>N/D</code>
+   where <code>N</code> is the decimal representation of the numerator and
+   <code>D</code> that of the denominator (leading and trailing whitespace is permitted)
+</li>
+<li><code>BigRatFromMPQ(mpq_value)</code> copy a GMP rational (of type <code>mpq_t</code>) into
+  a <code>BigRat</code>; helps interfacing between CoCoALib and code using GMP directly.
+</li>
+</ul>
+
+<p>
+The ctors <code>BigRat(n,d)</code> and <code>BigRatFromString(str)</code> accept an optional final
+arg <code>BigRat::AlreadyReduced</code> which asserts that the value is already reduced
+(<em>i.e.</em> positive denominator, and numerator and denominator are coprime).
+Use this feature only if you are <strong>absolutely certain</strong> that there is no
+common factor between the given numerator and denominator.
+</p>
+<p>
+See <strong>Bugs</strong> section for why there is no ctor from a single integer.
+</p>
+
+<ol>
+<li>Functions violating encapsulation
+  <ul>
+  <li><code>mpqref(n)</code>-- this gives a (const) reference to the <code>mpq_t</code> value inside
+               a <code>BigRat</code> object.  You should use this accessor very sparingly!
+  </li>
+  </ul>
+</li>
+</ol>
+
+</section>
+</section>
+</section>
+<section id="toc6">
+<h2>Maintainer Documentation</h2>
+
+<p>
+Nothing very clever.  Conversion from a string was a bit tedious.
+</p>
+<p>
+I have replaced the bodies of the <code>BigRat</code> ctors which take two integers
+as arguments by a call to the common body <code>BigRat::myAssign</code>.  This does
+mean that some wasteful temporaries are created when either of the
+arguments is a machine integer.  Time will tell whether this waste is
+intolerable.
+</p>
+<p>
+The reason for having "strange" ctors from<code>std::string</code> and <code>mpq_t</code>
+was to avoid problems with <code>BigRat(0)</code>.  Note that expressions such
+as <code>BigInt(2/3)</code> are equivalent to <code>BigInt(0)</code> but should be forbidden
+at compile time; however, at the moment <code>mpq_t</code> is a pointer type, so
+<code>BigRat(2/3)</code> is seen as <code>BigRat(0)</code>, and <code>0</code> can be interpreted as
+a null-pointer... so <code>BigRat(mpq_t)</code> would be an almost perfect match!
+</p>
+
+</section>
+<section id="toc7">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+This code is probably not <em>exception safe</em>; I do not know what the <code>mpq_*</code>
+functions do when there is insufficient memory to proceed.  Making the
+code <em>exception safe</em> could well be non-trivial: I suspect a sort of
+<code>auto_ptr</code> to an <code>mpq_t</code> value might be needed.
+</p>
+<p>
+Removed <code>BigRat</code> ctors from a single (machine) integer because too often
+I made the mistake of writing something like <code>BigRat(1/2)</code> instead of
+<code>BigRat(1,2)</code>.
+</p>
+<p>
+Should the <code>BigRatFromString</code> pseudo-ctor also accept numbers with decimal points?
+<em>e.g.</em> <code>BigRat("3.14159")</code>?  We'll wait and see whether there is demand for this
+before implementing; note that GMP does <strong>not</strong> offer this capability.
+</p>
+
+</section>
+<section id="toc8">
+<h2>Main changes</h2>
+
+<p>
+<strong>2018</strong>
+</p>
+
+<ul>
+<li>June  (v0.99570): split off <a href="BigRatOps.html"><code>BigRatOps</code></a>
+</li>
+<li>April (v0.99570):
+   Removed ctors from <code>string</code> and <code>mpq_t</code>; replaced them by pseudo-ctors.
+   This means that <code>BigRat(0)</code> and <code>BigRat(1/2)</code> etc. now give compile-time errors.
+</li>
+</ul>
+
+<p>
+<strong>2011</strong>
+</p>
+
+<ul>
+<li>August (v0.9950):
+   class <code>QQ</code> renamed into <code>BigRat</code>:
+   to avoid confusion with <a href="RingQQ.html"><code>RingQQ</code></a> and its name in CoCoA system
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      VectorOps</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      VectorOps</h1>
+<h2>      &copy;  2005,2009,2014,2021  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User Documentation</a>
+      <ul>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc5">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    <li><a href="#toc6">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-VectorOps1.C">ex-VectorOps1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User Documentation</h2>
+
+<p>
+The file offers a few handy functions on standard C++ containers
+(principally <code>vector</code> and <code>list</code>).
+</p>
+
+<section id="operations">
+<h3>Operations</h3>
+
+<ul>
+<li><code>out &lt;&lt; L</code>  output elements of <code>L</code> (as comma separated list in square brackets)
+</li>
+<li><code>concat_copy(v1, v2)</code>  append entries of <code>v2</code> onto end of <code>v1</code>
+</li>
+<li><code>concat_move(v1, v2)</code>  append entries of <code>v2</code> onto end of <code>v1</code>; empties <code>v2</code>!!
+</li>
+<li><code>product(L)</code>  returns the product of the entries of <code>L</code>; gives error
+if <code>L</code> is empty.
+</li>
+<li><code>sum(L)</code>  returns the sum of the entries of <code>L</code>; gives error
+if <code>L</code> is empty.
+</li>
+<li><code>HasUniqueOwner(L)</code> returns true if the entries of <code>L</code> all have the
+same owner; gives error if <code>L</code> is empty.
+</li>
+<li><code>LexCmp3(begin1,end1, begin2,end2)</code> do a 3-way lex comparison; returns
+&lt;0,=0,&gt;0 according as first seq is &lt;,=,&gt; second seq.  Uses <code>cmp</code> between
+elements, and assumes <code>cmp</code> returns &lt;0,=0,&gt;0.
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation</h2>
+
+<p>
+The output functions are specifically only for <code>vector</code> and <code>list</code>;
+I cannot make it more general without ambiguities arising.
+</p>
+<p>
+The implementations of the printing functions could hardly be simpler.
+The only "clever" part is the fn <code>OutputRange</code> which actually does the work.
+</p>
+<p>
+Implemented as template code in the header file.
+The implementation is slightly indirect to allow use of <code>std::for_each</code>
+(also so that would work with lists/vectors/etc)
+</p>
+
+</section>
+<section id="toc5">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+OutputRange is publicly visible, but is not intended for public use.
+</p>
+<p>
+Impl of <code>sum</code> and <code>product</code> is a bit too complicated.
+Need a template expert to clean it.
+</p>
+<p>
+Perhaps add also a <code>LexCmp3</code> that takes complete containers?
+Currently it is "STL compatible" (which I think is usually awkward).
+It would make the calls in <code>symbol.C</code> neater!
+</p>
+<p>
+Activate the commented out template fn <code>cmp</code>?
+The type <code>int</code> seemed the most natural choice for the return value of this
+three-way comparison functions (though <code>signed char</code> would be big enough).
+The implementation assumes that <code>operator&lt;</code> is defined; this decision was
+inspired by assumptions made by various STL functions.  The types of the
+arguments may be different as this is probably be more convenient for the
+user.  Obviously the generic definition given here can be overridden by
+more efficient specific definitions for certain argument types.
+</p>
+
+</section>
+<section id="toc6">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>July (v0.99534): merged io.H and UtilsTemplate.H into this file
+</li>
+<li>May (v0.99533): removed InputFailCheck (it was rather pointless)
+                  moved GlobalOutput etc to file server/GlobalIO.H
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

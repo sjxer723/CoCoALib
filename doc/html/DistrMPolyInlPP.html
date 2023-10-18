@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      DistrMPolyInlPP</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      DistrMPolyInlPP</h1>
+<h2>      &copy;  2005  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+      <ul>
+      <li><a href="#toc1">User documentation for the class DistrMPolyInlPP</a>
+      </li>
+      <li><a href="#toc2">Maintainer documentation for the class DistrMPolyInlPP</a>
+      </li>
+      <li><a href="#toc3">Bugs and Shortcomings</a>
+      </li>
+      </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section~A~>
+<h2></h2>
+<section id="toc1">
+<h3>User documentation for the class DistrMPolyInlPP</h3>
+
+<p>
+If you are not a CoCoA library developer then most likely you should not
+be considering using this class -- use a polynomial ring instead.  That
+way you will gain ease of use and safety with only a small performance
+penalty.
+</p>
+<p>
+This class should be seen and used only by CoCoA library implementors;
+normal users should use the polynomial rings (which internally may well
+use DMPIs to represent their elements).
+</p>
+<p>
+The class DistrMPolyInlPP implements multivariate polynomials
+represented as ordered linked lists of summands, each summand is made up
+of a coefficient (RingBase::RawValue) and a power product represented as
+an order vector.
+</p>
+<p>
+The implementation is oriented towards speed rather than safety or ease
+of use.  To this end argument sanity checks (and other types too) should
+normally use CoCoA_ASSERT rather than CoCoAError.
+</p>
+
+</section>
+<section id="toc2">
+<h3>Maintainer documentation for the class DistrMPolyInlPP</h3>
+
+<p>
+NO DOCUMENTATION YET WRITTEN.
+</p>
+<p>
+This code is very ugly, and I am far from happy with it.  I hope it will
+eventually become much cleaner while maintaining the speed.
+</p>
+
+</section>
+<section id="toc3">
+<h3>Bugs and Shortcomings</h3>
+
+<p>
+The biggest bug is the definition of the struct summand which is NOT
+PORTABLE since C++ compilers do not guarantee to respect the order of
+fields in a structure.  I do not yet know how best to avoid this without
+incurring a run-time penalty.
+</p>
+<p>
+This code is apparently stable but surprisingly ugly and awkward to use.
+I continue to hope that the same speed can be achieved with cleaner
+code.  As an example of how bad the code is just take a look at the
+function deriv (which computes derivatives) -- it is far too long and
+incomprehensible.  There must be better way!
+</p>
+<p>
+The classes DistrMPolyInlPP, PPMonoid and PPOrdering are more closely
+tied together than I would really like.
+</p>
+<p>
+Iterators are giving me headaches -- we need them, but they seem to
+expose implementation details.
+</p>
+</section>
+</section>
+</section>
+</div>
+
+</article></body></html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      geobucket</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      geobucket</h1>
+<h2>      &copy;  2006-2012 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors</a>
+      </li>
+      <li><a href="#queries">Queries</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+        <ul>
+        <li><a href="#toc6">Member functions</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation</a>
+      <ul>
+      <li><a href="#bucket">bucket</a>
+        <ul>
+        <li><a href="#toc9">Functions on buckets</a>
+        </li>
+        <li><a href="#toc10">Member fields</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc11">changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-geobucket1.C">ex-geobucket1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+Based on <strong>The Geobucket Data Structure for Polynomials</strong> by Thomas Yan (1996).
+</p>
+<p>
+A geobucket is a polynomial represented in a C++ vector of buckets:
+a <code>bucket</code> contains a polynomial and some other info
+(see below <a href="geobucket.html#bucket"><code>geobucket</code> bucket</a>)
+</p>
+<p>
+This construction is particularly useful for
+<strong>adding many short polynomials to a long one</strong>
+(in particular the reduction process) because it lowers the number of calls
+of <code>cmp</code> between <code>PPMonoidElem</code>s.
+</p>
+
+<section id="constructors">
+<h3>Constructors</h3>
+
+<ul>
+<li><code>geobucket(const SparsePolyRing&amp;)</code>;
+</li>
+</ul>
+
+</section>
+<section id="queries">
+<h3>Queries</h3>
+
+<ul>
+<li><code>IsZero(g)</code> -- true iff <code>g</code> is the zero polynomial (potentially costly because it compares the buckets)
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+Let <code>gbk</code> be a <code>geobucket</code>, <code>f</code> a <code>RingElem&amp;</code> (see <a href="RingElem.html"><code>RingElem</code></a>)
+</p>
+
+<ul>
+<li><code>CoeffRing(gbk)</code> -- the <a href="ring.html"><code>ring</code></a> of coefficients of the ring of <code>gbk</code>
+</li>
+<li><code>PPM(gbk)</code> -- the <a href="PPMonoid.html"><code>PPMonoid</code></a> of the ring of <code>gbk</code>
+</li>
+<li><code>LC(gbk)</code>  -- the leading coeff of <code>gbk</code>; it is an element of <code>CoeffRing(gbk)</code> (potentially costly because it compares the buckets)
+</li>
+<li><code>content(gbk)</code> -- the gcd of all coefficients in <code>gbk</code>; it is an element of <code>CoeffRing(gbk)</code> (it is the gcd of all bucket contents)
+</li>
+<li><code>RemoveBigContent(gbk)</code> -- if <code>gbk</code> has a big content, <code>gbk</code> is divided by it
+</li>
+<li><code>AddClear(f, gbk)</code> -- assign the polynomial value of <code>gbk</code> to <code>f</code>,
+                        and set 0 to <code>gbk</code>
+</li>
+<li><code>MoveLMToFront(f, gbk)</code>; -- moves the LM of <code>gbk</code> to <code>f</code> (using PushFront)
+</li>
+<li><code>MoveLMToBack(f, gbk)</code>; -- moves the LM of <code>gbk</code> to <code>f</code> (using PushBack)
+</li>
+<li><code>ReductionStep(gbk, f, RedLen)</code>; -- reduces <code>gbk</code> with <code>f</code>
+</li>
+<li><code>ReductionStepGCD(gbk, f, FScale, RedLen)</code>; -- same as above, but multiplies by a scalar if needed
+</li>
+<li><code>operator&lt;&lt;(std::ostream&amp;, gbk)</code> -- prints the buckets (mainly for debugging)
+</li>
+<li><code>PrintLengths(std::ostream&amp;, gbk)</code> -- just for debugging
+</li>
+</ul>
+
+<section id="toc6">
+<h4>Member functions</h4>
+
+<ul>
+<li><code>myAddClear(f, len)</code> -- mainly used for assigning to a geobucket
+</li>
+<li><code>myDeleteLM(void)</code>
+<p></p>
+</li>
+<li><code>myPushBackZeroBucket(MaxLen)</code>
+</li>
+<li><code>myBucketIndex(len)</code> -- the index for the <code>bucket</code> with length <code>len</code>
+</li>
+<li><code>myAddMul(monom, g, gLen, SkipLMFlag)</code> -- <code>*this += monom*g</code>
+</li>
+<li><code>myDivByCoeff(coeff)</code> -- content MUST be divisible by coeff
+</li>
+<li><code>myMulByCoeff(coeff)</code>
+</li>
+<li><code>myCascadeFrom(i)</code> -- start cascade from <code>i</code>th bucket
+</li>
+<li><code>mySize(void)</code> -- the number of buckets
+</li>
+<li><code>mySetLM()</code> -- Sets the LM of <code>*this</code> in the 0-th <code>bucket</code>
+                   and set <code>IhaveLM</code> to true;
+                   <code>*this</code> will be normalized
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation</h2>
+
+<p>
+After calling <code>gbk.mySetLM()</code> the leading monomial of <code>gbk</code> is in
+<code>gbk.myBuckets[0]</code>
+(and then  <code>gbk</code> is zero iff <code>gbk.myBuckets[0]=0</code>)
+</p>
+<p>
+<code>gbk.myBuckets[i]</code> contains at most <code>gbk_minlen * gbk_factor^i</code> summands
+</p>
+
+<ul>
+<li><code>myPolyRing</code> -- the SparsePolyRing gbk lives in
+</li>
+<li><code>IhaveLM</code> --    true if certified  that LM(gbk) = LM(gbk[0])
+</li>
+<li><code>myBuckets</code> --  the bucket vector
+</li>
+</ul>
+
+<section id="bucket">
+<h3>bucket</h3>
+
+<p>
+This class is to be used only by <code>geobucket</code>s.
+</p>
+<p>
+A <code>bucket</code> represents a polynomial as a product of a polynomial and
+a coefficient, two <code>RingElem</code> respectivey in a <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a>
+<code>P</code> and <code>CoeffRing(P)</code>.
+</p>
+<p>
+The coeffient factor is used for fast multiplication of a geobucket
+by a coefficient and it comes useful in the reduction process over
+a field of fraction of a GCD ring.
+</p>
+<p>
+We normalize the <code>bucket</code> (i.e. multiply the polynomial by the
+coefficient) only when it is necessary: e.g. to compute a reference to
+the LC of the bucket.
+</p>
+<p>
+All methods are private (to be used only by <code>geobucket</code>s, friend)
+</p>
+<p>
+Methods on buckets (weak exception guarantee)
+</p>
+
+<ul>
+<li><code>myNormalize(void)</code> --  myPoly *=myCoeff; myCoeff  1
+</li>
+<li><code>myAddClear(RingElem&amp; f, int FLen)</code> --  *this += f; f = 0; *this normalized
+</li>
+<li><code>myAddClear(bucket&amp; b)</code> --          *this += b; b = 0; *this normalized
+</li>
+<li><code>myMul(ConstRefRingElem coeff)</code> --  *this *= coeff
+</li>
+<li><code>myDiv(ConstRefRingElem coeff)</code> --  *this /= coeff; assumes *this divisible by coeff
+</li>
+</ul>
+
+<section id="toc9">
+<h4>Functions on buckets</h4>
+
+<ul>
+<li><code>IsZero(const bucket&amp;)</code> --
+</li>
+<li><code>content(const bucket&amp; b)</code> --
+</li>
+<li><code>poly(bucket&amp; b)</code> -- normalize b and return a reference to the polynomial
+</li>
+</ul>
+
+<p>
+Dirty method and function for efficiency (b1 and b2 will be normalized))
+</p>
+
+<ul>
+<li><code>myIsZeroAddLCs(const SparsePolyRing&amp;, bucket&amp; b1, bucket&amp; b2)</code> --
+  <code>b1 += LM(b2);  b2 -= LM(b2);</code>  return <code>LC(b1)+LC(b2)==0</code>;
+   it assumes <code>LPP(b1) == LPP(b2)</code>
+<p></p>
+</li>
+<li><code>MoveLM(const SparsePolyRing&amp;, bucket&amp; b1, bucket&amp; b2)</code> --
+  <code>b1 += LM(b2); b2 -= LM(b2);</code>  it assumes <code>LPP(b1)&lt;LPP(b2)</code>
+</li>
+</ul>
+
+</section>
+<section id="toc10">
+<h4>Member fields</h4>
+
+<ul>
+<li><code>myPoly</code> -- the polynomial (a <a href="RingElem.html"><code>RingElem</code></a> in <code>P</code>)
+</li>
+<li><code>myCoeff</code> -- the coefficient factor (a <a href="RingElem.html"><code>RingElem</code></a> in <code>CoeffRing(P)</code>)
+</li>
+<li><code>myMaxLen</code> -- the maximal length allowed for the polynomial of this bucket
+</li>
+<li><code>myApproxLen</code> -- an upper bound for the current length of the polynomial of this bucket
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+<section id="toc11">
+<h2>changes</h2>
+
+<p>
+<strong>2013</strong>
+</p>
+
+<ul>
+<li>Added example
+</li>
+</ul>
+
+<p>
+<strong>2004</strong>
+</p>
+
+<ul>
+<li>October: introduction of <code>myDivMaskImplPtr</code> for computing <code>LPPwMask</code>:
+  LPP with DivMask if this pointer is 0 LPPwMask returns an error
+  (through <code>CoCoA_ASSERT</code>?)
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

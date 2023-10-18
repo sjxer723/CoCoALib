@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      convert</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      convert</h1>
+<h2>      &copy;  2007,2009,2013  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">Examples</a>
+    </li>
+    <li><a href="#toc2">User Documentation</a>
+        <ul>
+        <li><a href="#toc3">NumericCast</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc4">Maintenance notes for convert</a>
+    </li>
+    <li><a href="#toc5">Bugs, Shortcomings, etc</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-convert1.C">ex-convert1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User Documentation</h2>
+
+<p>
+The header file <code>convert.H</code> supplies several conversion functions.
+They are for converting a <em>numerical</em> value of one type into another
+<em>numerical</em> type (at least one of the types must be a CoCoALib
+type).  There is also a way of safely converting machine integer
+values into other integral types.
+</p>
+<p>
+There are two families of conversion functions:
+</p>
+
+<ol>
+<li><code>ConvertTo&lt;DestType&gt;(src)</code> the result is the converted value; if <code>src</code> cannot
+be converted then an error is thrown (with code <code>ERR::BadConvert</code>)
+</li>
+<li><code>ConvertTo&lt;DestType&gt;(src, ErrMesg)</code> the result is the converted
+value; if <code>src</code> cannot be converted then an error is thrown
+(with code <code>ErrMesg</code> typically created by calling ``ErrorInfo(ERR::code, "fn name"))
+</li>
+<li><code>IsConvertible(dest,src)</code> the result is a boolean: <code>true</code> means the conversion
+was successful (and the result was placed in <code>dest</code>, the 1st arg)
+</li>
+</ol>
+
+<p>
+Here is a summary of the conversions currently offered:
+</p>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<th>"to" type</th>
+<th>"from" type</th>
+<th>notes</th>
+</tr>
+<tr>
+<td class="right">(unsigned) long</td>
+<td class="center"><a href="BigInt.html"><code>BigInt</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td class="center">(unsigned) int</td>
+<td class="center"><a href="BigInt.html"><code>BigInt</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td class="right">(unsigned) long</td>
+<td class="center"><a href="BigRat.html"><code>BigRat</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td class="center">(unsigned) int</td>
+<td class="center"><a href="BigRat.html"><code>BigRat</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td class="center">long</td>
+<td class="center"><a href="RingElem.html"><code>RingElem</code></a></td>
+<td>equiv to <code>IsInteger</code> &amp; range check</td>
+</tr>
+<tr>
+<td class="center"><a href="BigInt.html"><code>BigInt</code></a></td>
+<td class="center"><a href="RingElem.html"><code>RingElem</code></a></td>
+<td>same as <code>IsInteger</code></td>
+</tr>
+<tr>
+<td class="center"><a href="BigRat.html"><code>BigRat</code></a></td>
+<td class="center"><a href="RingElem.html"><code>RingElem</code></a></td>
+<td>same as <code>IsRational</code></td>
+</tr>
+<tr>
+<td class="center">long</td>
+<td class="center">double</td>
+<td>value must be integral &amp; in range</td>
+</tr>
+<tr>
+<td class="center"><a href="BigInt.html"><code>BigInt</code></a></td>
+<td class="center">double</td>
+<td></td>
+</tr>
+<tr>
+<td class="center"><a href="BigRat.html"><code>BigRat</code></a></td>
+<td class="center">double</td>
+<td></td>
+</tr>
+<tr>
+<td class="center">double</td>
+<td class="center"><a href="BigInt.html"><code>BigInt</code></a></td>
+<td>may have rounding error!!</td>
+</tr>
+<tr>
+<td class="center">double</td>
+<td class="center"><a href="BigRat.html"><code>BigRat</code></a></td>
+<td>may have rounding error!!</td>
+</tr>
+</table>
+
+<p>
+<strong>NOTE 1: Conversion to a <code>string</code></strong> can be achieved via <code>ostringstream</code>:
+</p>
+
+<pre>
+  ostringstream buffer;
+  buffer &lt;&lt; value;
+  const string&amp; ConvertedValue = buffer.str();
+</pre>
+
+<p>
+<strong>NOTE 2: Conversion fails</strong> if overflow occurs.  Currently converting a non-zero <code>BigRat</code> to
+a <code>double</code> does not fail if the closest double is 0.
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc3">
+<h4>NumericCast</h4>
+
+<p>
+There is a templated class called <code>NumericCast</code>; it is roughly analogous
+to <code>BOOST::numeric_cast</code>, and will eventually be replaced by direct use
+of this BOOST feature.  It is to be used for converting safely from one
+machine integer type to another: the conversion succeeds only if the value
+supplied can be represented by the destination type.  In case of failure an
+<code>ERR::BadConvert</code> exception is thrown.
+</p>
+
+</section>
+</section>
+</section>
+<section id="toc4">
+<h2>Maintenance notes for convert</h2>
+
+<p>
+The <code>ConvertTo</code> fns simply call the corresponding <code>IsConvertible</code>
+function -- indeed a template implementation is appropriate here.
+</p>
+<p>
+Only some combinations of <code>IsConvertible</code> functions are present so far.
+</p>
+<p>
+The class <code>NumericCast</code> has a single template argument, and the constructor
+has a separate template argument to allow the "natural syntax" like that of
+<code>static_cast</code> (or BOOST's <code>numeric_cast</code>).  I used a class rather than a templated function because a
+function would have required the user to specify two template arguments
+(<em>i.e.</em> unnatural syntax).  I don't know if this is the best way to achieve
+what I want, but it is simple enough that there are <em>obviously no deficiencies</em>.
+</p>
+
+</section>
+<section id="toc5">
+<h2>Bugs, Shortcomings, etc</h2>
+
+<p>
+Conversion to C++ integral types other than (unsigned) int/long is not yet supported.
+Indeed the <code>IsConvertible</code> functions are a hotch potch, but how can it be done better?
+</p>
+<p>
+BOOST has <code>numeric_cast</code> which is like <code>NumericCast</code> for built-in numerical types.
+Sooner or later we should use that.
+</p>
+<p>
+Should conversion of <code>BigRat</code> to <code>double</code> ignore underflow, or should it fail?
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="http://txt2tags.sf.net">
+<LINK REL="stylesheet" TYPE="text/css" HREF="cocoalib-doc.css">
+<TITLE>      ExternalLibs-BOOST</TITLE>
+</HEAD><BODY BGCOLOR="white" TEXT="black">
+<P ALIGN="center"><CENTER><H1>      ExternalLibs-BOOST</H1>
+<FONT SIZE="4">
+<I>      &copy;  2016-2022  John Abbott,  Anna M. Bigatti</I><BR>
+      GNU Free Documentation License, Version 1.2
+</FONT></CENTER>
+
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+    <UL>
+    <LI><A HREF="#toc1">User documentation</A>
+      <UL>
+      <LI><A HREF="#toc2">Install BOOST via Package Manager on Linux</A>
+      <LI><A HREF="#toc3">Download and compile BOOST</A>
+      <LI><A HREF="#toc4">Telling CoCoA-5 where BOOST is</A>
+      <LI><A HREF="#toc5">More info</A>
+      </UL>
+    <LI><A HREF="#toc6">Maintainer documentation</A>
+    <LI><A HREF="#toc7">Bugs, shortcomings and other ideas</A>
+    <LI><A HREF="#toc8">Main changes</A>
+    </UL>
+
+<P></P>
+<HR NOSHADE SIZE=1>
+<P></P>
+<P>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</P>
+<A NAME="toc1"></A>
+<H2>User documentation</H2>
+<P>
+<B>BOOST</B> (filesystem, system) is an <B>essential</B> external library for CoCoA-5.
+</P>
+<P>
+<B>BOOST is not used at all in CoCoALib.</B>  Currently (2022-12-14) BOOST is also
+not required for any of the optional external libraries.
+</P>
+<P>
+If you are lucky BOOST (or the necessary parts of it) are already installed
+on your computer.  The CoCoA <CODE>configure</CODE> script should find it automatically
+(and will check that all required sub-libraries are present).
+</P>
+<P>
+If you are not so lucky, you will have to install BOOST yourself.
+There are two approaches: use a package manager, or download the sources
+and compile BOOST yourself.  Using the package manager is likely simpler
+and quicker, but you will probably need "administrator rights".
+</P>
+<A NAME="toc2"></A>
+<H3>Install BOOST via Package Manager on Linux</H3>
+<P>
+Different GNU/Linux systems have different package managers.
+Here we assume use of <CODE>apt-get</CODE>; hopefully this suffices for most users.
+</P>
+<PRE>
+  sudo  apt-get  install  libboost-dev  libboost-doc  libboost-filesystem-dev  libboost-system-dev
+</PRE>
+<P></P>
+<A NAME="toc3"></A>
+<H3>Download and compile BOOST</H3>
+<P>
+You can download the BOOST sources from <CODE>http://www.boost.org/</CODE>.
+Current version is 1.81, and is about 135Mbytes.
+</P>
+<P>
+It is simplest to make a complete BOOST installation; that way you are
+sure to have everything you need -- but a full build can take a while,
+and occupy quite a lot of space on your disk.
+</P>
+<P>
+Alternatively, you can try building just those sub-libraries needed by CoCoA-5;
+at the moment CoCoA-5 uses the following BOOST sub-libraries:
+<CODE>filesystem</CODE> and   <CODE>system</CODE>.
+</P>
+<P>
+To build BOOST first use their script <CODE>bootstrap.sh</CODE>, then use the script <CODE>b2</CODE>.
+</P>
+<H4>Special note for users of old MacBooks</H4>
+<P>
+The <CODE>b2</CODE> script requires some extra options, so in the examples below
+<B>insert these extra two options</B>
+</P>
+<PRE>
+  ./b2  architecture=x86  address-model=32_64  &lt;remaining-options&gt;
+</PRE>
+<P></P>
+<H4>Make a system-wide installation</H4>
+<P>
+To make a system-wide installation you will need "administrator rights";
+if you do not have these rights, look at the next section about "personal installation".
+</P>
+<P>
+These steps should work:
+</P>
+<PRE>
+   cd &lt;BOOST_DIR&gt;
+   ./bootstrap.sh
+   sudo ./b2  variant=release  threading=multi  link=static  install
+</PRE>
+<P></P>
+<P>
+Remember the note for old MacBooks!
+</P>
+<H4>Personal installation</H4>
+<P>
+Anyone can make a personal installation; if you do not have "administrator right"
+then you must do this.
+</P>
+<P>
+Before compiling you must decide where to put your personal installation;
+this must be somewhere inside your own filespace.  For example, I can choose
+to install BOOST into <CODE>/home/john/software</CODE>
+</P>
+<P>
+Now I do the following steps: the <CODE>prefix</CODE> option says where to install BOOST
+</P>
+<PRE>
+   cd &lt;BOOST_DIR&gt;
+   ./bootstrap.sh  --prefix=/home/john/software
+   ./b2  variant=release  threading=multi  link=static  install
+</PRE>
+<P></P>
+<P>
+Recall the note above about old MacBooks!
+</P>
+<H4>Making a minimal installation</H4>
+<P>
+I do not really recommend this.
+</P>
+<P>
+If you do not want to install the complete BOOST libraries then you
+can specify which ones by giving an option to <CODE>bootstrap.sh</CODE>.
+For instance CoCoA-5 needs the sub-libraries <CODE>filesystem</CODE> and <CODE>system</CODE>.
+</P>
+<P>
+The steps to follow then look like this:
+</P>
+<PRE>
+   cd &lt;BOOST_DIR&gt;
+   ./bootstrap.sh  --with-libraries="filesystem,system"
+   ./b2  ... &lt;options-for-b2&gt;
+</PRE>
+<P></P>
+<A NAME="toc4"></A>
+<H3>Telling CoCoA-5 where BOOST is</H3>
+<P>
+If you have a system-side installation, the CoCoA <CODE>configure</CODE> script should
+probably find it automatically.  If you made a personal installation then you
+must tell CoCoA where to find it: in the example above I chose to install
+BOOST into <CODE>/home/john/software</CODE>, so I must tell CoCoA where it is:
+</P>
+<PRE>
+  cd CoCoALib-0.99
+  ./configure  --with-boost-hdr-dir=/home/john/software  &lt;more-configure-options&gt;
+  make
+</PRE>
+<P></P>
+<A NAME="toc5"></A>
+<H3>More info</H3>
+<P>
+<A HREF="http://www.technoboria.com/2009/12/compiling-boost-on-mac-os-x-for-64bit-builds/">http://www.technoboria.com/2009/12/compiling-boost-on-mac-os-x-for-64bit-builds/</A>
+<A HREF="http://wiki.tiker.net/BoostInstallationHowto">http://wiki.tiker.net/BoostInstallationHowto</A>
+</P>
+<A NAME="toc6"></A>
+<H2>Maintainer documentation</H2>
+<P>
+While BOOST is an interesting and worthy project, we endeavour to
+avoid using it inside CoCoALib.
+</P>
+<A NAME="toc7"></A>
+<H2>Bugs, shortcomings and other ideas</H2>
+<P>
+I found the following website useful:
+</P>
+<PRE>
+  http://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html
+</PRE>
+<P></P>
+<A NAME="toc8"></A>
+<H2>Main changes</H2>
+<P>
+<B>2022</B>
+</P>
+<UL>
+<LI>14 Dec: considerably updated
+</UL>
+
+<P>
+<B>2016</B>
+</P>
+<UL>
+<LI>10 June: first version; added new note about ldconfig
+<P></P>
+</UL>
+
+
+<!-- html code generated by txt2tags 2.5 (http://txt2tags.sf.net) -->
+<!-- cmdline: txt2tags -t html -o html/ExternalLibs-BOOST.html -i txt/ExternalLibs-BOOST.txt -->
+</BODY></HTML>

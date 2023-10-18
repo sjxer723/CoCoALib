@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      SugarDegree</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      SugarDegree</h1>
+<h2>      &copy;  2009 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation</a>
+      <ul>
+      <li><a href="#toc2">Member functions</a>
+      </li>
+      <li><a href="#toc3">Non member functions</a>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation</h2>
+
+<p>
+Abstract class for implementing several kinds of <em>sugar</em>:
+</p>
+
+<ul>
+<li>homogenous case (= the degree)
+</li>
+<li>non graded case (using StdDeg)
+</li>
+<li>graded case (using wdeg)
+</li>
+<li>non graded case and saturating algorithm
+</li>
+<li>graded case and saturating algorithm
+<p></p>
+=== Pseudo constructors ===
+<p></p>
+</li>
+<li><code>NewStdSugar(ConstRefRingElem f);</code>
+</li>
+<li><code>NewStdSugarNoIdx(ConstRefRingElem f, long PosIndet);</code>
+</li>
+<li><code>NewStdSugarSat(ConstRefRingElem f);</code>
+</li>
+<li><code>NewStdSugarNoIdxSat(ConstRefRingElem f, long PosIndet);</code>
+<p></p>
+</li>
+<li><code>NewWSugar(ConstRefRingElem f);</code>
+</li>
+<li><code>NewWDeg1CompTmp(ConstRefRingElem f);</code> -- temporary: only for testing
+</li>
+<li><code>NewWSugarConst(ConstRefRingElem f);</code>  -- stays constant in myUpdate
+</li>
+<li><code>NewWSugarSat(ConstRefRingElem f);</code>
+<p></p>
+There is also an "empty" constructor for when you don't have yet
+enough information to choose the kind of sugar.  However it does
+require the <code>uninitialized</code> marker to make sure you know you have an
+uninitialized sugar!
+</li>
+<li><code>sugar(uninitialized);</code>
+</li>
+</ul>
+
+<section id="toc2">
+<h3>Member functions</h3>
+
+<p>
+Warning! The following throw an error if the wrong type of value is asked!
+</p>
+
+<ul>
+<li><code>const degree&amp; myWSugar() const =0;</code> -- only if impl stores this value
+</li>
+<li><code>long myStdSugar() const =0;</code> -- only if impl stores this value
+<p></p>
+Warning! The following throw an error if the sugar is not initializes!
+</li>
+<li><code>void myMul(ConstRefPPMonoidElem pp) =0;</code> -- sugar after multiplying by pp
+</li>
+<li><code>void myUpdate(ReductionCog F, const GPoly&amp; g);</code> -- sugar after reducing F by g
+</li>
+<li><code>void myUpdate(ConstRefPPMonoidElem CofactorPP, const GPoly&amp; g) =0;</code> -- sugar after adding pp*g
+</li>
+<li><code>int myCmp(const SugarDegreeBase&amp; s) const =0;</code>  -- this &lt;=&gt; s ? &lt;0,=0,&gt;0
+</li>
+<li><code>std::ostream&amp; myOutput(std::ostream&amp; out) const =0;</code>
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Non member functions</h3>
+
+<ul>
+<li><code>bool IsInitialized(const SugarDegree&amp; sd);</code>
+</li>
+<li><code>std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const SugarDegree&amp; s);</code>
+<p></p>
+== Maintainer documentation ==
+<p></p>
+Work in progress
+<p></p>
+Sugar has not been properly tested on modules
+<p></p>
+== Bugs, shortcomings and other ideas ==
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+</div>
+</article></body></html>

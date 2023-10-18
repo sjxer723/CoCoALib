@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      symbol</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      symbol</h1>
+<h2>      &copy;  2005,2007,2008,2012,2014,2015 John Abbott and Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors</a>
+        <ul>
+        <li><a href="#toc4">Creating a vector of symbols</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#operations">Operations on symbols</a>
+        <ul>
+        <li><a href="#toc6">Operations on vectors of symbols</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc7">Other operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc8">Maintainer documentation for symbol</a>
+    </li>
+    <li><a href="#toc9">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-symbol1.C">ex-symbol1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-symbol2.C">ex-symbol2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PPMonoidElem1.C">ex-PPMonoidElem1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyRing2.C">ex-PolyRing2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+<code>symbol</code> is short for <em>Symbolic Name</em>.  A value of type <code>symbol</code>
+represents a <em>variable name</em> possibly with some integer subscripts
+attached.  Its primary use is for input and output of polynomials: the
+name of each indeterminate in a <a href="PolyRing.html"><code>PolyRing</code></a> is a <code>symbol</code>, similarly
+for a <a href="PPMonoid.html"><code>PPMonoid</code></a>.
+</p>
+<p>
+A <code>symbol</code> value has two components:
+</p>
+
+<ul>
+<li><strong>head</strong> -- a string starting with a letter followed by letters, digits and <code>_</code>s
+              (<strong>note</strong> no other characters allowed)
+</li>
+<li><strong>subscripts</strong> -- a (possibly empty) vector of machine integers
+</li>
+</ul>
+
+<p>
+Examples of <code>symbol</code>s are: (in standard printed forms)
+</p>
+
+<table style="margin-left: auto; margin-right: auto;">
+<tr>
+<td><code>x</code>, <code>X</code>, <code>alpha</code>, <code>z_alpha</code>, <code>x[2]</code>, <code>gamma[-2,3,-9]</code></td>
+</tr>
+</table>
+
+<p>
+It is also possible to create <strong>anonymous symbols</strong>:
+they are useful for building (<em>temporary</em>) polynomial extensions of
+unknown coefficient rings (which may contain any symbol) to guarantee
+no name conflicts.
+</p>
+
+<ul>
+<li><strong>head</strong> -- is the <em>empty</em> string
+</li>
+<li><strong>subscripts</strong> -- exactly one subscript
+</li>
+</ul>
+
+<p>
+Each newly created anonymous symbol has a subscript strictly greater
+than that of any previous anonymous symbol.  For better readability,
+an anonymous symbol prints out as a <strong>hash sign</strong> followed by the
+subscript: <em>e.g.</em> <code>#[12]</code>
+</p>
+
+<section id="constructors">
+<h3>Constructors</h3>
+
+<p>
+Let
+<code>head</code> be a <code>std::string</code>,
+<code>ind</code>, <code>ind1</code>, <code>ind2</code>, <code>n</code> machine integers,
+<code>inds</code> a <code>std::vector&lt;long&gt;</code>.
+</p>
+
+<ul>
+<li><code>symbol(head)</code> -- a <code>symbol</code> with no subscripts
+</li>
+<li><code>symbol(head, ind)</code> -- a <code>symbol</code> with a single subscript
+</li>
+<li><code>symbol(head, ind1, ind2)</code> -- a <code>symbol</code> with a two subscripts
+</li>
+<li><code>symbol(head, inds)</code> --  a <code>symbol</code> with the given subscripts
+</li>
+<li><code>NewSymbol()</code> -- a new anonymous symbol (printed form is like this <code>#[12]</code>)
+</li>
+</ul>
+
+<section id="toc4">
+<h4>Creating a vector of symbols</h4>
+
+<p>
+Several polynomial ring pseudo-constructors expect a <code>vector</code> of
+<code>symbol</code>s to specify the names of the indeterminates.  There are
+several convenience functions for constructing commonly used
+collections of <code>symbol</code>s.
+</p>
+
+<ul>
+<li><code>symbols(str)</code> -- create a <code>vector&lt;symbol&gt;</code> containing comma-separated symbols in <code>str</code>
+</li>
+<li><code>SymbolRange(hd, lo, hi)</code> -- create vector of
+                              <code>hd[lo]</code>, <code>hd[lo+1]</code>, ... <code>hd[hi]</code>.
+                      Note that these symbols each have just a single subscript
+</li>
+<li><code>SymbolRange(sym1, sym2)</code> -- create vector of <em>cartesian product</em> of the
+                      subscripts, e.g. given <code>x[1,3]</code> and <code>x[2,4]</code> produces
+                                <code>x[1,3]</code>, <code>x[1,4]</code>, <code>x[2,3]</code>, <code>x[2,4]</code>
+</li>
+<li><code>NewSymbols(n)</code> -- create vector of <code>n</code> new anonymous symbols
+</li>
+</ul>
+
+</section>
+</section>
+<section id="operations">
+<h3>Operations on symbols</h3>
+
+<p>
+Let <code>sym</code>, <code>sym1</code>, and <code>sym2</code> be objects of type <code>symbol</code>
+</p>
+
+<ul>
+<li><code>head(sym)</code>       --  head of <code>sym</code> as a const ref to <code>std::string</code>
+</li>
+<li><code>NumSubscripts(sym)</code> --  number of subscripts <code>sym</code> has (0 if sym has no subscripts)
+</li>
+<li><code>subscript(sym, n)</code>  --  gives <code>n</code>-th subscript of <code>sym</code>
+</li>
+<li><code>cmp(sym1, sym2)</code> --  &lt;0, =0, &gt;0 according as <code>sym1</code> &lt; = &gt; <code>sym2</code>
+                          (for more info see Maintainer section)
+<p></p>
+</li>
+<li><code>sym1 &lt;  sym2</code> -- comparisons defined in terms of <code>cmp</code>
+</li>
+<li><code>sym1 &lt;= sym2</code> -- ...
+</li>
+<li><code>sym1 &gt;  sym2</code> -- ...
+</li>
+<li><code>sym1 &gt;= sym2</code> -- ...
+</li>
+<li><code>sym1 == sym2</code> -- ...
+</li>
+<li><code>sym1 != sym2</code> -- ...
+<p></p>
+</li>
+<li><code>out &lt;&lt; sym</code>   -- print <code>sym</code> on <code>out</code>
+</li>
+<li><code>in  &gt;&gt; sym</code>   -- read a symbol into <code>sym</code> (but also see Bugs section)
+                  (expected format is x, y[1], z[2,3], etc.)
+</li>
+</ul>
+
+<section id="toc6">
+<h4>Operations on vectors of symbols</h4>
+
+<ul>
+<li><code>AreDistinct(vecsyms)</code> -- true iff all symbols are distinct
+</li>
+<li><code>AreArityConsistent(vecsyms)</code> -- true iff all symbols with the same head
+                                     have the same arity
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc7">
+<h3>Other operations</h3>
+
+<ul>
+<li><code>symbol::IsValidHead(str)</code> -- determine whether the <code>string</code> is a valid head
+</li>
+<li><code>symbol::IsValidFirstChar(ch)</code> -- determine whether the <code>char</code> is a valid first char of a head
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc8">
+<h2>Maintainer documentation for symbol</h2>
+
+<p>
+<strong>Note:</strong> I have used <code>MachineInt</code> as the type for fn args containing
+index values because it is <em>safer</em>, and I believe that the run-time
+penalty is unimportant.  This is a considered exception to the guideline
+which says to use <code>long</code> for indexes.
+</p>
+<p>
+I have decided <strong>not</strong> to allow <em>big integers</em> as subscripts because I don't
+see when it could ever be genuinely useful.
+</p>
+<p>
+The implementation is extremely simple.  Efficiency does not seem to be
+important (<em>e.g.</em> <code>symbols</code> and <code>SymbolRange</code> copy the vector upon returning).
+The implementation of <code>SymbolRange</code> is mildly delicate when we have to make
+checks to avoid integer overflow -- see comments in the code.
+</p>
+<p>
+To make "anonymous" symbols I opted to use a <strong>private ctor</strong> which
+accepts just a single subscript; this ctor is called only by <code>NewSymbol</code>
+and <code>NewSymbols</code>.
+</p>
+<p>
+The printing fn (<code>myOutputSelf</code>) has to check for an empty head, and if
+found it prints the string in <code>AnonHead</code>.
+</p>
+<p>
+We believe a total ordering on <code>symbol</code>s could be useful; for instance,
+if someone wants to make a <code>std::map</code> using <code>symbol</code>s.  Currently the
+total order is <em>Lex on the heads then lex on the subscript vectors</em>; this
+is simple, and is probably fast enough.
+</p>
+<p>
+The function <code>symbol::myInput</code> is a stop-gap implementation.
+</p>
+
+</section>
+<section id="toc9">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+The member function <code>myInput</code> handles white space wrongly.  For CoCoALib
+whitespace is space, TAB, or backslash-newline; newline without backslash
+is not considered white space.
+</p>
+<p>
+In redmine 747 there is a suggestion to allow <code>symbol("x[1,2]")</code>;
+we decided (2016-02-01) to postpone extending <code>symbol</code> in this way.
+</p>
+<p>
+It might be nice to have a function which returns the vector of subscripts
+of a name.
+</p>
+<p>
+I wonder what sending a <code>symbol</code> on an OpenMath channel would mean
+(given that OpenMath is supposed to preserve semantics, and a symbolic
+name is by definition devoid of semantics).
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

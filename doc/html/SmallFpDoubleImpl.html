@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      SmallFpDoubleImpl</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      SmallFpDoubleImpl</h1>
+<h2>      &copy;  2005,2010-2013  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for SmallFpDoubleImpl</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for SmallFpDoubleImpl</a>
+    </li>
+    <li><a href="#toc3">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for SmallFpDoubleImpl</h2>
+
+<p>
+The class <code>SmallFpDoubleImpl</code> is a very low level implementation class
+for fast arithmetic in a small, prime finite field.  It is <strong>not intended</strong>
+for use by casual CoCoALib users, who should instead see the documentation
+in <a href="QuotientRing.html"><code>QuotientRing</code></a> (in particular the function <code>NewZZmod</code>), or possibly
+the documentation in <a href="RingFp.html"><code>RingFp</code></a>, <a href="RingFpLog.html"><code>RingFpLog</code></a>, and <a href="RingFpDouble.html"><code>RingFpDouble</code></a>.
+</p>
+<p>
+Compared to <a href="SmallFpImpl.html"><code>SmallFpImpl</code></a> the main difference is an implementation
+detail: values are represented as <code>double</code>s -- on 32-bit computers this
+allows a potentially usefully greater range of characteristics at a
+probably minor run-time cost.
+</p>
+<p>
+<strong>All operations</strong> on values must be effected by calling member functions
+of the <code>SmallFpDoubleImpl</code> class.  Here is a brief summary.
+</p>
+
+<pre>
+  SmallFpDoubleImpl::IsGoodCtorArg(p);   // true iff ctor SmallFpDoubleImpl(p) will succeed
+  SmallFpDoubleImpl::ourMaxModulus();    // largest permitted modulus
+  SmallFpDoubleImpl ModP(p, convention); // create SmallFpDoubleImpl object
+  long n;
+  BigInt N;
+  BigRat q;
+  SmallFpImpl::value_t a, b, c;
+
+  ModP.myModulus();         // value of p (as a long)
+
+  ModP.myReduce(n);         // reduce mod p
+  ModP.myReduce(N);         // reduce mod p
+  ModP.myReduce(q);         // reduce mod p
+
+  ModP.myExport(a);         // returns a preimage (of type long) according to symm/non-neg convention.
+
+  ModP.myNegate(a);         // -a mod p
+  ModP.myAdd(a, b);         // (a+b)%p;
+  ModP.mySub(a, b);         // (a-b)%p;
+  ModP.myMul(a, b);         // (a*b)%p;
+  ModP.myDiv(a, b);         // (a*inv(b))%p;  where inv(b) is inverse of b
+  ModP.myPower(a, n);       // (a^n)%p;  where ^ means "to the power of"
+  ModP.myIsZeroAddMul(a,b,c) // a = (a+b*c)%p; result is (a==0)
+
+</pre>
+
+<p>
+For <code>myExport</code> the choice between least non-negative and symmetric
+residues is determined by the convention specified when constructing
+the <code>SmallFpDoubleImpl</code> object.  This convention may be either
+<code>GlobalSettings::SymmResidues</code> or
+<code>GlobalSettings::NonNegResidues</code>.
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for SmallFpDoubleImpl</h2>
+
+<p>
+Most functions are implemented inline, and no sanity checks are
+performed (except when <code>CoCoA_DEBUG</code> is enabled).  The constructor
+does do some checking.  The basic idea is to use the extra precision
+available in <code>double</code>s to allow larger prime finite fields than are
+permitted when 32-bit integers are used for all arithmetic.  If fast
+64-bit arithmetic becomes widespread then this class will probably
+become obsolete (unless you have a very fast floating point coprocessor?).
+</p>
+<p>
+<code>SmallFpDoubleImpl::value_t</code> is simply <code>double</code>.  Note that the
+values are always non-negative integers with maximum value less than
+<code>myModulusValue</code>; <em>i.e.</em> each residue class is represented
+(internally) by its least non-negative member.
+</p>
+<p>
+To avoid problems with overflow the constructor checks that all
+integers from 0 to p*p-p can be represented exactly.  We need to allow
+numbers as big as p*p-p so that <code>myIsZeroAddMul</code> can be implemented easily.
+</p>
+<p>
+It is not strictly necessary that <code>myModulusValue</code> be prime, though division
+becomes only a partial map if <code>myModulusValue</code> is composite.  I believe it is
+safest to insist that <code>myModulusValue</code> be prime.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+The implementation is simplistic -- I wanted to dash it off quickly
+before going on holiday :-)
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

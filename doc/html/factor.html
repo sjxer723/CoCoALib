@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      factor</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      factor</h1>
+<h2>      &copy;  2013 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+    </li>
+    <li><a href="#toc3">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc4">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc5">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-factor1.C">ex-factor1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+There are several functions for computing a <a href="factorization.html"><code>factorization</code></a> of a ring
+element: the factorizations produced have different properties (see below).
+For each function, the result is an object of type <a href="factorization.html"><code>factorization</code></a>; see
+the corresponding manual page for accessor functions into this type.
+</p>
+
+<ul>
+<li><code>factor(f)</code>  factorization into irreducibles
+</li>
+<li><code>SqFreeFactor(f)</code>  factorization into coprime squarefree factors (NB may not be the coarsest such factorization)
+</li>
+<li><code>ContentFreeFactor(f)</code> polynomial factorization into (coprime) content-free factors
+</li>
+</ul>
+
+<p>
+<strong>NOTE</strong> The irreducible factorization of a polynomial with rational coefficients
+produces factors with integer coefficients (and integer content = 1) having
+positive leading coefficient.  The remaining factor is the unique rational number
+(actually a polynomial of degree 0) which makes the factorization correct.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Maintainer documentation</h2>
+
+<p>
+<code>SqFreeFactor</code> is new code; should be reasonably clean and efficient.
+Originally written by d'Ali` but then considerably modified by JAA.
+The code is based on Bernardin's paper "On square-free factorization
+of multivariate polynomials over a finite field" in Theoretical Computer
+Science (special volume on algebra) Volume 187 Issue 1-2, Nov. 15, 1997
+Pages 105 - 116.
+</p>
+<p>
+<code>ContentFreeFactor</code> is a fairly simplistic recursive method; most of the
+work is done by <code>ContentFreeFactorLoop</code>. 
+</p>
+<p>
+<code>factor</code> is still only a prototype -- just uses old C4 code to do the work.
+</p>
+
+</section>
+<section id="toc4">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+<code>factor</code> still only a prototype -- just uses old C4 code to do the work.
+</p>
+
+</section>
+<section id="toc5">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>september: updated doc (new fns have been there for quite a while)
+<p></p>
+<strong>2013</strong>
+</li>
+<li>aprile (v0.9953): first doc
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

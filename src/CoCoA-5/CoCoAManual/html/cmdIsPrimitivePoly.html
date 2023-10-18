@@ -1,0 +1,68 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>IsPrimitivePoly</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#IsPrimitivePoly">up</a> <a href="cmdIsPrime.html">previous</a>  <a href="cmdIsProbPrime.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>IsPrimitivePoly<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+test if polynomial over finite field is primitive</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+IsPrimitivePoly(F: RINGELEM): BOOL</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+This function determines whether a univariate polynomial over a finite
+field is "primitive" (in the field theory sense): each of its roots
+is a group generator of extension field.
+<br><br>
+For the notion of "primitive" meaning no common factor dividing the
+coefficients see <A HREF="cmdcontent.html">
+    <tt>content</tt>
+  </A>.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  use ZZ/(3)[x];
+/**/  IsPrimitivePoly(x^3+2*x+1);
+true
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdcontent.html">content</A>
+</ul>
+</div>
+
+</body>
+</html>

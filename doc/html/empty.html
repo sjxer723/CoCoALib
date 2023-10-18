@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>    &lt;file_name&gt;</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>    &lt;file_name&gt;</h1>
+<h2>      &copy;  2009-2012  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#queries">Queries and views</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+        <ul>
+        <li><a href="#toc6">&lt;sub-sub-section&gt;</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc9">Main changes</a>
+    </li>
+    </ul>
+
+  <ul>
+  <li><a href="#toc10">mini-manual for writing cocoalib documentation using txt2tags</a>
+    <ul>
+    <li><a href="#toc11">Fonts</a>
+    </li>
+    <li><a href="#toc12">Links</a>
+    </li>
+    <li><a href="#toc13">Tables</a>
+    </li>
+    <li><a href="#toc14">Lists</a>
+      <ul>
+      <li><a href="#toc15">example</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc16">More txt2tags</a>
+    </li>
+    <li><a href="#toc17">Main changes</a>
+    </li>
+    </ul>
+  </li>
+  </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-empty.C">ex-empty.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+An easy way to add a new documentation file is to make a copy of this
+file and edit its contents as you want.  See the mini-manual below for
+some examples of how to change font, make tables, etc.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+</section>
+<section id="queries">
+<h3>Queries and views</h3>
+
+<p>
+Let <code>S</code> be a <a href="ring.html"><code>ring</code></a>
+</p>
+
+<ul>
+<li><code>IsBlah(S)</code> -- <code>true</code> iff <code>S</code> is actually a <code>Blah</code>
+</li>
+<li><code>BlahPtr(S)</code> -- pointer to impl of <code>S</code> (for calling mem fns)
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<section id="toc6">
+<h4>&lt;sub-sub-section&gt;</h4>
+
+</section>
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation</h2>
+
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+</section>
+<section id="toc9">
+<h2>Main changes</h2>
+
+<p>
+<strong>2010</strong>
+</p>
+
+<ul>
+<li>month (v0.99xx): ...
+<p></p>
+<strong>2009</strong>
+</li>
+<li>February (v0.9910): first release
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc10">
+<h1>mini-manual for writing cocoalib documentation using txt2tags</h1>
+
+<p>
+Compare the documentation text (text2tags) source the html version:
+</p>
+
+<ul>
+<li>If you are reading this as html, see the txt source in the file
+<code>doc/txt/empty.txt</code>.
+<p></p>
+</li>
+<li>If you are reading this as txt, run <code>make skeleton.html</code> and browse
+<code>doc/html/empty.html</code> to see the generated file.
+</li>
+</ul>
+
+<section id="toc11">
+<h2>Fonts</h2>
+
+<p>
+This is how to type <em>italic</em>, <strong>bold</strong>, <code>code</code>.  And also
+</p>
+
+<pre>
+preformatted/verbatim single line ("```" in the first column)
+</pre>
+
+<pre>
+preformatted/verbatim region
+second line
+</pre>
+
+</section>
+<section id="toc12">
+<h2>Links</h2>
+
+<p>
+Links to other files in the documentation are given by double square
+brackets: for example <a href="PPMonoid.html"><code>PPMonoid</code></a> will produce a link to the
+file/section generated by <code>PPMonoid.txt</code>.  It will also write the
+word as "code".  Always suggested when mentioning a class with the
+same name as the .txt file (except within the file itself).
+</p>
+<p>
+Links <strong>inside</strong> other files are done like this:
+See <a href="matrix.html#operations"><code>matrix</code> operations</a>
+</p>
+<p>
+<strong>NOTE</strong> since <code>[ ]</code> are used by txt2tags for defining links, even
+  though it is fairly clever, we suggest not use them in non verbatim
+  text.  <a href="word">this will become a link to the last</a>
+</p>
+
+</section>
+<section id="toc13">
+<h2>Tables</h2>
+
+<p>
+Alignment is not important, but you must leave a space between the
+text and the <code>|</code>s.  No newlines allowed.
+</p>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<th>th1</th>
+<th>th2</th>
+<th>th3</th>
+</tr>
+<tr>
+<td class="center">td</td>
+<td>td</td>
+<td>td</td>
+</tr>
+<tr>
+<td class="center">td</td>
+<td>td</td>
+<td>td</td>
+</tr>
+</table>
+
+</section>
+<section id="toc14">
+<h2>Lists</h2>
+
+<p>
+Lists end with <strong>2 blank lines</strong> or with the <em>list item character</em>
+followed by an empty line:
+</p>
+<p>
+The <em>list item character</em> is 
+</p>
+
+<ul>
+<li><code>-</code> for un-numbered lists
+</li>
+<li><code>:</code> for description lists
+</li>
+<li><code>+</code> for numbered lists
+</li>
+</ul>
+
+<p>
+Lines should  start with <code>- blahblah...</code> (exactly 1 space)
+</p>
+<p>
+You may have nested (and mixed) lists (leaving heading spaces)
+</p>
+
+<section id="toc15">
+<h3>example</h3>
+
+<ul>
+<li><code>NewInducedHom(RmodI, phi)</code>  creates a new ring homomorphism from RmodI to
+S where phi is a ring homomorphism from R to S, and where RmodI is a
+QuotientRing representing R/I.  Two types of error may occur:
+  <ul>
+  <li><code>ERR::BadInducingHom</code>   if domain(phi) is not BaseRing(RmodI)
+  </li>
+  <li><code>ERR::BadInducingHomKer</code> if phi does not map the gens of I to zero.
+  </li>
+  </ul>
+</li>
+<li>last item
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc16">
+<h2>More txt2tags</h2>
+
+<p>
+To know more and to download <code>txt2tags</code> visit the website
+         <a href="http://txt2tags.sourceforge.net">http://txt2tags.sourceforge.net</a>
+</p>
+
+</section>
+<section id="toc17">
+<h2>Main changes</h2>
+
+<p>
+<strong>2012</strong>
+</p>
+
+<ul>
+<li>May (v0.9951):
+ <ul>
+ <li>write which major changes have been done
+-
+ </li>
+ </ul>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

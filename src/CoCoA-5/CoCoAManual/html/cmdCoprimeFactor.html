@@ -1,0 +1,64 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>CoprimeFactor</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#CoprimeFactor">up</a> <a href="cmdcontinue.html">previous</a>  <a href="cmdCoprimeFactorBasis.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>CoprimeFactor<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+determine factor of N coprime to given base</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+CoprimeFactor(N: INT, b:INT): INT</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+This function returns the largest factor of <tt><b style="background:#bbeeee">N</b></tt> which is coprime to <tt><b style="background:#bbeeee">b</b></tt>.
+An error is signalled if <tt><b style="background:#bbeeee">N</b></tt> or <tt><b style="background:#bbeeee">b</b></tt> is zero.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  CoprimeFactor(100, 5);
+4
+/**/  CoprimeFactor(100, 21);
+100
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdgcd.html">gcd</A>
+<li><a href="cmdCoprimeFactorBasis.html">CoprimeFactorBasis</A>
+</ul>
+</div>
+
+</body>
+</html>

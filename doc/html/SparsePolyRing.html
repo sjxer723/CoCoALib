@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      SparsePolyRing</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      SparsePolyRing</h1>
+<h2>      &copy;  2005,2007,2018  John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation for SparsePolyRing</a>
+      <ul>
+      <li><a href="#constructors">Pseudo-constructors</a>
+      </li>
+      <li><a href="#query">Query and cast</a>
+      </li>
+      <li><a href="#toc5">Operations on a SparsePolyRing</a>
+      </li>
+      <li><a href="#toc6">Operations with SparsePolyIters</a>
+        <ul>
+        <li><a href="#toc7">Examples</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc8">Maintainer documentation for SparsePolyRing</a>
+    </li>
+    <li><a href="#toc9">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PolyRing1.C">ex-PolyRing1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyRing2.C">ex-PolyRing2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyIterator1.C">ex-PolyIterator1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyIterator2.C">ex-PolyIterator2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyInput1.C">ex-PolyInput1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-NF.C">ex-NF.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation for SparsePolyRing</h2>
+
+<p>
+<code>SparsePolyRing</code> is an abstract class (inheriting from <a href="PolyRing.html"><code>PolyRing</code></a>)
+representing rings of polynomials; in particular, rings of sparse
+multivariate polynomials (<em>i.e.</em> written in a <strong>sparse representation</strong>)
+with a special view towards computing Groebner bases and other related
+operations.  This means that the operations offered by a
+<code>SparsePolyRing</code> on its own values are strongly oriented towards those
+needed by Buchberger's algorithm.
+</p>
+<p>
+A polynomial is viewed abstractly as a formal sum of ordered terms
+(with default ordering <em>StdDegRevLex</em>).  Each term is a formal
+product of a non-zero coefficient (belonging to the coefficient <a href="ring.html"><code>ring</code></a>),
+and a power product of indeterminates (belonging to the <a href="PPMonoid.html"><code>PPMonoid</code></a> of
+the polynomial ring).  The ordering is determined by the <a href="PPOrdering.html"><code>PPOrdering</code></a>
+on the power products: distinct terms in a polynomial have distinct power
+products.  The zero polynomial is conceptually the formal sum of no terms;
+all other polynomials have a <em>leading term</em> being the one with the largest
+power product (<code>PPMonoidElem</code>) in the given ordering.
+</p>
+<p>
+See <a href="RingElem.html#SparsePolyRing"><code>RingElem</code> SparsePolyRing</a> for operations on its elements.
+</p>
+
+<section id="constructors">
+<h3>Pseudo-constructors</h3>
+
+<p>
+Currently there are three functions to create a polynomial ring:
+</p>
+
+<dl>
+<dt> <code>NewPolyRing(CoeffRing, IndetNames)</code></dt><dd>
+    -- This creates a sparse polynomial ring with coefficients in <code>CoeffRing</code>
+    and having indeterminates whose names are given in <code>IndetNames</code> (which
+    is of type <code>vector&lt;symbol&gt;</code>).  The PP ordering is <code>StdDegRevLex</code> (with
+    indet(j) &gt; indet(j+1) for each j).
+</dd>
+<dt> <code>NewPolyRing(CoeffRing, IndetNames, ord)</code></dt><dd>
+    -- This creates a sparse polynomial ring with coefficients in <code>CoeffRing</code>
+    and having indeterminates whose names are given in <code>IndetNames</code> (which
+    is of type <code>vector&lt;symbol&gt;</code>).  The PP ordering is given by <code>ord</code>
+    (a <a href="PPOrdering.html"><code>PPOrdering</code></a> or <a href="PPOrdering.html#PPOrderingCtor"><code>PPOrdering</code> PPOrderingCtor</a>).
+</dd>
+<dt> <code>NewPolyRing(CoeffRing, PPM)</code></dt><dd>
+    -- This creates a sparse polynomial ring with coefficients in <code>CoeffRing</code> and
+    with power products in <code>PPM</code> which is a power product monoid which specifies
+    how many indeterminates, their names, and the ordering on them.
+</dd>
+<dt> <code>SparsePolyRing(R)</code></dt><dd>
+    -- sort of downcast the ring <code>R</code> to a sparse poly ring;
+will throw an <code>ErrorInfo</code> object with code <code>ERR::NotSparsePolyRing</code> if needed.
+</dd>
+</dl>
+
+<p>
+In place of <code>NewPolyRing</code> you may use <code>NewPolyRing_DMPI</code>; this creates a
+sparse poly ring which uses a more compact internal representation (which probably
+makes computations slightly faster), but it necessarily uses a <code>PPMonoidOv</code> for
+the power products.  There is also <code>NewPolyRing_DMPII</code> which uses a still more
+compact internal representation, but which may be used only when the coefficients
+are in a small finite field and the power products are in a <code>PPMonoidOv</code>.
+</p>
+
+</section>
+<section id="query">
+<h3>Query and cast</h3>
+
+<p>
+Let <code>R</code> be an object of type <a href="ring.html"><code>ring</code></a>.
+</p>
+
+<ul>
+<li><code>IsSparsePolyRing(R)</code> -- <code>true</code> if <code>R</code> is actually <code>SparsePolyRing</code>
+</li>
+<li><code>SparsePolyRingPtr(R)</code> --  pointer to impl of <code>R</code> (for calling mem fns);
+will throw an <code>ErrorInfo</code> object with code <code>ERR::NotSparsePolyRing</code> if needed
+</li>
+</ul>
+
+</section>
+<section id="toc5">
+<h3>Operations on a SparsePolyRing</h3>
+
+<p>
+In addition to the standard <a href="PolyRing.html#operations"><code>PolyRing</code> operations</a>, a
+<code>SparsePolyRing</code> may be used in other functions.
+</p>
+<p>
+Let <code>P</code> be an object of type <code>SparsePolyRing</code>.
+</p>
+
+<ul>
+<li><code>PPM(P)</code>         -- the PPMonoid of <code>P</code>.
+</li>
+<li><code>OrdMat(P)</code>      --   a matrix defining the term ordering on <code>P</code>.
+</li>
+<li><code>GradingDim(P)</code>  -- the dimension of the grading on <code>P</code> (may be 0).
+</li>
+<li><code>GradingMat(P)</code>  --  the matrix defining the grading on <code>P</code>
+</li>
+<li><code>RandomLinearForm(P, N)</code>  -- produce a non-zero random linear form from <code>P</code> with coeffs at most <code>N</code>
+</li>
+</ul>
+
+</section>
+<section id="toc6">
+<h3>Operations with SparsePolyIters</h3>
+
+<p>
+A <code>SparsePolyIter</code> (class defined in SparsePolyRing.H) is a way to
+iterate through the summands in the polynomial without knowing the
+(private) details of the concrete implementation currently in use.
+</p>
+<p>
+See also the functions <code>coefficients</code>, <code>CoefficientsWRT</code>,
+<code>CoeffVecWRT</code> in <a href="RingElem.html"><code>RingElem</code></a>.
+</p>
+<p>
+Let <code>f</code> denote a non-const element of P.
+Let <code>it1</code> and <code>it2</code> be two <code>SparsePolyIter</code>s running over the same polynomial.
+</p>
+
+<ul>
+<li><code>BeginIter(f)</code> -- a <code>SparsePolyIter</code> pointing to the first term in <code>f</code>.
+</li>
+<li><code>EndIter(f)</code>   -- a <code>SparsePolyIter</code> pointing to one-past-the-last term
+                      in <code>f</code>.
+</li>
+</ul>
+
+<p>
+<strong>Changing the value of <code>f</code> invalidates all iterators over <code>f</code>.</strong>
+</p>
+
+<ul>
+<li><code>coeff(it1)</code>    -- read-only access to the coeff of the current term
+</li>
+<li><code>PP(it1)</code>       -- read-only access to the pp of the current term
+</li>
+<li><code>++it1</code>         -- advance <code>it1</code> to next term, return new value of <code>it1</code>
+</li>
+<li><code>it1++</code>         -- advance <code>it1</code> to next term, return copy of old value of <code>it1</code>
+</li>
+<li><code>it1 == it2</code>    -- true iff <code>it1</code> and <code>it2</code> point to the same term;
+                      throws <code>CoCoA::ErrorInfo</code> with code
+                      <code>ERR::MixedPolyIters</code>
+                      if <code>it1</code> and <code>it2</code> are over different polys.
+</li>
+<li><code>it1 != it2</code>    -- same as <code>!(it1 == it2)</code>
+</li>
+<li><code>IsEnded(it1)</code>  -- true iff <code>it1</code> is pointing at the one-past-the-last term
+</li>
+</ul>
+
+<section id="toc7">
+<h4>Examples</h4>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PolyIterator1.C">ex-PolyIterator1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-PolyIterator2.C">ex-PolyIterator2.C</a>
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+<section id="toc8">
+<h2>Maintainer documentation for SparsePolyRing</h2>
+
+<p>
+The exact nature of a <em>term</em> in a polynomial is hidden from public view:
+it is not possible to get at any term in a polynomial by any publicly
+accessible function.  This allows wider scope for trying different
+implementations of polynomials where the <em>terms</em> may be represented in
+some implicit manner.  On the other hand, there are many cases where
+an algorithm needs to iterate over the terms in a polynomial; some of
+these algorithms are <em>inside</em> PolyRing (i.e. the abstract class offers
+a suitable interface), but many will have to be <em>outside</em> for reasons
+of modularity and maintainability.  Hence the need to have <em>iterators</em>
+which run through the terms in a polynomial.
+</p>
+<p>
+The implementations in SparsePolyRing.C are all very simple: they just conduct
+some sanity checks on the function arguments before passing them to the
+PolyRing member function which will actually do the work.
+</p>
+
+</section>
+<section id="toc9">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+Too many of the iterator functions are inline.  Make them out of line, then
+use profiler to decide which should be inline.
+</p>
+<p>
+<code>PushFront</code> and <code>PushBack</code> do not verify that the ordering criteria are
+satisfied.
+</p>
+<p>
+Verify the true need for <code>myContent</code>, <code>myRemoveBigContent</code>, <code>myMulByCoeff</code>,
+<code>myDivByCoeff</code>, <code>myMul</code> (by pp).  If the coeff ring has zero divisors then
+<code>myMulByCoeff</code> could change the structure of the poly!
+</p>
+<p>
+Verify the need for these member functions:
+myIsZeroAddLCs, myMoveLMToFront, myMoveLMToBack, myDeleteLM, myDivLM,
+myCmpLPP, myAppendClear, myAddClear, myAddMulLM,
+myReductionStep, myReductionStepGCD, myDeriv.
+</p>
+<p>
+Should there be a RingHom accepting IndetImage (in case of univariate polys)?
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

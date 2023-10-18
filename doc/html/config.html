@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      config</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      config</h1>
+<h2>      &copy;  2005  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for files config.H</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for files config.H and config.C</a>
+    </li>
+    <li><a href="#toc3">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for files config.H</h2>
+
+<p>
+The file config.H defines certain <em>global</em> concepts which may be used by
+any of the files in CoCoALib; in particular, this will include any
+definitions needed to ensure platform independence.  Consequently, every
+header file in the CoCoA library should include the header file
+<code>CoCoA/config.H</code>.
+</p>
+<p>
+The file <code>config.H</code> contains the following:
+</p>
+
+<ul>
+<li>typedefs for <code>SmallFpElem_t</code> and <code>SmallFpLogElem_t</code> which are used
+  in <code>RingFpImpl</code> and <code>SmallFpImpl</code> (and their <code>Log</code> counterparts)
+</li>
+<li>typedef for <code>SmallExponent_t</code> which is used internally in some
+  <a href="PPMonoid.html"><code>PPMonoid</code></a> implementations.
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for files config.H and config.C</h2>
+
+<p>
+The typedef for <code>SmallFpElem_t</code> fixes the choice of representing type for
+elements in a <code>SmallFpImpl</code> which are used to implement a <code>RingFpImpl</code>; the
+type <code>SmallFpLogElem_t</code> does the same for <code>SmallFpLogImpl</code> and
+<code>RingFpLogImpl</code>.  These types should be some size of unsigned integer; the
+best choices are probably platform dependent.  If you want to try different
+choices, you will probably have to recompile the whole CoCoA library.
+</p>
+<p>
+The typedef for <code>SmallExponent_t</code> should be an unsigned integer type.
+It is used in the <a href="PPMonoid.html"><code>PPMonoid</code></a>s which use an "order vector".
+</p>
+
+</section>
+<section id="toc3">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+Putting <code>SmallFpElem_t</code> and <code>SmallFpLog_t</code> here is ugly.  How can
+I do it better?
+</p>
+<p>
+Shouldn't these typedefs be moved to the corresponding *.H files?
+What is the point of putting them here???
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

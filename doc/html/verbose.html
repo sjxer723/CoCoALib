@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      verbose</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      verbose</h1>
+<h2>      &copy;  2016  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#queries">Setting and querying the verbosity level</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc7">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc8">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-verbose1.C">ex-verbose1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+This file offers a simple facility for producing "verbose logging" of
+internal behaviour of algorithms.  This is likely to be of interest to
+developers; the logging messages may also please anyone curious to know
+what is happening "behind the scenes".
+</p>
+<p>
+There is a global "verbosity level": a non-negative integer whose
+default value is 0.  Verbose logging messages specify the lowest level
+at which they will appear: <em>e.g.</em> a level-2 message will not appear
+if the global verbosity level is 0 or 1, but will appear if the level
+is 2 or higher.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<p>
+There is just one constructor:
+</p>
+
+<ul>
+<li><code>VerboseLog(FnName)</code> -- create an output stream for verbose log messages
+</li>
+</ul>
+
+</section>
+<section id="queries">
+<h3>Setting and querying the verbosity level</h3>
+
+<p>
+There is just one query:
+</p>
+
+<ul>
+<li><code>SetVerbosityLevel(n)</code> -- set the global verbosity level to <code>n</code> (non-negative integer); returns value of previous verbosity level.
+</li>
+<li><code>IsVerbosityLevel(n)</code> -- <code>true</code> iff the verbose level is <strong>greater than or equal</strong> to <code>n</code> (positive integer).
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+There is just one operation: let <code>VERBOSE</code> be a <code>VerboseLog</code> object
+</p>
+
+<ul>
+<li><code>VERBOSE(n)</code> -- produces an <code>ostream</code> onto which a single-line verbose log message can be printed.
+</li>
+</ul>
+
+<p>
+<strong>NOTE</strong> a verbose logging command will <strong>always</strong> evaluate its arguments (even if the logging
+command will produce no output because the global level is too low).  It is best not to perform
+costly operations to produce logging output; if you must do so, then place a block of code inside
+the then-part of an <code>if (IsVerbosityLevel(...)) {...}</code> construct!
+</p>
+
+</section>
+</section>
+<section id="toc6">
+<h2>Maintainer documentation</h2>
+
+<p>
+Currently this is a very simplistic first implementation.
+</p>
+<p>
+There are 3 globals:
+</p>
+
+<ul>
+<li><code>DevNull</code> is an <code>ostream</code> which never prints anything (it just discards everything)
+</li>
+<li><code>VerboseLog::ourNestingDepth</code> keeps track of nesting depth (value is indicated in log messages)
+</li>
+<li><code>VerboseLog::ourVerbosityLevel</code> only messages up to this level are printed
+</li>
+</ul>
+
+</section>
+<section id="toc7">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Too simple?
+</p>
+<p>
+Ideally the prefix containing fn name (and total nesting depth) should be
+printed at the start of each verbose log line; currently, it is printed
+just by the call <code>VERBOSE(n)</code> -- this works OK provided that only a
+single line is sent to that stream.
+</p>
+<p>
+The name of <code>DevNull</code> is slightly misleading.
+</p>
+<p>
+Perhaps later offer a way to suppress verbose logging messages when the
+nesting depth exceeds a limit?
+</p>
+
+</section>
+<section id="toc8">
+<h2>Main changes</h2>
+
+<p>
+<strong>2016</strong>
+</p>
+
+<ul>
+<li>November (v0.99544): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

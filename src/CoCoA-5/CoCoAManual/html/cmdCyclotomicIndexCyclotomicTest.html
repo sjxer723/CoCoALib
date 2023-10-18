@@ -1,0 +1,72 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>CyclotomicIndex, CyclotomicTest</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#CyclotomicIndex, CyclotomicTest">up</a> <a href="cmdCyclotomicFactors.html">previous</a>  <span class="grayed">next</span>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>CyclotomicIndex, CyclotomicTest<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+computes the index of a given cyclotomic polynomial</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+CyclotomicIndex(F: RINGELEM): INT
+CyclotomicTest(F: RINGELEM): INT</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+The function <tt><b style="background:#bbeeee">CyclotomicTest</b></tt> takes the given polynomial <tt><b style="background:#bbeeee">F</b></tt> and returns the
+index <tt><b style="background:#bbeeee">n</b></tt> if it is the <tt><b style="background:#bbeeee">n</b></tt>-th cyclotomic polynomial; otherwise, it returns <tt><b style="background:#bbeeee">0</b></tt>.
+To test whether a polynomial is cyclotomic, call <tt><b style="background:#bbeeee">CyclotomicTest</b></tt>, and
+check that the result is non-zero.
+<br><br>
+The function <tt><b style="background:#bbeeee">CyclotomicIndex</b></tt> is similar but faster.  It is correct if
+the given polynomial is cyclotomic, but could potentially return a non-zero
+value even if the input polynomial is not cyclotomic.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  use R ::= QQ[x];
+/**/  CyclotomicTest(x^6 +x^3 +1);
+9
+/**/  CyclotomicTest(x^4 -x^2 +2);
+0
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdcyclotomic.html">cyclotomic</A>
+<li><a href="cmdCyclotomicFactors.html">CyclotomicFactors</A>
+</ul>
+</div>
+
+</body>
+</html>

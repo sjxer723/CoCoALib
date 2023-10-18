@@ -1,0 +1,63 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>CyclotomicFactors</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#CyclotomicFactors">up</a> <a href="cmdcyclotomic.html">previous</a>  <a href="cmdCyclotomicIndexCyclotomicTest.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>CyclotomicFactors<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+find cyclotomic factors of a polynomial</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+CyclotomicFactors(f: RINGELEM): RECORD</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+This function computes the cyclotomic factors of the univariate polynomial <tt><b style="background:#bbeeee">f</b></tt>.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  use QQ[z];
+/**/  CyclotomicFactors((z^2+1)*(z^2+3*z+1));
+record[RemainingFactor := 1, factors := [z^2 +1], multiplicities := [1]]
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdcyclotomic.html">cyclotomic</A>
+<li><a href="cmdCyclotomicIndexCyclotomicTest.html">CyclotomicIndex, CyclotomicTest</A>
+<li><a href="cmdfactor.html">factor</A>
+</ul>
+</div>
+
+</body>
+</html>

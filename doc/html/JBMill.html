@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      JBMill</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      JBMill</h1>
+<h2>      &copy;  2011-2015  John Abbott,  Anna M. Bigatti  (orig author: Mario Albert)</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for using Janet bases</a>
+      <ul>
+      <li><a href="#toc2">Computing a Janet basis</a>
+      </li>
+      <li><a href="#toc3">Using the JBMill</a>
+      </li>
+      <li><a href="#toc4">Examples</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation for JBDatastructure, JBSets, JBAlgorithm, JBMill</a>
+      <ul>
+      <li><a href="#toc6">JanetDatastructure</a>
+        <ul>
+        <li><a href="#toc7">JanetTriple</a>
+        </li>
+        <li><a href="#toc8">JanetNodeBase, JanetLeafNodeImpl, JanetInternalNodeImpl, JanetHandle, JanetTree</a>
+          <ul>
+          <li><a href="#toc9">Problems&amp;Ideals related to JanetNodeBase, JanetLeafNodeImpl, JanetInternalNodeImpl, JanetHandle, JanetTree</a>
+          </li>
+          </ul>
+        </li>
+        <li><a href="#toc10">JanetContainer</a>
+        </li>
+        <li><a href="#toc11">JanetIterator</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc12">JBSets</a>
+        <ul>
+        <li><a href="#toc13">Problems&amp;Ideas related to JBSets</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc14">JBAlgorithm</a>
+        <ul>
+        <li><a href="#toc15">JBAlgorithm</a>
+        </li>
+        <li><a href="#toc16">TQAlgorithm</a>
+        </li>
+        <li><a href="#toc17">DegreeTQ</a>
+        </li>
+        <li><a href="#toc18">BlockTQ</a>
+        </li>
+        <li><a href="#toc19">CompletionGB</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc20">JBMill</a>
+        <ul>
+        <li><a href="#toc21">JBMill</a>
+          <ul>
+          <li><a href="#toc22">Problems&amp;Ideas related to JBMill</a>
+          </li>
+          </ul>
+        </li>
+        <li><a href="#toc23">JBMill::Builder</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for using Janet bases</h2>
+
+<p>
+The files <code>JBDatastructure.H</code>, <code>JBSets.H</code>, <code>JBAlgorithm.H</code> and <code>JBMill.H</code> introduce several classes for computing and working with <strong>Janet basis</strong>.
+The normal user should only use the classes <code>Involutive::JBMill</code> and <code>Involutive::JBMill::Builder</code> to interact with Janet bases.
+</p>
+
+<section id="toc2">
+<h3>Computing a Janet basis</h3>
+
+<p>
+To compute a Janet basis the user should use the class <code>Involutive::JBMill::Builder</code>. To construct a <code>Involutive::JBMill::Builder</code> object the user has to use the standard constructor. For configuration of the building process there are several methods:
+</p>
+
+<ul>
+<li><code>setInput(v)</code> -- <code>v</code> must be a <code>vector&lt;RingElem&gt;</code>. It sets the generating set of the ideal to <code>v</code>.
+</li>
+<li><code>setInput(cBegin, cEnd)</code> -- <code>cBegin</code> and <code>cEnd</code> must be a <code>vector&lt;RingElem&gt;::const_iterator</code> and must define a range of <code>RingElem</code>. The method sets the generating set of the ideal to this range.
+</li>
+<li><code>setStrategy(strat)</code> -- <code>strat</code> must be a <code>Involutive::StrategyFlag</code>. Possible enums are <code>TQDegree</code>, <code>TQBlockHigh</code>, <code>TQBlockLow</code> and <code>GBCompletion</code>. It defines the algorithm which should be used to compute a Janet basis. If this method is never called the Builder object uses the <code>TQBlockLow</code> strategy.
+</li>
+<li><code>setInvolutiveCriteria(crits)</code> -- <code>crits</code> must be a <code>bitset&lt;3&gt;</code>. Every bit represents one of the three involutive criteria. If this method is never called the Builder object uses the first two involutive criteria.
+<p></p>
+The methods are chainable, e.g. the user can do the following: <code>builder.setInput(input).setStrategy(Involutive::TQDegree)</code>. If the user calls a method more than one time only the input of the last method call is taken into account.
+To construct a <code>JBMill</code> out of a correctly configured builder object <code>build</code> the user has to use <code>JBMill(build)</code>. If the user does not set a input the construction of a <code>JBMill</code> will fail.
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Using the JBMill</h3>
+
+<p>
+In the following let <code>elem</code> be a <code>RingElem</code>.
+</p>
+
+<ul>
+<li><code>myReturnJB()</code> -- returns the minimal Janet basis as <code>vector&lt;RingElem&gt;</code>
+</li>
+<li><code>myReturnGB()</code> -- returns the minimal Groebner basis as <code>vector&lt;RingElem&gt;</code>
+</li>
+<li><code>myPrintMultVar()</code> -- prints the multiplicative variables of every element in the given Janet basis
+</li>
+<li><code>myPrintNonMultVar()</code> -- prints the nonmultiplicative variables of every element in the given Janet basis
+</li>
+<li><code>myMultVars()</code> -- compute the multiplicative variables of the given Janet basis. It returns a <code>map&lt;PPMonoidElem, vector&lt;bool&gt; &gt;</code> where the key is a <code>LPP</code> of an element in the Janet basis.
+</li>
+<li><code>myNonMultVars()</code> -- compute the nonmultiplicative variables of the given Janet basis. It returns a <code>map&lt;PPMonoidElem, vector&lt;bool&gt; &gt;</code> where the key is a <code>LPP</code> of an element in the Janet basis.
+</li>
+<li><code>myNonMultVarsOf(elem)</code> -- computes the nonmultiplicative variables of <code>elem</code> which must be a member of the Janet basis. If not we assume that every variable is nonmultiplicative. It returns a <code>vector&lt;bool&gt;</code>.
+</li>
+<li><code>IamPommaretBasis</code> -- checks if the Janet basis is also a Pommaret basis. It returns a boolean.
+</li>
+<li><code>IamHomogenous</code> -- checks if the Janet basis is also homogeneous. It returns a boolean.
+</li>
+<li><code>IamMonomialIdeal</code> -- checks if the Janet basis is also a monomial ideal. It returns a boolean.
+</li>
+<li><code>myStandardRepresentation(elem)</code> -- compute the involutive standard representation of <code>elem</code>. It returns <code>pair&lt;map&lt;PPMonoidElem, RingElem&gt;, RingElem&gt;</code>. The first entry of the pair is a map, where the key represents the LPP of an element in the Janet basis and the value the corresponding factor. The second entry of the pair corresponds to the rest.
+</li>
+<li><code>myOutputStandardRepresentation(elem)</code> -- computes an involutive standard representation of <code>elem</code>.
+</li>
+<li><code>myHilbertPol(elem)</code> -- <code>elem</code> must be a single indent. The method computes the Hilbert polynomial of the ideal in terms of <code>elem</code>.
+</li>
+<li><code>myHilbertFunc(n)</code> -- <code>n</code> must be a <code>BigInt</code>. The method computes the dimension of P/I in degree <code>n</code>.
+</li>
+<li><code>myHilbertSeries(elem)</code> -- <code>elem</code> must be a single indent of a fraction field. The method computes the Hilbert series of the ideal in terms of <code>elem</code>.
+</li>
+<li><code>mySyzygy()</code> -- Compute the first involutive syzygy and returns a <code>FGModule</code>.
+</li>
+<li><code>myDim()</code> -- Computes the dimension of P/I.
+</li>
+<li><code>myCls(ppelem)</code> -- Computes the class of <code>ppelem</code> which is of type <code>PPMonoidElem</code>. the class starts counting at <code>0</code> up to <code>n - 1</code>. The cls of <code>1</code> is <code>-1</code>. It returns a <code>long</code>.
+</li>
+<li><code>myMinCls()</code> -- Computes the minimal class of all LPP's of the Janet basis as long.
+</li>
+<li><code>myMaxCls()</code> -- Computes the maximal class of all LPP's of the Janet basis as long.
+</li>
+<li><code>myElementsWithClass(InputCls)</code> -- Computes all elements of the Janet basis where the class of the LPP is <code>InputCls</code>. <code>InputCls</code> is a <code>long</code> and the method returns a <code>vector&lt;RingElem&gt;</code>.
+</li>
+<li><code>myComplementaryDecomposition()</code> -- Computes the complementary decomposition of I. it returns <code>vector&lt;pair&lt;PPMonoidElem, vector&lt;bool&gt; &gt; &gt;</code>.
+</li>
+<li><code>myStandardPairs()</code> -- Computes the standard pairs of I. it returns <code>vector&lt;pair&lt;PPMonoidElem, vector&lt;bool&gt; &gt; &gt;</code>.
+</li>
+<li><code>myJNormalForm(elem)</code> -- Computes the involutive normal form of <code>elem</code> and returns a <code>RingElem</code>.
+</li>
+<li><code>myJDivisor(elem)</code> -- Computes the involutive divisor of <code>LPP(elem)</code>. If there is an involutive divisor it returns it as <code>RingElem</code> if not the method returns <code>0</code>.
+</li>
+</ul>
+
+</section>
+<section id="toc4">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-Janet1.C">ex-Janet1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-Janet2.C">ex-Janet2.C</a>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation for JBDatastructure, JBSets, JBAlgorithm, JBMill</h2>
+
+<p>
+The basic datastructures to deal with Janet basis are implemented in <code>JBDatastructure.C</code>. Everything of the following lives in the namespace <code>CoCoA::Involutive</code>.
+</p>
+
+<section id="toc6">
+<h3>JanetDatastructure</h3>
+
+<section id="toc7">
+<h4>JanetTriple</h4>
+
+<p>
+The <code>JanetTriple</code> is nothing else than a polynomial with some extra informations.
+In addition to the polynomial <code>myPolynom</code> it has a data member <code>myAncestor</code> which is usually the LPP of <code>myPolynom</code> and the already prolonged variables (<code>myAlreadyProlongedVars</code>). If the <code>JanetTriple</code> arises from a prolongation <code>x_i * myP^\prime</code> the ancestor is the LPP of <code>myP^\prime</code>.
+</p>
+
+</section>
+<section id="toc8">
+<h4>JanetNodeBase, JanetLeafNodeImpl, JanetInternalNodeImpl, JanetHandle, JanetTree</h4>
+
+<p>
+The <code>JanetTree</code> is the basic data structure to compute and deal efficiently with a Janet basis.
+It is a binary tree. A Janet tree contains the Janet basis in its leaf nodes.
+Therefore we distinguish between internal nodes (<code>JanetInternalNodes</code>) and leaf nodes (<code>JanetLeafNodes</code>).
+The tree is designed as a nested set of lists.
+A node basically consists of the distance to the next variable (the distance to next node to the right) and the next degree (the distance to next node to the left).
+An internal node contains a list of <code>JanetHandles</code> additionally, which represents the following tree to the right.
+A leaf node contains, beside the distance information, a <code>JanetTriple</code>.
+The <code>JanetTriple</code> is not a direct data member of a leaf node.
+It is stored in a list.
+<code>JanetLeafNodeImpl</code> only gets an iterator from this list.
+The <code>JanetHandle</code> handles the distinction between the <code>JanetLeafNodeImpl</code> and the <code>JanetInternalNodeImpl</code> because a stl-container cannot reasonable handle different classes even if they have the same base class.
+</p>
+
+<section id="toc9">
+<h5>Problems&amp;Ideals related to JanetNodeBase, JanetLeafNodeImpl, JanetInternalNodeImpl, JanetHandle, JanetTree</h5>
+
+<p>
+The <code>JanetTree</code> only works with a list of <code>JanetTriple</code>'s. It would be useful if it would work with a list of polynomials as well.
+</p>
+
+</section>
+</section>
+<section id="toc10">
+<h4>JanetContainer</h4>
+
+<p>
+The last part of the previous paragraph shows a strong connection between the list of <code>JanetTriple</code> which shall represents the Janet basis and the <code>JanetTree</code> which is another representation of the Janet basis.
+This could lead to strange situations which has as a consequence invalidate iterators.
+To avoid this during the normal usage of these two datastructure we introduce a <code>JanetContainer</code>.
+<code>JanetContainer</code> couples these two datastructures.
+It contains a list of <code>JanetTriple</code>'s and a <code>JanetTree</code> which leaf nodes consists of iterators to this list.
+With this coupling the user can deal with a Janet basis safely.
+But for computing a Janet basis we do not use this class for efficiency reasons.
+</p>
+
+</section>
+<section id="toc11">
+<h4>JanetIterator</h4>
+
+<p>
+The task of <code>JanetIterator</code> is to offer a way to navigate through the <code>JanetTree</code>.
+Basically the <code>JanetIterator</code> consists of a pointer to the specific <code>JanetTree</code>, pointer to the current in the tree and an iterator to a specific position in this list.
+The <code>JanetIterator</code> provides access (if possible) to the underlying <code>JanetTriple</code>, provides the possibility to move forward in the tree, provides some informations of the current position in the tree and provides the functionality to add a new node in the <code>JanetTree</code> behind the current position.
+For knowing the way from the beginning of the tree to the current position it consists of a vector of longs which stores the specific degrees and the current variable.
+</p>
+
+</section>
+</section>
+<section id="toc12">
+<h3>JBSets</h3>
+
+<p>
+The most important algorithm to compute Janet basis is the TQ-Algorithm.
+There are two variants of it: the basic TQDegree strategy and the more advanced TQBlock strategy.
+The TQDegree strategy deals with a set T and Q. In short, through the computation the algorithm moves elements mainly from Q to T and vica versa. To deal efficiently with it we introduced the class <code>TQSets</code>. It consists of the sets T (<code>mySetT</code>) and Q (<code>mySetQ</code>) which are ordered. Both are represented as <code>std::multiset</code>.
+They contain <code>JanetTriple</code> and ordered by the LPP's of them (Because these LPP's are not unique during the computation we choosing <code>std::multiset</code>).
+The <code>JanetTriple</code>'s are not contained directly in the set T and Q itself, as it is very expensive to move them from one set to the other.
+Therefore there is a third set (<code>myBasicSet</code>) which is implemented as list of <code>JanetTriple</code>'s which contains the <code>JanetTriple</code>'s itself.
+The sets T and Q only contain an iterator to a specific position of these sets.
+</p>
+<p>
+For applying the BlockTQ algorithm we need a third set P (<code>mySetP</code>) which is implemented like T and Q. Due to the similarity we introduced a subclass of <code>TQSets</code> which is called <code>TQPSets</code>. In addition to the new set P it introduces a strategy flag which influences the way how we move elements from Q to P.
+</p>
+<p>
+In addition to the above mentioned sets <code>TQSets</code> consists of a <code>SparsePolyRing</code>, a <code>ReductionCog</code> and a <code>bitset&lt;3&gt;</code> (<code>myCriteria</code>). <code>myCriteria</code> regulates which involutive criteria shall be applied during the computation. Every bit stands for one single involutive criteria.
+</p>
+
+<section id="toc13">
+<h4>Problems&amp;Ideas related to JBSets</h4>
+
+<p>
+Again the construction of the sets T,Q and <code>myBasicSet</code> is dangerous. There could be invalid iterators in the set T and Q.
+In addition to that it can happen (it really happens!!!!) that we can modify an element in <code>myBasicSet</code> in such a way that the ordering in T or Q would be change.
+But T and Q does not realizing this change.
+Therefore we getting again an invalid state.
+A solution for the second problem could be to store T and Q simply as a list of iterators of <code>JanetTriple</code>'s and sort the list manually every time we want to have a sorted list. Maybe this solution is even faster than the current one!
+</p>
+
+</section>
+</section>
+<section id="toc14">
+<h3>JBAlgorithm</h3>
+
+<section id="toc15">
+<h4>JBAlgorithm</h4>
+
+<p>
+This class provides an interface for computing Janet bases.
+It defines a method to compute a Janet basis for a given input, and a method to get a JanetContainer which should contain the computed Janet basis.
+Also it contains as basic data the polynomial ring and the <code>PPMonoid</code>.
+Every class which computes a Janet basis has to be a subclass of this class.
+</p>
+
+</section>
+<section id="toc16">
+<h4>TQAlgorithm</h4>
+
+<p>
+This class is a subclass of <code>JBAlgorithm</code> but is again purely virtual.
+It acts as an interface for all algorithms which using the TQ strategy.
+In addition to the data members of the base class it defines amongst other things a <code>JanetTree</code> (<code>myJTree</code>).
+All <code>TQAlgorithm</code> subclasses deal with the class <code>TQSets</code> or a subclass of it.
+To get a unique access to the specific data member (which is defined in the subclasses) we implemented a purely virtual function <code>myGetSets</code> which returns a reference to the specific data members.
+With this construction we are able to initialize the specific set in the class <code>TQAlgorithm</code> via the method <code>myInitialization</code>.
+In addition to that <code>TQAlgorithm</code> contains a method to return the ideal which is generated by <code>1</code>.
+</p>
+
+</section>
+<section id="toc17">
+<h4>DegreeTQ</h4>
+
+<p>
+This class is a subclass of <code>TQAlgorithm</code>. It defines the data member <code>mySets</code> (a <code>TQSets</code> instance) additionally. In addition to that it implements the purely virtual methods <code>myGetSets</code> and <code>myComputer</code>.
+</p>
+
+</section>
+<section id="toc18">
+<h4>BlockTQ</h4>
+
+<p>
+This class is a subclass of <code>TQAlgorithm</code>. It defines the data member <code>mySets</code> (a <code>TQPSets</code> instance) additionally. In addition to that it implements the purely virtual methods <code>myGetSets</code> and <code>myComputer</code>.
+</p>
+
+</section>
+<section id="toc19">
+<h4>CompletionGB</h4>
+
+<p>
+This class defines another approach to compute Janet basis, than the TQ approach.
+Here we first compute a reduced Groebner basis and complete it to the minimal Janet basis. It is a subclass of <code>JBAlgorithm</code>. The class implements the purely virtual methods <code>myComputer</code> and <code>myOutputResult</code> and defines a <code>JanetTree</code> and a list of <code>JanetTriple</code>'s as data members. In addition to that it implements several methods to compute the completion.
+</p>
+
+</section>
+</section>
+<section id="toc20">
+<h3>JBMill</h3>
+
+<section id="toc21">
+<h4>JBMill</h4>
+
+<p>
+This class defines the representation of a Janet basis accessible by the user.
+As data members it contains a <code>JanetContainer</code> (<code>myBasis</code>), a <code>SparsePolyRing</code> (<code>myPolyRing</code>) and a <code>PPMonoid</code> (<code>myPPMValue</code>).
+The class defines several methods to work with the Janet basis. For example the user can compute the multiplicative variables, the Groebner basis or some invariants like the hilbert polynomial.
+In addition to that it acts as a base class for the <code>PBMill</code>, which is the representation of a Pommaret basis.
+</p>
+
+<section id="toc22">
+<h5>Problems&amp;Ideas related to JBMill</h5>
+
+<p>
+Maybe introduce typedefs or structs for complicated objects like a complementary decomposition.
+Add several methods to check different stability position.
+</p>
+
+</section>
+</section>
+<section id="toc23">
+<h4>JBMill::Builder</h4>
+
+<p>
+This class is designed to construct a Janet basis.
+The goal of this class is to separate the construction of the <code>JBMill</code> from its representation.
+The 'Gang of Four' (Gamma, Helm, Johnson, Vlissides - Design Patterns) served
+as template for the construction.
+The corresponding pattern is called <strong>Building Pattern</strong>.
+To construct a <code>JBMill</code> out of the builder object the user can call a constructor of <code>JBMill</code> with a configured builder object.
+</p>
+</section>
+</section>
+</section>
+</section>
+</div>
+
+</article></body></html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      RingElemInput</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      RingElemInput</h1>
+<h2>      &copy;  2014,2016,2020  John Abbott &amp; Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+    </li>
+    <li><a href="#toc3">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc4">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc5">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PolyInput2.C">ex-PolyInput2.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+These are the functions for creating a <a href="RingElem.html"><code>RingElem</code></a> from a <code>string</code> or an <code>istream</code>.
+Let
+<code>str</code> be a <code>string</code>,
+<code>in</code> be a <code>string</code> or <code>istream</code> (<em>e.g.</em> reading from file),
+and <code>R</code> any <a href="ring.html"><code>ring</code></a>.
+They both return the expression read from <code>in</code> and evaluated in <code>R</code>.
+</p>
+
+<ul>
+<li><code>RingElem(R, str)</code>  -- <a href="RingElem.html"><code>RingElem</code></a> constructor, same as <code>ReadExpr(R, str)</code>
+</li>
+<li><code>ReadExpr(R, in)</code> -- keeps reading to the end of input (so it's
+convenient for reading from a string)
+</li>
+<li><code>ReadExprSemicolon(R, in)</code> -- stops at the semicolon (convenient for reading from file or standard input)
+</li>
+<li><code>RingElems(R, in)</code>  -- returns a <code>vector&lt;RingElem&gt;</code> of the comma-separated list of <a href="RingElem.html"><code>RingElem</code></a> written in file/string <code>in</code>
+</li>
+<li><code>RingElemVec(R, in)</code>  -- returns a <code>vector&lt;RingElem&gt;</code> of the comma-separated list of <a href="RingElem.html"><code>RingElem</code></a> inside square brackets written in file/string <code>in</code>
+</li>
+</ul>
+
+<p>
+Recognized operations in the string are:
+</p>
+
+<pre>
++ - * / ^ ()
+</pre>
+
+<p>
+The expression may contain integer constants or decimals (which are read
+as exact rational numbers, <em>e.g.</em> <code>1.25</code> is read the same as <code>(5/4)</code>).
+The expression may contain symbols (any indices are placed after the symbol
+head inside square brackets, and separated by commas).
+</p>
+
+</section>
+<section id="toc3">
+<h2>Maintainer documentation</h2>
+
+<p>
+Code is so nice it does not need any documentation! ;-)
+</p>
+
+</section>
+<section id="toc4">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Potentially ambiguous expressions such as <code>1/2/3</code> are accepted (without any
+warning message), and interpreted as <code>(1/2)/3</code>.
+</p>
+
+</section>
+<section id="toc5">
+<h2>Main changes</h2>
+
+<p>
+<strong>2019</strong>
+</p>
+
+<ul>
+<li>October (v0.99650): added <code>RingElems</code> for reading a vector
+<p></p>
+<strong>2016</strong>
+</li>
+<li>September (v0.99544): added "decimal numbers"
+</li>
+</ul>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>January (v0.99533): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

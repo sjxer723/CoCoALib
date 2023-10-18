@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      JBMill</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      JBMill</h1>
+<h2>      &copy;  2011-2015  John Abbott,  Anna M. Bigatti    (orig author: Mario Albert)</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for using the UniversalInvolutiveBasisContainer</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for UIBC</a>
+      <ul>
+      <li><a href="#toc3">Goal of UIBC</a>
+      </li>
+      <li><a href="#toc4">Implementation of UIBC</a>
+      </li>
+      <li><a href="#toc5">Ideas</a>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for using the UniversalInvolutiveBasisContainer</h2>
+
+<p>
+The normal user should not use this class directly. The class UniversalInvolutiveBasisContainer (short UIBC) is only an interface between everything which is related to involutive bases and the <code>ideal</code> class.
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for UIBC</h2>
+
+<section id="toc3">
+<h3>Goal of UIBC</h3>
+
+<p>
+The UIBC acts as an interface between <code>JBMill</code>/<code>PBMill</code> and an <code>ideal</code>. It handles
+every request of an <code>ideal</code> to a <code>JBMill</code>/<code>PBMill</code> and computes if necessary a
+Janet or Pommaret basis. In addition to that the UIBC stores every computed
+value which is related to a Janet or Pommaret basis. Therefore it needs to
+compute values like the dimension only once, because for additional calls it
+already knows these values.
+</p>
+
+</section>
+<section id="toc4">
+<h3>Implementation of UIBC</h3>
+
+<p>
+The UIBC is designed as a subclass of <code>IntrusiveReferenceCount</code>. The reason for that
+is that we use this class as a <code>SmartPtrIRC</code>. Nearly every datamember of UIBC is <code>mutable</code> one.
+The only non-mutable one is <code>gens</code>, which is a vector of <code>RingElem</code>s. <code>gens</code> is constant e.g.
+after the initialization we can't change this value anymore. As all other data members of
+UIBC are directly dependent from this generating set we make them mutable. In general
+every mutable data member is 'empty'. Only if the user requests one of this values we check
+if this value is non-empty and return it. If is empty we compute this value and return it.
+</p>
+<p>
+The class <code>SparsePolyRing::IdealImpl</code> contains <code>SmartPtrIRC&lt;Involutive::UniversalInvolutiveBasisContainer&gt;</code>
+as data member. It implements several methods to compute values via the UIBC. In addition to that
+we have some non-member methods in the namespace <code>Involutive</code>, which access these methods.
+</p>
+
+</section>
+<section id="toc5">
+<h3>Ideas</h3>
+
+<p>
+At the moment UIBC contains a <code>JBMill</code> and a <code>PBMill</code>. Because <code>PBMill</code> is a subclass of <code>JBMill</code> which
+only extens <code>JBMill</code> it would be better if (in case of delta-regular coordinates) we only store a <code>PBMill</code>.
+</p>
+<p>
+It would be useful to set different Janet basis computation strategies via the ideal implementation. But for this we need
+to know <code>Involutive::StrategyFlag</code> already in <code>SparsePolyRing.C</code>. But that is not a clean solution... (See discussion in redmine!)
+</p>
+</section>
+</section>
+</section>
+</div>
+
+</article></body></html>

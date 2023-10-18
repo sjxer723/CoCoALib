@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      MorseGraph</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      MorseGraph</h1>
+<h2>      &copy;  2015  John Abbott,  Anna M. Bigatti   (orig author: Mario Albert)</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation for Morse Graph</a>
+      <ul>
+      <li><a href="#toc3">Using the Morse Graph</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Maintainer documentation for TmpMorseGraph.C, TmpMorseBetti.C, TmpMorseResolution.C, TmpPartialMorseBetti.C TmpMorseElement.C, TmpMorsePaths.C, TmpResolutionMinimization.C</a>
+      <ul>
+      <li><a href="#toc5">MorseElement and JBElem</a>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-MorseGraph.C">ex-MorseGraph.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation for Morse Graph</h2>
+
+<p>
+Via the Morse Graph we are able to compute a free resolution of a
+polynomial ideal via the <code>JBMill</code>. We can compute a free
+resolution and, if the ideal is homogeneous, the minimal free resolution
+and the graded Betti numbers of the ideal.
+</p>
+
+<section id="toc3">
+<h3>Using the Morse Graph</h3>
+
+<p>
+In the following let <code>mill</code> a <a href="JBMill.html"><code>JBMill</code></a> with <code>degrevlex</code> order
+The following command computes a free resolution as <code>vector&lt;matrix&gt;</code>
+</p>
+
+<ul>
+<li><code>Resolution(mill)</code>
+<p></p>
+Now we assume that <code>mill</code> contains a homogeneous ideal and <code>col</code> and <code>row</code> are of type <code>long</code>
+<p></p>
+</li>
+<li><code>MinimalResolution(mill)</code> -- Returns the minimal free resolution of <code>mill</code> as <code>vector&lt;matrix&gt;</code>
+</li>
+<li><code>BettiDiagramm(mill)</code>     -- Returns a matrix of <code>ZZ</code>, which represents the graded Betti numbers in Macaulay-Style
+</li>
+<li><code>BettiColumn(mill, col)</code>  -- Returns a matrix with only one column. This column represents the <code>col</code>th column of the Betti diagram (The first column/row has index <code>0</code>).
+</li>
+<li><code>BettiNumber(mill, row, col)</code> -- Returns a <code>RingElem</code> of type <code>RingZZ</code> which represents the Betti number at position (<code>row</code>, <code>col</code>) in the Betti diagram (The first column/row has index <code>0</code>).
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Maintainer documentation for TmpMorseGraph.C, TmpMorseBetti.C, TmpMorseResolution.C, TmpPartialMorseBetti.C TmpMorseElement.C, TmpMorsePaths.C, TmpResolutionMinimization.C</h2>
+
+<p>
+For computing free resolutions and graded Betti diagramms with a Janet basis we using algebraic discrete Morse theory.
+(More information about the mathematical background the user can find in "On the free resolution induced by a Pommaret basis").
+</p>
+
+<section id="toc5">
+<h3>MorseElement and JBElem</h3>
+
+<p>
+The basic datastructure is a, so called, <code>MorseGraph</code>. The nodes are represented by the class <code>MorseElement</code>. A <code>MorseElement</code> consists of three main data members:
+</p>
+
+<ul>
+<li><code>myWedgeProduct</code> -- A <code>DynamicBitset</code> which represents a wedge product.
+</li>
+<li><code>myRightProduct</code> -- A <code>PPMonoidElem</code>.
+</li>
+<li><code>myBasis</code> -- A <code>JBElemConstIter</code>. This is a constant iterator to a vector of <code>JBElem</code>.
+<p></p>
+The class <code>JBElem</code> is contained in the class <code>MorseElement</code>. The set of all <code>JBElem</code>s should represent the given Janet basis. It consists of the basis element (<code>elem</code>) as <code>RingElem</code>, the multiplicative variables (<code>multVars</code>) as <code>DynamicBitset</code> and the lexicographic position above all elements in the given Janet basis (<code>lexPos</code>) as <code>long</code>. We store this additional attributes to avoid redundant computations.
+<p></p>
+<code>MorseElement</code> implements several methods to construct and modify <code>MorseElement</code>s. In addition to that it implements several methods which we need to compute the resolution. For detailed descriptions the user should take a look at the inline documentation.
+<p></p>
+=== StandardRepresentationContainer ===
+<p></p>
+During the computation of the free resolution we need to compute standard representations of the form <code>x[i] * basis_element</code> very often. Due to that we often compute the same standard representation. To avoid redundant computations we store every already computed standard representation in the container.
+<p></p>
+A standard representation is represented by a vector of <code>RingElem</code>s. These vector corresponds to the given Janet basis (e.g. The standard representation of <code>r</code> is (1. element of the vector) * (1. basis element) + (2. element of the vector) * (2. basis element) + ...). Together with <code>r</code> we save the standard representation in a <code>pair</code>.
+We store all standard representations in a multimap (<code>myContainer</code>), where the key is the corresponding LPP.
+<p></p>
+If we want to compute the standard representation of <code>r</code>. We first searching for the range with the same LPP in <code>myContainer</code>. If this is range is not empty we try to find an pair with the same <code>RingElem</code> than <code>r</code>. If we do not find such an element we compute the standard representation, save it in <code>myContainer</code> and return the standard representation to the user.
+<p></p>
+=== MorseGraph and MorsePaths ===
+<p></p>
+For modelling a Graph we need some additional data structures beside a <code>MorseElement</code>.
+Essentially we need again a map where the beginning of an edge should be the key and a vector of the tail of all edges with same beginning should be the value.
+For efficiency and simplicity we invert this natural datastructure, e.g. the tail of an edge is the key of the map and the beginning of all edges with this tail is the value (this list is called <code>myResolution</code> and is of type <code>map&lt;MorseElement, MorsePaths&gt;</code>).
+The edges have additionally values. Therefore we join the beginnings of all edges with the value (a simple <code>RingElem</code>) of the corresponding edges.
+These list is represented by the class <code>MorsePaths</code>.
+<code>MorsePaths</code> implements an intelligent version of this list. It notices if we add an already known edge and sums up the values of this edges.
+If a edge has value <code>0</code> it removes this edge from the list.
+<p></p>
+The implementation of the list is quite complicated:
+<p></p>
+The beginning of the edges are <code>MorseElement</code>s. To avoid memory consumption we only save a <code>const_iterator</code> to the corresponding <code>MorseElement</code> in <code>myResolution</code>.
+For efficiency we save these const iters as a key of map, where the values are <code>RingElem</code>s, representing the value of the corresponding edges.
+<p></p>
+If there is a <code>MorseElement</code> which is not the end of an edge we simply store it in <code>myComputer</code> with an empty <code>MorsePaths</code>.
+<p></p>
+<code>MorseGraph</code> does not only consists of <code>myContainer</code>. It also contains the a <code>JBMill</code> (<code>myMill</code>), the corresponding <code>SparsePolyRing</code> (<code>myRing</code>), the corresponding Janet basis as <code>vector&lt;MorseElement::JBElem&gt;</code> (<code>myBasis</code>) and a <code>ring</code> (<code>myMapRing</code>).
+<code>MorseGraph</code> is purely virtual class. It concrete subclasses are <code>MorseBetti</code> and <code>MorseResolution</code>.
+In <code>MorseBetti</code> all values of the edges in our graph are of type <code>CoeffRing(myRing)</code> and in <code>MorseResolution</code> they are of type <code>myRing</code>.
+The variable <code>myMapRing</code> keeps track of this information.
+<p></p>
+The implementation of <code>MorseBetti</code> and <code>MorseResolution</code> is quite similar.
+They compute and minimize the MorseGraph, but the <code>MorseBetti</code> class only computes the part of the graph where all edges have only a constant value.
+For further information look at the cited paper or at the inline documentation.
+Another difference between <code>MorseBetti</code> and <code>MorseResolution</code> is the expected output.
+<code>MorseBetti</code> computes the graded betti diagram of an ideal. The betti diagramm is represented by <code>matrix</code>.
+<code>MorseResolution</code> computes a graded free resolution of an ideal. The resolution is represented by <code>vector&lt;matrix&gt;</code>.
+<p></p>
+=== PartialMorseBetti ===
+We use this class to compute a single Betti column or Betti number. It is a child class of <code>MorseBetti</code>. The algorithms to compute these partial datas are nearly the same as in the class <code>MorseBetti</code>. The only difference are the restriction to one column or only one number. For more informations take a look at the inline documentation.
+<p></p>
+=== ResolutionMinimization ===
+<p></p>
+This class takes a vector of matrices of <code>RingElem</code>s which should represent a free resolution and minimizes it with the standard algorithm.
+<p></p>
+== Bugs, Shortcomings and other ideas ==
+<p></p>
+=== ResolutionMinimization ===
+<p></p>
+Implementing a own specialized myAddRowMul function (skipping zeros...).
+<p></p>
+=== MorseGraph ===
+<p></p>
+Waiting for general free resolution object.
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+</div>
+</article></body></html>

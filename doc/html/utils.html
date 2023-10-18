@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      utils</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      utils</h1>
+<h2>      &copy;  2006,2014,2017,2020  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for file utils.H</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for files utils.H</a>
+    </li>
+    <li><a href="#toc3">Bugs, Shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc4">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for file utils.H</h2>
+
+<p>
+This file defines a few very basic functions which I feel should
+really be part of the standard C++.  Nevertheless I have placed all
+definitions inside the namespace <code>CoCoA</code>.  Here is a summary:
+</p>
+
+<ul>
+<li><code>round(x)</code> -- round <code>x</code> (of type <code>double</code>) to nearest integer value (of type <code>double</code>); halves round towards +infinity.
+<p></p>
+</li>
+<li><code>ULongDiff(hi,lo)</code> -- computes <code>hi-lo</code> as <strong>unsigned long</strong> (assumes <code>hi&gt;=lo</code>)
+<p></p>
+</li>
+<li><code>LongRange(lo,hi)</code> -- returns a <code>vector&lt;long&gt;</code> filled with <code>lo,lo+1,...,hi</code> (useful for <code>submat</code>)
+<p></p>
+</li>
+<li><code>IsDecimal(strm)</code> -- returns <code>true</code> is i/o stream <code>strm</code> is in decimal mode, o/w returns <code>false</code>
+<p></p>
+</li>
+<li><code>MaxSquarableInteger&lt;T&gt;()</code> -- returns largest integer whose square fits in type <code>T</code>
+<p></p>
+</li>
+<li><code>fold(str, n)</code>  -- make a copy of the string <code>str</code> inserting a newline every <code>n</code> chars
+<p></p>
+</li>
+<li><code>len(v)</code> -- same as <code>v.size()</code> except that result is <code>long</code>
+             rather than <code>size_t</code>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for files utils.H</h2>
+
+<p>
+Everything is in <code>utils.H</code>;
+the functions are all so simple that they can be implemented inline.
+</p>
+<p>
+Impl of template fn <code>MaxSquarableInteger</code> uses GMP to compute the
+memorized values.  A table of constants would be faster but potentially
+less portable (given that CoCoALib requires GMP anyway).  I haven't yet
+found a neat way of ensuring that the type <code>T</code> is integral &amp; bounded.
+</p>
+
+</section>
+<section id="toc3">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+A possibly better idea for <code>MaxSquarableInteger</code>: precompute 2^63*sqrt(2) as
+<code>unsigned long</code>, then simply right shift this value for integral types with
+less than 127 bits.  This suggestion presupposes a binary computer.
+</p>
+
+</section>
+<section id="toc4">
+<h2>Main changes</h2>
+
+<p>
+<strong>2017</strong>
+</p>
+
+<ul>
+<li>February (v0.99543): added round; removed DeleteObject and cmp template fn.
+</li>
+<li>date of first release not noted
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      error</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      error</h1>
+<h2>      &copy;  2005,2008,2010,2015,2020  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#toc3">Debugging</a>
+      </li>
+      <li><a href="#toc4">Recommended way of reporting errors</a>
+      </li>
+      <li><a href="#toc5">Adding a New Error ID and its Default Message</a>
+      </li>
+      <li><a href="#toc6">Information about errors -- for the more advanced</a>
+      </li>
+      <li><a href="#toc7">Choosing the language for error messages</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc8">Maintainer documentation for files error.H and error.C</a>
+      <ul>
+      <li><a href="#toc9">To Add a New Error Code and Message</a>
+      </li>
+      <li><a href="#toc10">To Add a New Language for Error Messages</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc11">Bugs, Shortcomings, and other ideas</a>
+      <ul>
+      <li><a href="#toc12">new improved list of errors</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc13">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-error1.C">ex-error1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+The standard way of reporting an error in CoCoALib is to call the macro
+<code>CoCoA_THROW_ERROR</code> which will create and throw an object of type
+<code>CoCoA::ErrorInfo</code>.  This type is derived from <code>CoCoA::exception</code> (see <a href="exception.html"><code>exception</code></a>).
+</p>
+<p>
+If you want to throw a CoCoA exception <code>EXC</code>, we recommend doing so via
+calling <code>ThrowException(EXC)</code>; the advantage with this approach is that
+the (template) function calls <code>JustBeforeThrowing()</code> which can be
+intercepted easily in a debugger (<em>e.g.</em> <code>gdb</code>).
+</p>
+
+<section id="toc3">
+<h3>Debugging</h3>
+
+<p>
+If you get a <code>CoCoA ERROR</code> when you execute your program, recompile CoCoALib
+with the configure option <code>--debug</code>, then you can easily intercept the throwing
+of the exception with your preferred debugger tool.
+</p>
+<p>
+For example, when debugging with <strong>gdb</strong>, type
+</p>
+
+<pre>
+break CoCoA::JustBeforeThrowing
+</pre>
+
+<p>
+and then <code>run</code>.
+When it stops in the call of <code>JustBeforeThrowing</code>, type <code>up</code> (possibly
+repeatedly to reach the line which originally caused the error.
+</p>
+
+</section>
+<section id="toc4">
+<h3>Recommended way of reporting errors</h3>
+
+<p>
+Usually if you have detected an error in your program, you want to
+report it immediately.  We recommend that you use the macro <code>CoCoA_ERROR</code>
+to do this.  Here's an example:
+</p>
+
+<pre>
+    value_t operator/(const value_t&amp; num, const value_t&amp; den)
+    {
+      if (IsZero(den))
+        CoCoA_THROW_ERROR(ERR::DivByZero, "operator/ for value_t");
+      ....
+    }
+</pre>
+
+<p>
+The first argument should be an error ID (<em>i.e.</em> ERR::something); you can
+find a list of the IDs in the file (CoCoA_ROOT)/include/CoCoA/error.H.  If
+no ID is suitable, you can just put a string instead.  The second argument
+should be an indication of the function in which the error occurred.
+</p>
+
+</section>
+<section id="toc5">
+<h3>Adding a New Error ID and its Default Message</h3>
+
+<p>
+If you are a CoCoALib contributor and want to add a new error ID and
+message (or even a new language for error messages), please read the
+maintainer documentation for what to do.
+</p>
+
+</section>
+<section id="toc6">
+<h3>Information about errors -- for the more advanced</h3>
+
+<p>
+The macro <code>CoCoA_THROW_ERROR</code> does two things:
+</p>
+
+<ul>
+<li>(1)  it creates a <code>CoCoA::ErrorInfo</code> object with the parameters given to the macro, and also with the filename and line number;
+</li>
+<li>(2)  it calls the function <code>CoCoA::ThrowException</code> on the <code>ErrorInfo</code> object just created.
+</li>
+</ul>
+
+<p>
+Below we explain these two stages in more detail.
+</p>
+<p>
+The class <code>CoCoA::ErrorInfo</code> is intended to be used for creating exception
+objects -- indeed, it derives from <code>std::exception</code>.  There are two things
+you are likely to want to do with exception objects:
+</p>
+
+<ul>
+<li>(A)  create and throw the exception object
+</li>
+<li>(B)  catch the exception object
+</li>
+</ul>
+
+<ul>
+<li>Case (A) Rather than using using the C++ <code>throw</code> command directly, we
+  recommend that you pass the error object to the function
+  <code>CoCoA::ThrowError</code> as it makes debugging easier (see above).
+<p></p>
+  We also recommend that you use the constructor which takes a
+  <code>CoCoA::ERR::ID</code> and a string; the string should indicate where
+  the error was detected, <em>e.g.</em> the name of the C++ function which
+  found the error.  Look through the list of <code>CoCoA::ERR::ID</code>s (in
+  the file <code>error.H</code>) to find the one best suited to the type of
+  error you wish to signal.
+<p></p>
+  If no error <code>CoCoA::ERR::ID</code> is suitable then you can use the
+  constructor which accepts two string arguments: the first should be a
+  description of the error (<em>e.g.</em> "Incompatible hypermatrix
+  dimensions"), and the second should indicate where the error was
+  detected.  If you are a CoCoALib contributor, see the notes below about
+  how to add a new error ID and message.
+</li>
+</ul>
+
+<p>
+  NOTE: if you set the C++ preprocessor symbol <code>CoCoA_DEBUG</code> to a value
+    greater than 1 then a log message is produced each time <code>CoCoA::ThrowError</code>
+    is called; the log message is printed on <code>std::clog</code>.
+</p>
+
+<ul>
+<li>Case (B) After catching a <code>CoCoA::ErrorInfo</code> object in the variable <code>err</code>
+  you can make the following queries:
+
+<pre>
+  err == ERR::ErrorID  -- returns true iff err is of type ERR::ErrorID
+                   (replace ErrorID by the ID of the error you want!)
+</pre>
+
+  EXAMPLE (of handling a CoCoA Error):
+
+<pre>
+  try { ... }
+  catch (const CoCoA::ErrorInfo&amp; err)
+  {
+    if (err != ERR::DivByZero) throw; // rethrow unexpected error
+    // code to handle the "expected" division by zero error
+  }
+</pre>
+
+  If you have caught a <code>CoCoA::ErrorInfo</code> object and want to announce it
+  as an error then call the procedure <code>CoCoA::ANNOUNCE</code> with the ostream
+  on which to make the announcement and the ErrorInfo object as second
+  argument.  This will print an eye-catching error announcement, and then
+  return to the caller.  Note that <code>CoCoA::ANNOUNCE</code> does not cause the
+  program to exit/abort, it merely prints out an eye-catching announcement.
+<p></p>
+  To facilitate debugging, an <code>ErrorInfo</code> object may be printed in the usual
+  way; this produces a modest message, clearly different from an error
+  announcement.
+</li>
+</ul>
+
+<p>
+Recall that, as for any other "exception object", simply creating a
+<code>CoCoA::ErrorInfo</code> object does not cause the error condition to be
+signalled.  To signal the error it must be thrown -- we recommend passing
+the error object to the function <code>CoCoA::ThrowError</code> (see above).
+</p>
+
+</section>
+<section id="toc7">
+<h3>Choosing the language for error messages</h3>
+
+<p>
+You may choose the language for CoCoALib error messages: the default is
+English.  If an error message has not yet been translated into the
+chosen language then it is replaced by the default english message.
+Currently there are only two choices:
+</p>
+
+<pre>
+ ErrorLanguage::english();
+</pre>
+
+<pre>
+ ErrorLanguage::italian();
+</pre>
+
+<p>
+EXAMPLE:
+</p>
+
+<pre>
+  int main()
+  {
+    CoCoA::ErrorLanguage::italian(); // vogliamo messaggi d'errore in italiano
+    ....
+  }
+</pre>
+
+<p>
+The language for error messages may be changed any number of times: the last
+chosen language is the one used when creating an <code>ErrorInfo</code> object.
+</p>
+
+</section>
+</section>
+<section id="toc8">
+<h2>Maintainer documentation for files error.H and error.C</h2>
+
+<p>
+<code>CoCoA::ErrorInfo</code> is derived from <code>std::exception</code> for compatibility with the
+rest of C++.  How this might be useful I cannot yet say, but it does not
+measurably complicate the code (though it does force the implementation of a
+member function called <code>what</code>).
+</p>
+<p>
+The preferred constructors for <code>ErrorInfo</code> are those accepting an
+<code>ERR::ID</code> and a C string indicating context (with or without filename
+and line number information); the other constructors should be used
+only when no suitable <code>ERR::ID</code> exists.  The <code>ERR::ID</code> object indicates
+the general nature of the error, and is used for selecting the error
+message to be printed.
+</p>
+<p>
+Note that the conversion from an <code>ERR::ID</code> to a string is slightly
+convoluted: this is to allow the possibility of selecting at run-time a
+language other than English for the error messages.
+</p>
+<p>
+I chose not to offer an <code>ErrorInfo</code> constructor which accepts natively
+<code>const char*</code> args because the potential extra copying of strings (to
+construct a <code>std::string</code>) is hardly likely to be important, and
+<code>std::string</code>s feel much cleaner.
+</p>
+<p>
+The nature and context of the error are kept separate in an <code>ErrorInfo</code>
+object since it is possible that we may wish to propagate the nature of the
+error to top level in an interactive system where it would be unhelpful
+or confusing to refer to some C++ function irrelevant to the user.
+</p>
+<p>
+The definition of the function <code>CoCoA::ThrowError</code> is quite straightforward.
+The function is deliberately not inline: efficiency is wholly
+unimportant whereas the ability to set a breakpoint in the function is
+(some debuggers may be unable to set a breakpoint in an inline function).
+</p>
+<p>
+Each CoCoA error ID object is in reality a constant global variable
+containing two pointers to constant C strings called <code>myName</code> and
+<code>myDefaultMesg</code>: the latter contains the associated default error message
+(which must be in English), and the former contains the name of the error
+ID object.  The identity of the error ID actually resides in the address of
+the specific string constant in the data member <code>myName</code> -- this implies
+that copying the ID object does not change its identity.  Since the
+different objects necessarily have different names, the string literals
+containing those names are surely distinct, and so we are guaranteed that
+these addresses are distinct.  There are comparison operators (equal,
+not-equal, and less-than) for <code>ERR::ID</code>; less-than is needed for using C++
+maps when implementing error messages in languages other than english.
+These comparison operators merely conduct the required comparison on the
+addresses of the strings in <code>myName</code>; this is quick and simple, and
+sufficient for our purposes -- the actual values of strings pointed to are
+not taken into consideration!
+</p>
+
+<section id="toc9">
+<h3>To Add a New Error Code and Message</h3>
+
+<p>
+Invent a new name for the error code, and insert it in the list of names
+of "error variables" (in the file error.H).  Make sure you insert it
+in the right place respecting alphabetical order -- this way it is easy
+to check whether a name is already present in the list.  Add a short
+comment indicating what sort of error that code is to be used for.
+</p>
+<p>
+Next you must add a message corresponding to that code.  In the file
+error.C you will find a long list of "error variable" initializations.  Add
+an initialization for your new "error variable" -- the syntax is quite
+obvious from the other initializations there (which use the macro
+<code>DEFINE_ERROR</code>).  You may wish to add translations of your new error message
+into the other languages present in error.C.
+</p>
+
+</section>
+<section id="toc10">
+<h3>To Add a New Language for Error Messages</h3>
+
+<p>
+You must write a function analogous to the function italian() which
+resides inside the namespace <code>CoCoA::ErrorLanguage</code>.  The new function
+must have a name different from the other functions there: I suggest the
+english name of the language.  Inside the function you will have to fill
+a <code>MsgTable_t</code> object with the translated messages associated to each
+possible error code.  At the end you should check to make sure that you
+have a message for each possible code: it should suffice simply to count
+them.  The code will still compile and run even if some translated
+messages are missing: if an error occurs for which the current error
+language has no translation then the default (english) message is printed.
+</p>
+<p>
+EXAMPLE:
+  Suppose we want to add german error messages.  We choose to use
+  the name "german" for the function which activates german error
+  messages.  Here is what we do:
+</p>
+
+<dl>
+<dt> (1) edit error.H;</dt><dd>
+      immediately after the line containing "void italian();" insert
+      "void german();"
+<p></p>
+</dd>
+<dt> (2) edit error.C;</dt><dd>
+      make a copy of the function italian(){...} and change its name
+      to "german" -- make sure you stay inside namespace <code>ErrorLanguage</code>;
+      translate all the error messages in the strings.
+</dd>
+</dl>
+
+</section>
+</section>
+<section id="toc11">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+The throw specifications on the destructor and <code>what</code> member function
+are needed for compatibility with <code>std::exception</code> -- I regard this as
+a nuisance.  I wonder if <code>std::string::c_str</code> can throw?
+</p>
+<p>
+What about parameter values?  In some cases it would be handy to give
+the bad value which caused the error: <em>e.g.</em> "Bad characteristic: 33".
+A problem is that a parameter value could be very large.  We could
+simply allow up to 100 (say) characters of parameter information in
+a suitable string.
+</p>
+<p>
+Only very few error messages have been translated into italian so far.
+</p>
+<p>
+Perhaps allow the user to specify which ostream to print the logging
+message in <code>ThrowError</code>?
+</p>
+
+<section id="toc12">
+<h3>new improved list of errors</h3>
+
+<p>
+work in progress
+</p>
+
+<ul>
+<li>ShouldNeverGetHere (previously SERIOUS)
+</li>
+<li>NYI
+</li>
+<li>nonstandard (specified by a string) -- equality test makes sense for these?
+</li>
+<li>system/LowLevel  (about GlobalMgr, MemPool, I/O, AssertFail)
+ <ul>
+ <li>InsuffPrecision???
+ </li>
+ </ul>
+</li>
+<li>BadArg (UnsuitableValue)
+ <ul>
+ <li>NotNonZero RENAME ExpectedNonZero
+ </li>
+ <li>IndexOutOfRange   (incl iterators?)
+ </li>
+ <li>ValueOutOfRange
+  <ul>
+  <li>NotNonNegative (RENAME ExpectedNonNegative?)
+  </li>
+  <li>NotPositive (RENAME ExpectedNonNegative?)
+  </li>
+  <li>TooBig  (*not* system independent!!!)
+  </li>
+  </ul>
+ </li>
+ </ul>
+</li>
+<li>BadArgType
+</li>
+<li>IncompatibleArgs  (op not def'd for the given combination of args)
+ <ul>
+ <li>IncompatibleSizes
+ </li>
+ <li>IncompatibleTypes
+ </li>
+ </ul>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc13">
+<h2>Main changes</h2>
+
+<p>
+<strong>2013</strong>
+</p>
+
+<ul>
+<li>July (v0.995??):
+ <ul>
+ <li>major re-write in progress
+-
+ </li>
+ </ul>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

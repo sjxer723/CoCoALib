@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      BigRatOps</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      BigRatOps</h1>
+<h2>      &copy;  2018,2020 John Abbott and Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+        <ul>
+        <li><a href="#toc3">Infix operators</a>
+        </li>
+        <li><a href="#toc4">More functions</a>
+        </li>
+        <li><a href="#toc5">Conversion functions</a>
+        </li>
+        <li><a href="#toc6">Miscellany</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc7">Maintainer Documentation</a>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc9">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-BigRat1.C">ex-BigRat1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+Here is a collection of basic operations available for rational values;
+see also the more advanced functions in <a href="NumTheory.html"><code>NumTheory</code></a>.
+</p>
+<p>
+The usual arithmetic operations are available with standard C++
+syntax.  The type <code>BigRat</code> is provided for convenience of
+representing rational values rather than for rapid computation; the
+native GMP operations may be noticeably faster.
+</p>
+<p>
+There is an important exception to the natural syntax: <code>^</code> does <strong>not</strong>
+denote exponentiation; you must use the function <code>power</code> instead.
+We have chosen not to define <code>operator^</code> to perform exponentiation
+because it is too easy to write misleading code: for instance,
+<code>a*b^2</code> is interpreted by the compiler as <code>(a*b)^2</code>.  There is no
+way to make the C++ compiler use the expected interpretation.
+</p>
+<p>
+Arithmetic may also be performed between a <code>BigRat</code> and a machine
+integer or a <a href="BigInt.html"><code>BigInt</code></a>.  The result is always of type <code>BigRat</code>
+(even if the value turns out to be an integer).  Do remember, though,
+that operations between two machine integers are handled directly by
+C++, and problems of overflow can occur.
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc3">
+<h4>Infix operators</h4>
+
+<p>
+<strong>NOTE:</strong> similar to operations on <code>BigInt</code> -- see <a href="BigIntOps.html"><code>BigIntOps</code></a>
+</p>
+
+<ol>
+<li>normal arithmetic (potentially inefficient because of temporaries)
+ <ul>
+ <li><code>+</code>    the sum
+ </li>
+ <li><code>-</code>    the difference
+ </li>
+ <li><code>*</code>    the product
+ </li>
+ <li><code>/</code>    quotient
+ </li>
+ <li><code>=</code>    assignment
+ <p></p>
+ </li>
+ </ul>
+</li>
+<li>arithmetic and assignment
+ <ul>
+ <li><code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code> --  definitions as expected; LHS must be of type <code>BigRat</code>
+ <p></p>
+ </li>
+ </ul>
+</li>
+<li>arithmetic ordering
+ <ul>
+ <li><code>==</code>, <code>!=</code>
+ </li>
+ <li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> -- comparison (using the normal arithmetic ordering)
+    -- see also the <code>cmp</code> function below.
+ <p></p>
+ </li>
+ </ul>
+</li>
+<li>increment/decrement
+ <ul>
+ <li><code>++</code>, <code>--</code> (prefix, e.g. <code>++a</code>)   use these if you can
+ </li>
+ <li><code>++</code>, <code>--</code> (postfix, e.g. <code>a++</code>)  avoid these if you can, as they create temporaries
+ </li>
+ </ul>
+</li>
+</ol>
+
+</section>
+<section id="toc4">
+<h4>More functions</h4>
+
+<ol>
+<li>query functions (all take 1 argument)
+ <ul>
+ <li><code>IsZero(q)</code>     -- true iff <code>q</code> is zero
+ </li>
+ <li><code>IsOne(q)</code>      -- true iff <code>q</code> is 1
+ </li>
+ <li><code>IsMinusOne(q)</code> -- true iff <code>q</code> is -1
+ </li>
+ <li><code>IsOneNum(q)</code>   -- true iff <code>num(q)</code> is 1
+ </li>
+ <li><code>IsOneDen(q)</code>   -- true iff <code>den(q)</code> is 1
+ </li>
+ <li><code>IsPowerOf2(q)</code> -- true iff <code>q</code> is a power of 2
+ </li>
+ <li><code>sign(q)</code>       -- gives -1 (machine integer) to mean <code>q</code> is negative,
+                         0 (machine integer) to mean <code>q</code> is zero,
+                        +1 (machine integer) to mean <code>q</code> is positive.
+ <p></p>
+ </li>
+ </ul>
+</li>
+<li>Exponentiation
+  <ul>
+  <li><code>power(a, b)</code> -- returns <code>a</code> to the power <code>b</code> (result is always a <code>BigRat</code>)
+  <p></p>
+  </li>
+  </ul>
+</li>
+<li>The cmp function (three way comparison)
+ <ul>
+ <li><code>cmp(a,b)</code> -- returns an <code>int</code> which is <code>&lt; 0</code> if <code>a &lt; b</code>, or <code>== 0</code> if <code>a == b</code>, or <code>&gt; 0</code> if <code>a &gt; b</code>.
+ </li>
+ <li><code>CmpAbs(a,b)</code> -- equivalent to <code>cmp(abs(a),abs(b))</code>
+ <p></p>
+ </li>
+ </ul>
+</li>
+<li>Other functions
+ <ul>
+ <li><code>abs(q)</code>   -- gives the absolute value of <code>q</code>
+ </li>
+ <li><code>floor(q)</code> -- returns a <a href="BigInt.html"><code>BigInt</code></a> for the greatest integer <code>&lt;= q</code>
+ </li>
+ <li><code>ceil(q)</code>  -- returns a <a href="BigInt.html"><code>BigInt</code></a> for the least integer <code>&gt;= q</code>
+ </li>
+ <li><code>round(q)</code> -- returns a <a href="BigInt.html"><code>BigInt</code></a> which is the nearest to <code>q</code>
+                   (halves round the same way as in <code>RoundDiv</code>, see <a href="BigIntOps.html"><code>BigIntOps</code></a>)
+ </li>
+ <li><code>num(q)</code>   -- returns a <a href="BigInt.html"><code>BigInt</code></a> which is the numerator of <code>q</code>
+ </li>
+ <li><code>den(q)</code>   -- returns a positive <a href="BigInt.html"><code>BigInt</code></a> which is the denominator of <code>q</code>
+ </li>
+ <li><code>CommonDenom(v)</code> -- returns least (positive) common denominator for a vector of BigRat
+ </li>
+ <li><code>log(q)</code>   -- returns a double whose value is (approx) the natural logarithm of <code>q</code>; error if `` q &lt;= 0``.
+ </li>
+ <li><code>LogAbs(q)</code>  -- equiv to <code>log(abs(q))</code>
+ </li>
+ <li><code>FloorLog2(q) -- same as ``FloorLogBase(q,2)</code>
+ </li>
+ <li><code>FloorLog10(q) -- same as ``FloorLogBase(q,10)</code>
+ </li>
+ <li><code>FloorLogBase(q,base)</code> -- returns largest integer <code>k</code> such that <code>power(base,k) &lt;= abs(q)</code>; error if <code>base &lt; 2</code>
+ </li>
+ <li><code>mantissa(q)</code> -- returns a <code>double</code> between 0.5 and 1 (excluded)
+ </li>
+ <li><code>exponent(q)</code> -- 
+ </li>
+ </ul>
+</li>
+</ol>
+
+</section>
+<section id="toc5">
+<h4>Conversion functions</h4>
+
+<p>
+Only for <a href="BigInt.html"><code>BigInt</code></a>
+</p>
+
+<ul>
+<li><code>mantissa(N)</code> -- <code>N</code> represented as a floating-point number.
+  	    If <code>N</code> is zero, produces 0.0.
+            If <code>N&gt;0</code>, produces a value between 0.5 and 0.999...;
+            otherwise (when <code>N&lt;0</code>) a value between -0.5 and -0.999...
+            The bits of the floating point result are the topmost
+            bits of the binary representation of <code>N</code>.
+</li>
+<li><code>exponent(N)</code> -- result is a <code>long</code> whose value is the least integer e such that
+              2^e &gt; abs(n).  If <code>N</code> is zero, result is zero.
+</li>
+</ul>
+
+</section>
+<section id="toc6">
+<h4>Miscellany</h4>
+
+<p>
+Only for <a href="BigInt.html"><code>BigInt</code></a>
+</p>
+
+<ul>
+<li><code>SizeInBase(N, b)</code> -- (returns <code>long</code>) the number of digits <code>N</code> has
+                         when written in base <code>b</code>.  Very fast!
+                         <strong>WARNING</strong> the result may sometimes to be too large by 1; use <code>1+FloorLogBase(N)</code> to get the exact result.
+</li>
+</ul>
+
+</section>
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer Documentation</h2>
+
+<p>
+Most impls are very simple (since GMP does all the real work).
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Impl of <code>FloorLogBase</code> is ugly!
+</p>
+<p>
+There are some NYI functions!
+</p>
+
+</section>
+<section id="toc9">
+<h2>Main changes</h2>
+
+<p>
+<strong>2018</strong>
+</p>
+
+<ul>
+<li>June
+ <ul>
+ <li>split off from <a href="BigRat.html"><code>BigRat</code></a>
+ </li>
+ </ul>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

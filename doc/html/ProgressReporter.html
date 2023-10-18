@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>    ProgressReporter</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>    ProgressReporter</h1>
+<h2>      &copy;  2014  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-ProgressReporter1.C">ex-ProgressReporter1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+<code>ProgressReporter</code> is a simple utility to help keep track of progress
+in a long iterative computation; it prints out a short "progress
+report" at roughly the indicated time intervals.
+</p>
+<p>
+To respect the chosen time interval <code>ProgressReporter</code> assumes that
+successive iterations do not vary wildly in computational cost.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<ul>
+<li><code>ProgressReporter(t)</code>  -- create a reporter which prints at intervals of roughly <code>t</code> seconds (<code>t</code> is a <code>double</code>)
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+There is essentially one operation: let <code>report</code> be a <code>ProgressReporter</code>
+</p>
+
+<ul>
+<li><code>report()</code>  -- print a progress report if enough time has elapsed
+</li>
+<li><code>report(arg1)</code>  -- print a progress report (incl. value of <code>arg1</code> of type <code>long</code>) if enough time has elapsed
+</li>
+<li><code>report(arg1, arg2)</code>  -- print a progress report (incl. values of <code>arg1, arg2</code> of type <code>long</code>)
+    if enough time has elapsed
+</li>
+</ul>
+
+<p>
+These calls are designed to be cheap when it is not time to produce a report.
+</p>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation</h2>
+
+<p>
+The only "tricky part" was trying to make reports appear at round values
+of the internal counter.  It is a little messy, but not hard.
+</p>
+<p>
+The mem fns <code>operator()</code> are inline so that most non-printing calls should
+be very cheap.  It seems useful to let the user supply some extra values to
+be printed.
+</p>
+<p>
+<code>increase125</code> increases its arg to next number of the form 10^n, 2*10^n or
+5*10^n; <code>decrease125</code> decreases the arg to the next lowest number of that
+form.
+</p>
+<p>
+Initially I tried to make the printed times close to multiples of the
+specified interval, but this led to "surprising" behaviour if some CPU
+time had been used before starting the loop --  the first report could
+be printed after much less than the chosen interval (and the corresponding
+number of iterations would be much smaller than expected).  Now the code
+simply says next print time is one interval from the previous print time
+(so average print intervals will be slightly longer than desired).
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Should <code>increase125</code> and <code>decrease125</code> be moved to utils?
+</p>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2014</strong>
+</p>
+
+<ul>
+<li>april (v0.99534): first release
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

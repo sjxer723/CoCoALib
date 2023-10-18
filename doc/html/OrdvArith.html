@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      OrdvArith</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      OrdvArith</h1>
+<h2>      &copy;  2005,2014  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for OrdvArith</a>
+      <ul>
+      <li><a href="#toc2">Initializers and Converters for OrdvElem</a>
+      </li>
+      <li><a href="#toc3">Arithmetic operations on OrdvElem</a>
+      </li>
+      <li><a href="#toc4">Other operations on OrdvElem</a>
+        <ul>
+        <li><a href="#toc5">Background about matrices and PP orderings</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc6">Maintainer documentation for OrdvArith</a>
+        <ul>
+        <li><a href="#toc7">Threadsafety and CoCoA_THREADSAFE_HACK</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc8">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for OrdvArith</h2>
+
+<p>
+<code>OrdvArith</code> objects are "low level" values, and thus probably of
+little interest to most users of CoCoALib.  They perform arithmetic
+operations on <code>OrdvElem</code> values, <em>i.e.</em> compressed vectors of
+non-negative small integers (which represent "order vectors" of power
+products).  The main aim is fast multiplication and comparison of two
+power products (using a specified PP ordering -- see <a href="PPOrdering.html"><code>PPOrdering</code></a>).
+</p>
+<p>
+All operations on <code>OrdvElem</code> values must be effected through an
+explicit <code>OrdvArith</code> member function call; this design is similar to
+that of <code>ring</code>s and <code>RingElem</code>s.  The main design aim was speed
+rather than convenience; as a consequence the member fns listed below
+expect the caller to have allocated the memory used to contain the
+results of computations (<em>e.g.</em> in the parameter <code>ordv</code>).
+</p>
+
+<section id="toc2">
+<h3>Initializers and Converters for OrdvElem</h3>
+
+<p>
+These fns are all member fns of <code>OrdvArith</code>.
+</p>
+
+<ul>
+<li><code>myAssignZero(ordv)</code>  set <code>ordv</code> to all zeros
+</li>
+<li><code>myAssignFromExpv(ordv, expv)</code>  set <code>ordv</code> from given exponent vector <code>expv</code>
+</li>
+<li><code>myComputeExpv(expv, ordv)</code>  extract exponent vector from <code>ordv</code>
+</li>
+</ul>
+
+<p>
+Note: the two functions which convert between <code>expv</code> and <code>ordv</code>
+    representations might be quite slow, especially if a general
+    ordering is used.  Even with the simplest ordering (<em>i.e.</em> lex)
+    the conversion is not instant because order vectors are held in a
+    packed representation.
+</p>
+
+</section>
+<section id="toc3">
+<h3>Arithmetic operations on OrdvElem</h3>
+
+<p>
+These fns are all member fns of <code>OrdvArith</code>.
+</p>
+
+<ul>
+<li><code>myMul(ordv, ordv1, ordv2)</code>  put into <code>ordv</code> product of <code>ordv1</code> and <code>ordv2</code>
+</li>
+<li><code>myMulIndetPower(ordv, x, n)</code>  multiply <code>ordv</code> by <code>x^n</code>
+</li>
+<li><code>myDiv(ordv, ordv1, ordv2)</code>  put into <code>ordv</code> quotient of <code>ordv1</code> by <code>ordv2</code>
+</li>
+<li><code>myPower(ordv, ordv1, n)</code>  put into <code>ordv</code> the <code>n</code>-th power of <code>ordv1</code>
+</li>
+</ul>
+
+<p>
+Note: since order vectors are linearly related to exponent vectors, the
+    functions <code>myMul</code> and <code>myDiv</code> actually compute the sum and difference of the
+    order vectors.  No check is made for over-/under-flow!
+</p>
+
+</section>
+<section id="toc4">
+<h3>Other operations on OrdvElem</h3>
+
+<p>
+These fns are all member fns of <code>OrdvArith</code>.
+</p>
+
+<ul>
+<li><code>myCmp(ordv1, ordv2)</code>  compare <code>ordv1</code> with <code>ordv2</code>; result is -1,0,+1 according as <code>ordv1 &lt; = &gt; ordv2</code>
+</li>
+<li><code>myStdDeg(ordv1)</code>  compute std degree of <code>ordv1</code>
+</li>
+<li><code>myWDeg(D, ordv1)</code> put into <code>D</code> weighted degree of <code>ordv1</code>
+</li>
+<li><code>myCmpWDeg(ordv1, ordv2)</code>  compare weighted degrees of <code>ordv1</code> and <code>ordv2</code>
+</li>
+<li><code>myCmpWDegPartial(ordv1, ordv2, GrDim)</code>  compare weighted degrees of <code>ordv1</code> and <code>ordv2</code>
+</li>
+<li><code>myIsZero(ordv1)</code>  test whether <code>ordv1</code> is zero
+</li>
+<li><code>myIsIndet(x, ordv1)</code>  test whether <code>ordv1</code> is an indet; if so, put index into <code>x</code>
+</li>
+</ul>
+
+<section id="toc5">
+<h4>Background about matrices and PP orderings</h4>
+
+<p>
+This section is for the curious.
+</p>
+<p>
+To better understand the what an <code>OrdvArith</code> object does, let us begin by
+setting the scene.  We recall that for all practical purposes an arithmetic
+ordering on power products can be specified by a matrix of integers <code>M</code> as
+follows:
+  Let <code>t1 = x_1^e_1 * x_2^e_2 * ... * x_n^e_n</code> be a power product,
+  and <code>t2 = x_1^f_1 * x_2^f_2 * ... * x_n^f_n</code> be another.
+  Then we call <code>(e_1, e_2,..., e_n)</code> the <strong>exponent vector</strong> for <code>t1</code>,
+  and similarly for <code>t2</code>.  For brevity we shall write <code>expv(t1)</code>, etc.
+</p>
+<p>
+  The matrix <code>M</code> determines the ordering thus:  we say that
+  <code>t1 &lt; t2</code>  iff  <code>M*expv(t1)</code> comes before <code>M*expv(t2)</code> in lex ordering.
+  We call the product <code>M*expv(t1)</code> the <strong>order vector</strong> for <code>t1</code>, and for
+  brevity we shall write <code>ordv(t1)</code> to denote it; similarly for <code>t2</code>.
+</p>
+<p>
+Typically the matrix <code>M</code> is subject to some suitability criteria, <em>e.g.</em> <code>M</code>
+should be square and invertible.  We shall assume henceforth that <code>M</code> has
+been chosen so that all order vectors contain only non-negative entries.
+While reading the rest of these notes it may be convenient to think of <code>M</code> as
+being non-singular, so that there is a 1-1 correspondence between power
+products and their order vectors.
+</p>
+<p>
+Now the scene has been set, we can explain what an <code>OrdvArith</code> object does.
+It can effect the conversion from <em>exponent vector</em> to <em>order vector</em>,
+and <em>vice versa</em>.  It can also operate directly on order vectors.
+Certain special orderings are recognized, so that special relationships
+between the exponent vector and order vector can be exploited to enable
+faster computation.
+</p>
+
+</section>
+</section>
+</section>
+<section id="toc6">
+<h2>Maintainer documentation for OrdvArith</h2>
+
+<p>
+See subsection below about thread-safety!
+</p>
+<p>
+The base class <code>OrdvArith::base</code> just contains several handy values
+related to the number of indets and the packing mechanism.  The ctor
+does some sanity checking on the supplied parameters, and computes
+some handy values for packing/unpacking vectors.
+</p>
+<p>
+Mem fns <code>myMul</code>, <code>myDiv</code> and <code>myCmp</code> are inline for speed.  Recall
+that <code>myMul</code> and <code>myDiv</code> do not check for over-/under-flow (for speed).
+</p>
+<p>
+The mem fns <code>myCompress</code> and <code>myDecompress</code> have to check whether
+<code>myPackingDensity</code> is 1 because C++ shift operators work "strangely"
+if the shift size equals the wordsize.
+</p>
+<p>
+There are several derived classes which supply efficient "short-cut"
+impls for some operations when specific knowledge of the ordering
+permits this.
+</p>
+<p>
+Data member <code>myNumIndets</code> is required when dealing with exponent vectors
+(since C vectors do not record their own length).  It is the number of
+valid entries in a C vector representing an exponent vector.
+</p>
+<p>
+Data member <code>myGradingDim</code> specifies how many initial components of an order
+vector comprise the grading.  It is needed in <code>myWDeg</code>.
+</p>
+<p>
+Data member <code>myOrdvWords</code> is used only to supply the return value to the
+friend function <code>OrdvWords</code>.  This value is needed so that a caller can
+allocate the correct amount of space in which to build a new order vector
+value.  By default this is initialized to a huge value, so that it will
+quickly become evident at run-time if it hasn't been initialized to a sane
+value.
+</p>
+<p>
+Data member <code>myOrdvWordsForCmp</code> is used in <code>myMul</code>, <code>myDiv</code> and <code>myCmp</code> to choose
+between an inline function and a virtual call.  Its value may be non-zero
+and different from <code>myOrdvWords</code> if a redundant representation is being used
+(<em>e.g.</em> for a <code>StdDegRevLex</code> ordering).  By default this is initialized to a huge
+value, so that it will quickly become evident at run-time if it hasn't been
+initialized to a sane value.
+</p>
+<p>
+The member functions <code>myMul</code>, <code>myDiv</code>, and <code>myCmp</code> are non-virtual so that the
+compiler can implement them inline: at run-tme they check the data member
+<code>myOrdvWordsForCmp</code> to decide whether to the use the inline function or
+delegate to a "shadow" virtual function.  This rather ugly arrangement was
+necessary to achieve acceptable run-time performance.
+</p>
+<p>
+The member function <code>myMulIndetPower</code> is not pure because a reasonable
+generic implementation exists.  Similarly, myOutput(OMOut, ordv) is not pure.
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc7">
+<h4>Threadsafety and CoCoA_THREADSAFE_HACK</h4>
+
+<p>
+The code contains some <code>#if</code> blocks to distinguish between
+single-threaded and multi-threaded run-time environments.  In a
+single-threaded environment the base class contains two "global"
+buffers used when converting between exponent vectors and compressed
+order vectors; in a multi-threaded environment these buffers are not
+used, but each function needing to do such conversions creates
+appropriate buffers in local variables (so there are lots of #if
+directives).
+</p>
+
+</section>
+</section>
+</section>
+<section id="toc8">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+In some ways, <code>myCmp</code> could simply be operator(); thus calls would look
+like <code>ord(ordv1, ordv2)</code> where ord is an object of type PPOrdering.
+</p>
+<p>
+We need a way to handle order vectors which have large integer entries!
+(also ordering matrices with large integer entries).
+Recall that some ordvs may involve <code>mpz_t</code> integers!
+Note that the polynomial type needs to know how big an ordv can be: that's what
+the <code>OrdvWords</code> member function is for.
+</p>
+<p>
+Should <code>StdDegRevLex</code> actually store an extra component so that <code>deg(...,x[0])</code>
+can be calculated easily?  Do we really need this to be quick?  It would be
+needed for computing GCDs, testing divisibility etc, but these operations
+would normally be done only on "rich PP" objects -- talk to Anna!
+</p>
+<p>
+The restriction to order compatible gradings may not be wholly necessary.
+The PPs in a polynomial homogeneous with respect to a k-dimensional grading
+are completely specified by n-k of the entries in the order vector, though
+precisely which entries must be retained depends on the grading and the
+ordering.  Thus a later generalization to non order compatible gradings
+may not be too painful.
+</p>
+<p>
+ANNA: must add a section about modular order matrix
+JOHN: yes, you must!  Where does 46336 come from???
+</p>
+<p>
+The default implementation of <code>myIsIndet</code> is not very efficient, but is it
+really worth writing many different (efficient) implementations?
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

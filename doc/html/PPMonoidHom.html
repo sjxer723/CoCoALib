@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      PPMonoidHom</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      PPMonoidHom</h1>
+<h2>      &copy;  2010,2012  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for the class PPMonoidHom</a>
+      <ul>
+      <li><a href="#examples">Examples</a>
+      </li>
+      <li><a href="#toc3">Functions for PPMonoidHoms</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc4">Library Contributor Documentation</a>
+    </li>
+    <li><a href="#toc5">Maintainer documentation for PPMonoid, PPMonoidElem, and PPMonoidBase</a>
+    </li>
+    <li><a href="#toc6">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for the class PPMonoidHom</h2>
+
+<p>
+The class <code>PPMonoidHom</code> is used for representing homomorphisms between
+<code>PPMonoid</code>s.  Each indeterminate in the domain monoid maps into an
+element of the codomain (<em>i.e.</em> a power product).
+</p>
+
+<section id="examples">
+<h3>Examples</h3>
+
+<ul>
+<li><a href="../../examples/index.html#ex-PPMonoidHom1.C">ex-PPMonoidHom.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc3">
+<h3>Functions for PPMonoidHoms</h3>
+
+<p>
+Here is a list of the (pseudo-)ctors for <code>PPMonoidHom</code>
+</p>
+
+<ul>
+<li><code>IdentityHom(PPM)</code> the identity
+</li>
+<li><code>GeneralHom(PPM, images)</code> where <code>images</code> is a <code>vector</code> of <code>PPMonoidElem</code> whose <em>i</em>-th entry is the image of the <em>i</em>-th indet in <code>PPM</code>
+</li>
+<li><code>RestrictionHom(PPM, IndetIndexes)</code> where <code>IndetIndexes</code> is a vector of indices of the indets which map to themselves, the others map to 1.
+</li>
+</ul>
+
+<p>
+The <code>PPMonoidHom</code> object may be applied to a value by using normal
+function call syntax: for instance
+</p>
+
+<pre>
+   PPMonoidElem t =  ...;
+   PPMonoidHom phi = ...;
+   cout &lt;&lt; "phi applied to t gives " &lt;&lt; phi(t) &lt;&lt; endl;
+</pre>
+
+<p>
+Given a <code>PPMonoidHom</code> you can find out its domain and codomain:
+</p>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<td class="center"><code>domain(phi)</code></td>
+<td>the domain of <code>phi</code> as a <code>PPMonoid</code></td>
+</tr>
+<tr>
+<td class="right"><code>codomain(phi)</code></td>
+<td>the codomain of <code>phi</code> as a <code>PPMonoid</code></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="toc4">
+<h2>Library Contributor Documentation</h2>
+
+</section>
+<section id="toc5">
+<h2>Maintainer documentation for PPMonoid, PPMonoidElem, and PPMonoidBase</h2>
+
+</section>
+<section id="toc6">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+Add some more special cases: <em>e.g.</em> permutations of the indets, and
+the "identity" between PPMonoids which differ only in their orderings.
+</p>
+<p>
+Should we allow partial homs? <em>e.g.</em> one which maps <code>x^2</code> to <code>y</code>
+(so odd powers of <code>x</code> have no image).
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

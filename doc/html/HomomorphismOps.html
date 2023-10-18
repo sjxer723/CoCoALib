@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      HomomorphismOps</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      HomomorphismOps</h1>
+<h2>      &copy;  2017 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#queries">Queries and views</a>
+      </li>
+      <li><a href="#operations">Operations</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc6">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc7">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-empty.C">ex-empty.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+This file offers some functions for working with homomorphisms between
+(quotients of) polynomial algebras.
+</p>
+
+<section id="queries">
+<h3>Queries and views</h3>
+
+<p>
+Let <code>phi</code> be a <a href="RingHom.html"><code>RingHom</code></a> from <code>R</code> to <code>S</code> where both rings are
+either polynomial rings or quotients of polynomial rings.
+</p>
+
+<ul>
+<li><code>IsInjective(phi)</code> -- <code>true</code> iff <code>phi</code> is injective
+</li>
+<li><code>IsSurjective(phi)</code> -- <code>true</code> iff <code>phi</code> is surjective
+</li>
+<li><code>IsInImage(phi,y)</code> -- <code>true</code> iff <code>y</code> is in the image of <code>phi</code>
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations</h3>
+
+<p>
+Let <code>phi</code> be a <a href="RingHom.html"><code>RingHom</code></a> from <code>R</code> to <code>S</code> where both rings are
+either polynomial rings or quotients of polynomial rings.
+</p>
+
+<ul>
+<li><code>ker(phi)</code> -- computes the kernel of <code>phi</code> as an ideal in <code>R</code>
+</li>
+<li><code>preimage(phi,y)</code> -- computes an element <code>x</code> of <code>R</code> such that <code>phi(x) = y</code>; throws an exception if <code>y</code> is not in the image of <code>phi</code>
+</li>
+<li><code>preimage0(phi,y)</code> -- computes an element <code>x</code> of <code>R</code> such that <code>phi(x) = y</code>;  returns <code>zero(domain(phi))</code> if <code>y</code> is not in the image of <code>phi</code>
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation</h2>
+
+<p>
+The centrepiece is the structure <code>RichRingHom</code> which contains several
+components useful for actually doing the computation.  In particular,
+all operations require computation in a new ring <code>RS</code> which contains "orthogonal"
+copies of the polynomial rings in <code>R</code> and <code>S</code>  There are natutal homomorphisms
+from <code>RS</code> to <code>R</code> and from <code>S</code> into <code>RS</code>.
+</p>
+<p>
+The hope is that this structure will be memorized inside the <code>RingHom</code>
+object so that it does not need to be recomputed.
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Maintainer doc is very incomplete.  The algorithms are not especially
+hard, but they are also not so simple.  Reference to K+R book?
+</p>
+
+</section>
+<section id="toc7">
+<h2>Main changes</h2>
+
+<p>
+<strong>2017</strong>
+</p>
+
+<ul>
+<li>July (v0.99556): first release  (ported from CoCoA-5 package)
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

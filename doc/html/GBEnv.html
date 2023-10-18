@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      GBEnv</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      GBEnv</h1>
+<h2>      &copy;  2010 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation</a>
+      <ul>
+      <li><a href="#toc3">GBEnv will know</a>
+        <ul>
+        <li><a href="#toc4">Notes</a>
+        </li>
+        </ul>
+      </li>
+      <li><a href="#toc5">GBInfo will know</a>
+      </li>
+      <li><a href="#toc6">GBMill/BuchbergerMill (?) will know -- was GReductor</a>
+        <ul>
+        <li><a href="#toc7">Some general notes</a>
+        </li>
+        </ul>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+    </li>
+    <li><a href="#toc9">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation</h2>
+
+<p>
+This class contains some information needed for the computation of
+a GBasis (with Buchberger's algorithm)
+</p>
+<p>
+At the moment the file contains instead the class <code>GRingInfo</code> which
+was defined in <code>TmpGPoly.H</code>
+</p>
+<p>
+One idea to unify the class of ideals in <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a> is to make
+an abstract <code>GBMill</code> as a base for the the operation on ideals
+(toric, squarefree, ideals of points,..)  For <em>standard</em> ideals the
+key for the (GB)operations is computing with Buchberger algorithm,
+therefore the <code>BuchbergerMill</code> should inherit from <code>GBMill</code>.
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation</h2>
+
+<p>
+As <em>one class should do one thing</em> <code>GRingInfo</code> and <code>GReductor</code>
+should reorganized and split into <code>GBEnv</code>, <code>GBInfo</code>, and
+<code>GBMill</code>.
+</p>
+<p>
+<strong>Mill</strong>: <em>A building equipped with machinery for processing raw materials into finished products</em>
+</p>
+
+<section id="toc3">
+<h3>GBEnv will know</h3>
+
+<p>
+the environment for the arithmetics, that is:
+</p>
+
+<ul>
+<li>the <code>SparsePolyRing</code> involved
+</li>
+<li>the <code>DivMaskRule</code>
+</li>
+<li>the <code>PPMonoid</code> for <code>LPPForDiv</code>
+</li>
+<li>the <code>ring</code> of coefficients (field or FrFldOfGCDDomain)
+</li>
+<li>if it represents a module computation
+</li>
+<li>the "module/ring" embeddings (or GBHom ???)
+</li>
+<li>---&gt; inheritance for the module case?
+</li>
+</ul>
+
+<section id="toc4">
+<h4>Notes</h4>
+
+<p>
+Embeddings/deembeddings are now in TmpGReductor: they embed
+polynomials and ModuleElems into <a href="GPoly.html"><code>GPoly</code></a>s therefore cannot directly
+be GBEnv member functions (i.e. GBEnv would need GPoly forward
+declaration or .H inclusion)
+</p>
+<p>
+Should embeddings/deembeddings be a class on their own?
+or just functions in a file on their own?
+or where?
+</p>
+<p>
+The main difference between ring and module computations is in
+considering the component in <code>IsDivisibleFast</code>.  How to balance
+efficiency and inheritance?  (The other difference is in making pairs
+of polynomials with the same component)
+</p>
+
+</section>
+</section>
+<section id="toc5">
+<h3>GBInfo will know</h3>
+
+<p>
+<strong>constant</strong> <code>GBEnv</code> and the flags related with the algorithm:
+</p>
+
+<ul>
+<li>if the input was homogeneous (for interreduction?)
+</li>
+<li>alg homog/aff/sat/hdriven...
+</li>
+<li>the kind of sugar function to use
+</li>
+<li>active criteria (Weyl/module).  Now <code>GBCriteria</code> is in <code>GReductor</code>
+</li>
+<li>...
+</li>
+</ul>
+
+</section>
+<section id="toc6">
+<h3>GBMill/BuchbergerMill (?) will know -- was GReductor</h3>
+
+<p>
+<strong>constant</strong> <code>GBInfo</code> and the "frozen computation":
+</p>
+
+<ul>
+<li>the input polynomials
+</li>
+<li>list of pairs
+</li>
+<li>list of reducers
+</li>
+<li>list for output
+</li>
+<li>reducing SPolynomial (or atomic ???)
+</li>
+<li>stats
+</li>
+<li>...
+</li>
+</ul>
+
+<section id="toc7">
+<h4>Some general notes</h4>
+
+<p>
+Partial steps for the conversion of the current code:
+</p>
+
+<ol>
+<li>use member function in ctor for common assignments (done)
+</li>
+<li>transform functions with <code>GRingInfo</code> as argument into GRingInfo
+    member functions (wip)
+</li>
+</ol>
+
+<p>
+Good to know:
+</p>
+
+<ol>
+<li>reduce.C uses only "env" info from <code>GRI.</code>
+</li>
+<li>GRingInfo has many fields, completely unused in the basic case (ie
+    GB for polys).  Some are set with a default value which is
+    different for some "concrete classes" (eg modules, operation specific)
+</li>
+<li>SPoly creates a GPoly with "env" info, only sugar needs "mill";
+  in fact the constructor for GPoly needs "mill" only for sugar:
+  we can make an "undefined" sugar to be set later on.
+</li>
+</ol>
+
+</section>
+</section>
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<p>
+Everything so far is just work in progress.
+</p>
+
+</section>
+<section id="toc9">
+<h2>Main changes</h2>
+
+<p>
+<strong>2010</strong>
+</p>
+
+<ul>
+<li>moved definition of class <code>GRingInfo</code> into <code>GBEnv.H,C</code>
+<p></p>
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>

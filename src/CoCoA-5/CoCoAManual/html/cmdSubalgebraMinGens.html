@@ -1,0 +1,68 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>SubalgebraMinGens</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#SubalgebraMinGens">up</a> <a href="cmdSubalgebraMap[OBSOLETE].html">previous</a>  <a href="cmdSubalgebraRepr[OBSOLESCENT].html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>SubalgebraMinGens<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+list of minimal generators as subalgebra</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+SubalgebraMinGens(L: LIST): LIST</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+If <tt><b style="background:#bbeeee">L</b></tt> is a list of polynomials, this function returns a list
+of minimal generators for the algebra <tt><b style="background:#bbeeee">K[L]</b></tt> (not necessarily a subset of <tt><b style="background:#bbeeee">L</b></tt>).
+<br><br>
+Verbosity range 40-90.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/ use P::=QQ[x,y,z];
+/**/ f := 3*x^2;
+/**/ g := x*y -z^2;
+/**/ h := f^2*g -5*g^3;
+/**/ SubalgebraMinGens([f, g, h]);
+[x*y -z^2,  x^2]
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdMinGens.html">MinGens</A>
+<li><a href="cmdSAGBISAGBIHomog.html">SAGBI, SAGBIHomog</A>
+</ul>
+</div>
+
+</body>
+</html>

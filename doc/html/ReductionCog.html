@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      ReductionCog</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      ReductionCog</h1>
+<h2>      &copy;  2006,2021  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">class ReductionCogBase</a>
+        <ul>
+        <li><a href="#toc2">example</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#toc3">implementations</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>class ReductionCogBase</h2>
+
+<p>
+<code>ReductionCogBase</code> is an abstract class to perform a full reduction:
+it contains two parts:
+</p>
+
+<ul>
+<li><code>IgnoredPPs</code>  summands whose PPs are to be ignored
+</li>
+<li><code>Active</code>      the part which will be reduced
+</li>
+</ul>
+
+<p>
+Thanks to the limited operations allowed on a <code>ReductionCog</code>, all PPs in
+<code>IgnoredPPs</code> are guaranteed bigger than those in the <code>Active</code> part.
+</p>
+<p>
+With a <code>ReductionCog</code> <code>F</code> you can compute:
+</p>
+
+<ul>
+<li><code>ActiveLPP(F)</code>     the LPP of the <code>Active</code> part
+</li>
+<li><code>IsActiveZero(F)</code>  is the <code>Active</code> part zero?
+<p></p>
+</li>
+<li><code>F.myMoveToNextLM()</code>  move the <code>LM</code> of the <code>Active</code> part to the <code>IgnoredPPs</code>
+</li>
+<li><code>F.myReduce(f)</code>       reduce the <code>Active</code> part with <code>f</code>
+</li>
+<li><code>F.myAssignReset(f)</code>  the <code>Active</code> part gets <code>f</code>;  <code>f</code> and <code>IgnoredPPs</code> get 0
+</li>
+<li><code>F.myAssignReset(f, fLen)</code>  same as above but faster for geobucket implementation
+</li>
+<li><code>F.myRelease(f)</code>      <code>F</code> gets the total value of <code>f</code>;  <code>f</code> gets 0
+</li>
+<li><code>F.myOutput(out)</code>     
+</li>
+</ul>
+
+<p>
+The idea is that LM will be reduced first; if the result is not 0 it
+will be "set aside and ignored" and the new LM of the <code>Active</code> part will be
+reduced, and so on.
+</p>
+<p>
+The result of <code>myReduce</code> is defined up to an invertible (in the
+coefficient ring) constant factor.
+</p>
+<p>
+Constructors are
+</p>
+
+<pre>
+  ReductionCog NewRedCogPolyField(const SparsePolyRing&amp; P);
+  ReductionCog NewRedCogPolyGCD(const SparsePolyRing&amp; P);
+  ReductionCog NewRedCogGeobucketField(const SparsePolyRing&amp; P);
+  ReductionCog NewRedCogGeobucketGCD(const SparsePolyRing&amp; P);
+</pre>
+
+<p>
+In the "GCD" version, <code>myRelease</code> makes poly content free.
+In the "Field" version: <code>myRelease</code> does NOT make poly monic.
+... I can't remember why I made this choice....
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="toc2">
+<h4>example</h4>
+
+<pre>
+  ReductionCog F = ChooseReductionCogGeobucket(myGRingInfoValue);
+  F-&gt;myAssignReset(f, fLen);
+  while ( !IsActiveZero(F) )
+  {
+    (..) // find reducer g or break
+    F-&gt;myReduce(g);
+  }
+  F-&gt;myRelease(f);
+</pre>
+
+</section>
+</section>
+</section>
+<section id="toc3">
+<h2>implementations</h2>
+
+<p>
+In general the geobucket implementation are to be preferred
+</p>
+
+<dl>
+<dt><code>RedCog::PolyFieldImpl</code></dt><dd>
+  this implementation contains two <a href="RingElem.html"><code>RingElem</code></a>.
+<p></p>
+</dd>
+<dt><code>RedCog::PolyGCDImpl</code></dt><dd>
+  this implementation contains two polynomials [RingElem]
+  two coefficients [RingElem] and a counter
+<p></p>
+</dd>
+<dt><code>RedCog::GeobucketFieldImpl</code></dt><dd>
+  this implementation contains a RingElem for the <code>IgnoredPPs</code> and a
+  geobucket for the <code>Active</code> part
+<p></p>
+</dd>
+<dt><code>RedCog::GeobucketGCDImpl</code></dt><dd>
+  this implementation contains a RingElem for the <code>IgnoredPPs</code> and a
+  geobucket for the <code>Active</code> part
+  two coefficients [RingElem] and a counter
+</dd>
+</dl>
+
+</section>
+</section>
+</div>
+</article></body></html>

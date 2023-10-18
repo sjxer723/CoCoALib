@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      RingDistrMPolyClean</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      RingDistrMPolyClean</h1>
+<h2>      &copy;  2005  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for the class RingDistrMPolyClean</a>
+    </li>
+    <li><a href="#toc2">Maintainer documentation for the class RingDistrMPoly</a>
+      <ul>
+      <li><a href="#toc3">Bugs and Shortcomings</a>
+      </li>
+      </ul>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for the class RingDistrMPolyClean</h2>
+
+<p>
+<code>RingDistrMPoly</code> implements a ring of distributed multivariate
+polynomials: you may think of the elements as being ordered lists of
+coefficient and power product pairs (with the additional guarantee
+that the coefficients are non-zero, and that the power products are
+all distinct.
+</p>
+<p>
+A <code>RingDistrMPoly</code> is a concrete instance of a <a href="SparsePolyRing.html"><code>SparsePolyRing</code></a>.
+</p>
+
+</section>
+<section id="toc2">
+<h2>Maintainer documentation for the class RingDistrMPoly</h2>
+
+<p>
+I have implemented <code>HomImpl</code> and <code>IdealImpl</code> as private subclasses since
+their existence should not be known outside the scope of the class
+<code>RingDistrMPolyImpl</code>.
+</p>
+
+<section id="toc3">
+<h3>Bugs and Shortcomings</h3>
+
+<p>
+Documentation almost completely absent.
+</p>
+<p>
+The implementation of <code>RingDistrMPolyImpl::HomImpl::myApply</code> is very
+poor.  I simply needed some easy code that would work.  A major
+overhaul will be needed when I have understood how best to implement
+it.
+</p>
+</section>
+</section>
+</section>
+</div>
+
+</article></body></html>

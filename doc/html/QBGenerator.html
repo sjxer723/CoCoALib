@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      QBGenerator</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      QBGenerator</h1>
+<h2>      &copy;  2006,2012  John Abbott,  Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#toc1">User documentation for QBGenerator</a>
+        <ul>
+        <li><a href="#theory">Background theory</a>
+        </li>
+        </ul>
+    </li>
+    <li><a href="#constructors">Constructors and Pseudo-constructors</a>
+      <ul>
+      <li><a href="#operations">Operations on QBGenerator</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc5">Maintainer documentation for QBGenerator</a>
+    </li>
+    <li><a href="#toc6">Bugs, Shortcomings and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="toc1">
+<h2>User documentation for QBGenerator</h2>
+
+<p>
+The name <code>QBGenerator</code> derives from its intended use as a (monomial)
+<em>quotient basis generator</em>, that is a way of generating a factor closed
+(vector space) basis of power products for the quotient of a
+polynomial ring by a zero-dimensional ideal.  It is used in the
+implementation of the <strong>FGLM</strong> and the <strong>Buchberger-Moeller algorithms</strong> -- in
+fact these are really the same algorithm (for computing a Groebner
+basis of an intersection of one or more zero-dimensional ideals).
+</p>
+
+<section~A~>
+<h3></h3>
+<section id="theory">
+<h4>Background theory</h4>
+
+<p>
+Let <code>P</code> denote a polynomial <a href="ring.html"><code>ring</code></a> (with coefficients in a field
+<code>k</code>), and let <code>I</code> be a zero-dimensional <a href="ideal.html"><code>ideal</code></a> in <code>P</code>.  Then
+mathematically the quotient <code>P/I</code> is a finite dimensional vector space
+over <code>k</code>.  We seek a basis <code>QB</code> for <code>P/I</code> which is a <strong>factor closed</strong>
+set of power products; <em>i.e.</em> if the power product <code>t</code> is in <code>QB</code> then any
+factor of <code>t</code> is in <code>QB</code> too.  Groebner basis theory guarantees that such
+bases exist; actually it was first proved by Macaulay (a person, not a
+computer algebra system).
+</p>
+<p>
+The elements of <code>QB</code> are determined one at a time, obviously
+starting with the trivial power product, 1.  Moreover, at every stage
+the set of elements in the partially formed <code>QB</code> is factor closed,
+and this implies that only certain PPs are candidates for being
+adjoined to the <code>QB</code> (we call these <strong>corners</strong>).  When a new
+element is adjoined to the <code>QB</code> new elements may appear in the
+<em>corner set</em>, these newly adjoined elements form the <strong>new corner set</strong>
+(this is always a subset of the <em>corner set</em>, and may be empty).
+</p>
+<p>
+During the determination of the <code>QB</code>, some power products will be
+discovered which cannot be in the <code>QB</code> (usually based on the failure of a linear
+independence criterion).  Such PPs form the <strong>avoid set</strong>: the
+<code>QBGenerator</code> will exclude all multiples of all elements of the
+<em>avoid set</em> from subsequent consideration.
+</p>
+
+</section>
+</section>
+<section id="constructors">
+<h3>Constructors and Pseudo-constructors</h3>
+
+<ul>
+<li><code>QBGenerator(PPM)</code> where <code>PPM</code> is the <a href="PPMonoid.html"><code>PPMonoid</code></a> in which we shall
+calculate; initially the <em>quotient basis</em> is empty, and the <em>corner set</em> contains
+just <code>1</code>.
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations on QBGenerator</h3>
+
+<p>
+There are 3 accessor functions, and 2 true operations:
+</p>
+
+<ul>
+<li><code>QBG.myQB()</code> gives the current elements of the <em>quotient basis</em> (as a
+<code>vector</code>) in the order they were added;
+</li>
+<li><code>QBG.myCorners()</code> gives the current elements of the <em>corner set</em> (as a <code>list</code>);
+</li>
+<li><code>QBG.myNewCorners()</code> gives the newly added elements to the <em>corner set</em>
+(as a <code>list</code>);
+</li>
+<li><code>QBG.myCornerPPIntoQB(pp)</code> move the element <code>pp</code> of the <em>corner set</em>
+into the <em>quotient basis</em> (this updates both the <em>corner set</em> and the <em>new corner set</em>);
+</li>
+<li><code>QBG.myCornerPPIntoAvoidSet(pp)</code>  move the element <code>pp</code> of the <em>corner set</em>
+into the <em>avoid set</em> (all multiples of <code>pp</code> will skipped hereafter).
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc5">
+<h2>Maintainer documentation for QBGenerator</h2>
+
+<p>
+The tricky part was designing a good interface.  The implementations themselves
+are relatively straightforward (and actually contain some useful comments!)
+</p>
+<p>
+The function <code>QBGenerator::myCornerPPIntoQB</code> makes local copies of some
+fields to permit full exception safety.  This may adversely affect execution
+speed, but I believe that in the context of FGLM &amp; Buchberger-Moeller the
+slow-down will be negligible <em>(but I have not actually tested my guess)</em>.
+</p>
+
+</section>
+<section id="toc6">
+<h2>Bugs, Shortcomings and other ideas</h2>
+
+<p>
+Class <code>QBGenerator</code> could offer a ctor which accepts a (good)
+estimate of the dimension of the quotient, <em>i.e.</em> final number of
+elements in the QB.  It could use this value to <code>reserve</code> space for
+<code>myQBList</code>.
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

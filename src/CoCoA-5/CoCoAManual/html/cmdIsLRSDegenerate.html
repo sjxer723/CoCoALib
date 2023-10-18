@@ -1,0 +1,72 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>IsLRSDegenerate</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#IsLRSDegenerate">up</a> <a href="cmdIsLexSegment.html">previous</a>  <a href="cmdIsLRSDegenerateOrder.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>IsLRSDegenerate<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+checks the given polynomial for LRS-degeneracy</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+IsLRSDegenerate(F: RINGELEM): BOOL</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+This function takes the given polynomial <tt><b style="background:#bbeeee">F</b></tt> and checks the
+corresponding Linear Recurrence Sequence (LRS) for degeneracy.  A LRS
+is <tt><b style="background:#bbeeee">n</b></tt>-degenerate iff its characteristic polynomial <tt><b style="background:#bbeeee">F</b></tt>
+has two distinct roots whose quotient is a primitive <tt><b style="background:#bbeeee">n</b></tt>-th
+root of unity.  Use <A HREF="cmdLRSDegeneracyOrder.html">
+    <tt>LRSDegeneracyOrder</tt>
+  </A> to find a value for <tt><b style="background:#bbeeee">n</b></tt>.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/  use R ::= QQ[x];
+/**/  IsLRSDegenerate(x^4 +3*x^3 +2*x^2 -3*x +1);
+true
+/**/  IsLRSDegenerate(x^3 +x +2);
+false
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdcyclotomic.html">cyclotomic</A>
+<li><a href="cmdCyclotomicIndexCyclotomicTest.html">CyclotomicIndex, CyclotomicTest</A>
+<li><a href="cmdIsLRSDegenerateOrder.html">IsLRSDegenerateOrder</A>
+<li><a href="cmdLRSDegeneracyOrder.html">LRSDegeneracyOrder</A>
+</ul>
+</div>
+
+</body>
+</html>

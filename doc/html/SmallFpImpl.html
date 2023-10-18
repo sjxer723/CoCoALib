@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      SmallFpImpl</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      SmallFpImpl</h1>
+<h2>      &copy;  2005,2010-2013,2015,2018 John Abbott, Anna M. Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation for SmallFpImpl</a>
+      <ul>
+      <li><a href="#constructors">Constructors and pseudo-constructors</a>
+      </li>
+      <li><a href="#queries">Queries and views</a>
+      </li>
+      <li><a href="#operations">Operations on Values</a>
+      </li>
+      <li><a href="#toc6">Advanced Use: Unnormalized Computation</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation for SmallFpImpl</a>
+    </li>
+    <li><a href="#toc8">Bugs, Shortcomings, and other ideas</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-SmallFp1.C">ex-SmallFp1.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-SmallFp2.C">ex-SmallFp2.C</a>
+</li>
+<li><a href="../../examples/index.html#ex-SmallFp3.C">ex-SmallFp3.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation for SmallFpImpl</h2>
+
+<p>
+The class <code>SmallFpImpl</code> is a very low level implementation class for fast
+arithmetic in a small, prime finite field.  It is <strong>not intended</strong> for use
+by casual CoCoALib users, who should instead see the documentation in
+<a href="QuotientRing.html"><code>QuotientRing</code></a> (in particular the function <code>NewZZmod</code>), or possibly the
+documentation in <a href="RingFp.html"><code>RingFp</code></a>, <a href="RingFpLog.html"><code>RingFpLog</code></a>, and <a href="RingFpDouble.html"><code>RingFpDouble</code></a>.
+</p>
+<p>
+The class <code>SmallFpImpl</code> offers the possibility of efficient arithmetic in
+small, prime finite fields.  This efficiency comes at a cost: the interface
+is rather unnatural.  The emphasis is on speed rather than convenience;
+this speed depends on many functions being inlined.
+</p>
+<p>
+The overall structure is modelled on that of <code>ring</code> and <code>RingElem</code>:
+namely, operations on values are via member functions of <code>SmallFpImpl</code>.
+The class <code>SmallFpImpl</code> records the modulus, while the actual values are
+of type <code>SmallFpImpl::value</code>, and record only the residue class.  Also
+see below for the special type <code>SmallFpImpl::NonRedValue</code>.
+</p>
+
+<section id="constructors">
+<h3>Constructors and pseudo-constructors</h3>
+
+<p>
+The ctor for a <code>SmallFpImpl</code> object takes 1 or 2 args:
+</p>
+
+<ul>
+<li><code>SmallFpImpl(p)</code>  - create a <code>SmallFpImpl</code> for prime <code>p</code>; error if <code>p</code> is not prime, or too large.
+</li>
+<li><code>SmallFpImpl(p,conv)</code>  - specify export convention <code>conv</code>: either <code>SymmResidues</code> or <code>NonNegResidues</code>
+</li>
+</ul>
+
+<p>
+The default export convention is <code>SymmResidues</code> (unless changed in the <a href="GlobalManager.html"><code>GlobalManager</code></a>).
+  This convention may be either
+<code>GlobalSettings::SymmResidues</code> or <code>GlobalSettings::NonNegResidues</code>;
+the default convention is determined by the <a href="GlobalManager.html"><code>GlobalManager</code></a>.
+</p>
+<p>
+<strong>Note</strong> if the first argment is of type <code>SmallPrime</code> then the constructor
+skips testing for primality.
+</p>
+
+</section>
+<section id="queries">
+<h3>Queries and views</h3>
+
+<p>
+Let <code>ModP</code> be a <code>SmallFpImpl</code> object.
+</p>
+
+<ul>
+<li><code>SmallFpImpl::IsGoodCtorArg(p)</code> -- returns <code>true</code> if <code>p</code> is a valid <code>SmallFpImpl</code> ctor arg; otherwise <code>false</code>
+</li>
+<li><code>SmallFpImpl::ourMaxModulus()</code>  -- returns largest ctor arg allowed by the implementation
+</li>
+<li><code>ModP.myModulus()</code>  -- returns the prime <code>p</code> (as a <code>long</code>)
+</li>
+<li><code>ModP.myMaxIters()</code> -- see section on unnormalized computation
+</li>
+</ul>
+
+</section>
+<section id="operations">
+<h3>Operations on Values</h3>
+
+<p>
+All operations (except for <code>zero</code>, <code>one</code>, <code>IsZero</code>, <code>IsOne</code>, <code>==</code> and <code>!=</code>)
+must be effected by calling member functions of the <code>SmallFpImpl</code> class.
+The member function <code>myReduce</code> is effectively a ctor.  Here is a brief summary.
+</p>
+
+<pre>
+  long n;
+  BigInt N;
+  BigRat q;
+  SmallFpImpl::value a, b, c;
+
+  a = zero(SmallFp);        // equiv to a = ModP.myReduce(0);
+  b = one(SmallFp);         // equiv to b = ModP.myReduce(1);
+  IsZero(a);                // equiv to (a == ModP.myReduce(0))
+  IsOne(b);                 // equiv to (b == ModP.myReduce(1))
+  a == b;                   // test for equality
+  a != b;                   // logical negation of (a == b)
+
+  ModP.myReduce(n);         // reduce mod p
+  ModP.myReduce(N);         // reduce mod p
+  ModP.myReduce(q);         // reduce mod p
+
+  ModP.myExportNonNeg(a);   // returns the least non negative preimage (of type long), between 0 and p-1.
+  ModP.myExportSymm(a);     // returns a symmetric preimage (of type long), between -p/2 and p/2.
+  ModP.myExport(a);         // returns a preimage (of type long) between -p/2 and p-1; see note below!
+
+  ModP.myNegate(a);         // -a mod p, additive inverse
+  ModP.myRecip(a);          // inv(a), multiplicative inverse
+  ModP.myAdd(a, b);         // (a+b)%p;
+  ModP.mySub(a, b);         // (a-b)%p;
+  ModP.myMul(a, b);         // (a*b)%p;
+  ModP.myDiv(a, b);         // (a*inv(b))%p;  where inv(b) is inverse of b
+  ModP.myPower(a, n);       // (a^n)%p;  where ^ means "to the power of"
+  ModP.myIsZeroAddMul(a,b,c) // a = (a+b*c)%p; result is (a==0)
+  ModP.myAddMul(a,b,c)      // (a+b*c)%p
+</pre>
+
+<p>
+We suggest using the function <code>myExport</code> principally for values to be printed;
+in other contexts we recommend using <code>myExportNonNeg</code> if possible.
+Code calling <code>myExport</code> should assume only that the value returned is
+between <code>-p/2</code> and <code>p-1</code>; the actual range of return values is determined
+by the convention specified when the <code>SmallFpImpl</code> object was constructed.
+</p>
+
+</section>
+<section id="toc6">
+<h3>Advanced Use: Unnormalized Computation</h3>
+
+<p>
+The normal mod p arithmetic operations listed above always produce
+a normalized result, but this normalization incurs a run-time cost.
+In some loops (<em>e.g.</em> for an inner product) it may be possible to compute
+several iterations before having to normalize the result.
+</p>
+<p>
+<code>SmallFpImpl</code> supports this by offering the type <code>SmallFpImpl::NonRedValue</code>
+for unnormalized values; this type is effectively an unsigned integer,
+and such values may be added and multiplied without normalization
+(but also without overflow checks!) using the usual <code>+</code> and <code>*</code> operators
+(and also <code>+=</code> and <code>*=</code>).
+</p>
+<p>
+<code>SmallFpImpl</code> offers the following three functions to help implement
+a delayed normalization strategy.
+</p>
+
+<pre>
+    SmallFpImpl::NonRedValue a;
+    ModP.myNormalize(a);     -- FULL normalization of a, result is a SmallFpImpl::value
+    ModP.myHalfNormalize(a); -- *fast*, PARTIAL normalization of a, result is a NonRedValue
+    ModP.myMaxIters();   -- see comment below
+</pre>
+
+<p>
+The value of <code>myMaxIters()</code> is the largest number of unnormalized
+products (of normalized values) which may safely be added to a "half
+normalized" value without risking overflow.  The half normalization
+operation is quick (at most a comparison and a subtraction).
+Naturally, the final result must be fully normalized.  See example
+program <code>ex-SmallFp1.C</code> for a working implementation.
+</p>
+
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation for SmallFpImpl</h2>
+
+<p>
+Most functions are implemented inline, and no sanity checks are
+performed (except when <code>CoCoA_DEBUG</code> is enabled).  The constructor
+does do some checking.
+</p>
+<p>
+<code>SmallFpImpl::value_t</code> <strong>must</strong> be an unsigned integral type; it is a
+typedef to a type specified in <code>CoCoA/config.H</code> -- this should allow
+fairly easy platform-specific customization.
+</p>
+<p>
+This code is valid only if the square of <code>myModulus</code> can be represented
+in a <code>SmallFpImpl::value_t</code>; the constructor checks this condition.
+Most functions do not require <code>myModulus</code> to be prime, though division
+becomes only a partial map if it is composite; and the function
+<code>myIsDivisible</code> is correct only if <code>myModulus</code> is prime.  Currently the
+constructor rejects non-prime moduli.
+</p>
+<p>
+The code assumes that each value modulo p is represented as the least
+non-negative residue (<em>i.e.</em> the values are represented as integers in
+the range 0 to p-1 inclusive).  This decision is linked to the fact
+that <code>SmallFpImpl::value_t</code> is an unsigned type.
+</p>
+<p>
+The constants <code>myResidueUPBValue</code> and <code>myIterLimit</code> are to allow efficient
+exploitation of non-reduced multiplication (<em>e.g.</em> when trying to
+compute an inner product modulo p).  See example program <code>ex-SmallFp1.C</code>
+</p>
+<p>
+The return type of <code>NumBits</code> is <code>int</code> even though the result is
+always non-negative -- I do not like <code>unsigned</code> values.
+</p>
+
+</section>
+<section id="toc8">
+<h2>Bugs, Shortcomings, and other ideas</h2>
+
+<p>
+Should there be a <code>myIsMinusOne</code> function?
+</p>
+</section>
+</section>
+</div>
+
+</article></body></html>

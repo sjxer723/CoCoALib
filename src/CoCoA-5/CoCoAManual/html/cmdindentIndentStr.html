@@ -1,0 +1,95 @@
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="gui.css">
+<title>indent, IndentStr</title>
+</head>
+
+<body bgcolor=#eeffff>
+<div>
+<a href="toc.html#indent, IndentStr">up</a> <a href="cmdincrdecr.html">previous</a>  <a href="cmdindet.html">next</A>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+3><b>indent, IndentStr<small> <i> &nbsp;&nbsp; -- &nbsp;&nbsp; 
+prints in a more readable way</i> </small></b></font>
+</td></tr></table>
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Syntax</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+indent(X: OBJECT)
+indent(X: OBJECT, RecursionDepth: INT)
+IndentStr(X: OBJECT): STRING
+IndentStr(X: OBJECT, RecursionDepth: INT): STRING</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>Description</b></font>
+</td></tr></table>
+
+These functions produce an easy-to-read version of the argument by
+splitting it into several lines: a <tt><b style="background:#bbeeee">LIST</b></tt> or <tt><b style="background:#bbeeee">IDEAL</b></tt> is printed one
+element per line, a <tt><b style="background:#bbeeee">RECORD</b></tt> one field per line.
+<br><br>
+The function <tt><b style="background:#bbeeee">indent</b></tt> prints the result on the screen,
+whereas <tt><b style="background:#bbeeee">IndentStr</b></tt> returns it as a <tt><b style="background:#bbeeee">STRING</b></tt>, useful for passing it
+to other functions (<i>e.g.</i><tt><b style="background:#bbeeee">print IndentStr(L) on file</b></tt>).
+<br><br>
+The second optional argument is for setting the level of recursive
+indentation; <i>e.g.</i> it can be useful when printing a list of records.
+<br>
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+1><b>Example</b></font>
+</td></tr></table>
+<table bgcolor=#ccffff width=100%><tr><td><pre>
+/**/ use QQ[x,y];
+/**/ R := record[I := ideal((x-1)^3,  (y+2)^4),  L := 5..7];
+/**/ println R;
+record[I := ideal(x^3 -3*x^2 +3*x -1,  y^4 +8*y^3 +24*y^2 +32*y +16), L := [5,  6,  7]]
+
+/**/ indent(R);
+record[
+  I := ideal(x^3 -3*x^2 +3*x -1,  y^4 +8*y^3 +24*y^2 +32*y +16),
+  L := [5,  6,  7]
+]
+
+/**/ indent(R, 2);
+record[
+  I := ideal(
+    x^3 -3*x^2 +3*x -1,
+    y^4 +8*y^3 +24*y^2 +32*y +16
+  ),
+  L := [
+    5,
+    6,
+    7
+  ]
+]
+</pre></td></tr></table>
+
+
+<br> 
+<!-- ========================= -->
+<table bgcolor=#00dddd width=100%><tr><td>
+  <font size=+2><b>See Also</b></font>
+</td></tr></table>
+<ul>
+<li><a href="cmdformat.html">format</A>
+<li><a href="cmdfold.html">fold</A>
+<li><a href="cmdprinton.html">print on</A>
+</ul>
+</div>
+
+</body>
+</html>

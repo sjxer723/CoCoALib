@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>      DynamicBitset</title>
+<meta name="generator" content="https://txt2tags.org">
+<link rel="stylesheet" href="cocoalib-doc.css">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>      DynamicBitset</h1>
+<h2>      &copy;  2010-2012 Anna Bigatti</h2>
+<h3>      GNU Free Documentation License, Version 1.2</h3>
+</hgroup>
+</header>
+<article>
+
+<nav>
+<div class="body" id="body">
+
+    <ul>
+    <li><a href="#examples">Examples</a>
+    </li>
+    <li><a href="#toc2">User documentation</a>
+      <ul>
+      <li><a href="#constructors">Constructors</a>
+      </li>
+      <li><a href="#toc4">Functions</a>
+      </li>
+      <li><a href="#toc5">Member functions</a>
+      </li>
+      <li><a href="#toc6">output options</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc7">Maintainer documentation</a>
+    </li>
+    <li><a href="#toc8">Bugs, shortcomings and other ideas</a>
+      <ul>
+      <li><a href="#toc9">boost?</a>
+      </li>
+      <li><a href="#toc10">Stretchable?</a>
+      </li>
+      </ul>
+    </li>
+    <li><a href="#toc11">Main changes</a>
+    </li>
+    </ul>
+
+</div>
+</nav>
+<div class="body" id="body">
+<p>
+      <center><a href="index.html">CoCoALib Documentation Index</a></center>
+</p>
+<p>
+WORK-IN-PROGRESS
+</p>
+
+<section~A~>
+<h1></h1>
+<section id="examples">
+<h2>Examples</h2>
+
+<ul>
+<li><a href="../../examples/index.html#ex-DynamicBitset1.C">ex-DynamicBitset1.C</a>
+</li>
+</ul>
+
+</section>
+<section id="toc2">
+<h2>User documentation</h2>
+
+<p>
+Class for representing square free monomials, or subsets of integers.
+</p>
+<p>
+This is quite technical and useful only when efficiency is important.
+</p>
+<p>
+Similar to a C++ <code>bitset</code> except that its size does not need to be
+fixed at compile time (hence the adjective <em>dynamic</em>).
+</p>
+
+<section id="constructors">
+<h3>Constructors</h3>
+
+<p>
+Let <code>n</code> be an integer,
+    <code>pp</code> a <code>PPMonoidElem</code>,
+    <code>b</code> a <code>DynamicBitset</code>
+</p>
+
+<ul>
+<li><code>DynamicBitset(n)</code> -- <code>DynamicBitset()</code> same as <code>DynamicBitset(0)</code>
+</li>
+<li><code>DynamicBitset(ConstRefPPMonoidElem pp)</code>  size is <code>NumIndets(owner(pp))</code>, sets k-th entry iff k-th exponent is non-zero
+</li>
+<li><code>DynamicBitset(const DynamicBitset&amp;)</code>
+</li>
+</ul>
+
+</section>
+<section id="toc4">
+<h3>Functions</h3>
+
+<p>
+Let <code>DB1</code> and <code>DB2</code> be two (const) values of type <code>DynamicBitset</code>
+</p>
+
+<ul>
+<li><code>len(DB1)</code>  -- returns number of bits in <code>DB1</code>
+</li>
+<li><code>count(DB1)</code>  -- returns number of set bits in <code>DB1</code>
+</li>
+<li><code>out &lt;&lt; DB1</code> -- print out <code>DB1</code> (using currently chosen style)
+<p></p>
+</li>
+<li><code>DB1 | DB2</code>  -- bitwise or (equiv. the union of the subsets)
+</li>
+<li><code>DB1 &amp; DB2</code>  -- bitwise and (equiv. the intersection of the subsets)
+</li>
+<li><code>DB1 - DB2</code>  -- bitwise diff (equiv. the set difference)
+</li>
+<li><code>DB1 ^ DB2</code>  -- bitwise xor (equiv. union set-diff intersection)
+</li>
+<li><code>IsSubset(DB1, DB2)</code>  -- true iff <code>DB1</code> is subset of <code>DB2</code>
+</li>
+<li><code>IsDisjoint(DB1, DB2)</code>  -- true iff <code>DB1</code> and <code>DB2</code> are disjoint
+</li>
+<li><code>Is1At(DB1, n)</code>  -- true iff <code>DB1</code> is 1 at position <code>n</code>
+</li>
+<li><code>NewPP(PPM, DB1)</code> -- create new PP in PPM whose exponents are given by <code>DB1</code>
+</li>
+<li><code>flip(DB1)</code>  -- create new DynamicBitset which is bitwise inverse of <code>DB1</code>
+</li>
+</ul>
+
+</section>
+<section id="toc5">
+<h3>Member functions</h3>
+
+<p>
+Additionally, let <code>DB</code> be a non-const value of type <code>DynamicBitset</code>.
+</p>
+
+<ul>
+<li><code>DB1.myLen()</code> -- number of bits
+</li>
+<li><code>DB1.IamAll0s()</code> -- true iff value is [00000...0000]
+</li>
+<li><code>DB1.IamAll1s()</code> -- true iff value is [11111...1111]
+</li>
+</ul>
+
+<p>
+These two do not check that the index is valid:
+</p>
+
+<ul>
+<li><code>DB.mySet(index, val)</code> --  morally equiv to <code>DB[index] = val</code> (boolean)
+</li>
+<li><code>DB.mySet(index)</code> -- morally equiv to <code>DB[index] = true</code>
+<p></p>
+</li>
+<li><code>DB = DB1</code>  -- assignment
+</li>
+<li><code>DB &amp;= DB1</code> --  equiv. to <code>DB = (DB &amp; DB1)</code>
+</li>
+<li><code>DB |= DB1</code> --  equiv. to <code>DB = (DB | DB1)</code>
+</li>
+<li><code>DB ^= DB1</code> --  equiv. to <code>DB = (DB ^ DB1)</code>
+</li>
+<li><code>DB -= DB1</code> --  equiv. to <code>DB = (DB - DB1)</code>
+<p></p>
+</li>
+<li><code>DB1.Iam1At(index)</code> -- equiv. to DB[index] == 1
+</li>
+<li><code>bool operator&lt;(const DynamicBitset&amp; rhs)   const;</code> -- wrt Xel
+</li>
+<li><code>DB1.IamSubset(DB2)</code> -- true iff <code>DB1</code> is subset of <code>DB2</code>
+</li>
+<li><code>DB1.IamDisjoint(DB2)</code> -- true iff <code>DB1</code> and <code>DB2</code> are disjoint
+<p></p>
+</li>
+<li><code>DB1 == DB2</code>  -- true iff <code>DB1</code> and <code>DB2</code> have the same value
+</li>
+<li><code>DB1 != DB2</code>  -- true iff <code>DB1</code> and <code>DB2</code> have different values
+</li>
+</ul>
+
+</section>
+<section id="toc6">
+<h3>output options</h3>
+
+<p>
+Default printing style is <code>clean</code>, <em>i.e.</em> as an STL bitset of the same
+size.  Printing style can be changed by setting the variable
+<code>DynamicBitset::ourOutputStyle</code>
+Example with a 66-bit <code>DynamicBitset</code> on a 64-bit machine:
+</p>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<td><code>DynamicBitset::clean</code></td>
+<td><code>0000000000000000000000000000000011</code></td>
+</tr>
+<tr>
+<td><code>DynamicBitset::WithSeparators</code></td>
+<td><code>00-00000000.00000000.00000000.00000011</code></td>
+</tr>
+<tr>
+<td><code>DynamicBitset::AsRevVecOfLong</code></td>
+<td><code>[0, 3]</code></td>
+</tr>
+</table>
+
+<p>
+(see <a href="../../examples/index.html#ex-DynamicBitset1.C">ex-DynamicBitset1.C</a>).
+</p>
+<p>
+<strong>Member functions</strong>
+</p>
+
+<ul>
+<li><code>void myOutputSelf(std::ostream&amp; out) const;</code>
+   --   as a bitset of same size
+</li>
+<li><code>void myOutputSelf8(std::ostream&amp; out) const;</code>
+   --  blocks of 8/ourNumBitsInBlock, for readability
+</li>
+<li><code>void myOutputSelfLong(std::ostream&amp; out) const;</code>
+   --  as reversed vector&lt;unsigned long&gt;
+</li>
+</ul>
+
+</section>
+</section>
+<section id="toc7">
+<h2>Maintainer documentation</h2>
+
+<p>
+<strong>Member fields (private)</strong>
+</p>
+
+<table style="margin-left: auto; margin-right: auto;" class="tableborder">
+<tr>
+<td><code>std::vector&lt;BitBlock&gt;</code></td>
+<td><code>myVec;</code></td>
+</tr>
+<tr>
+<td><code>unsigned long</code></td>
+<td><code>mySizeValue;</code></td>
+</tr>
+</table>
+
+<p>
+The <code>long</code> constant <code>DynamicBitset::ourNumBitsInBlock</code>
+stores number of bits contained in an <code>unsigned long</code> (normally 32 or 64).
+</p>
+<p>
+So a <code>DynamicBitset</code> stores a STL vector of STL bitsets of
+(constant) size <code>ourNumBitsInBlock</code> called <code>myVec</code>.
+The field <code>mySizeValue</code> is the number of bits we intend to use.
+(<em>e.g.</em> in a 32 bit machine a <code>DynamicBitset</code> of size 60 is stored as
+a vector with 2 <code>BitBlock</code>s and will have 4 unused bits)
+</p>
+
+<pre>
+   enum OutputStyle {clean, AsRevVecOfLong, WithSeparators};
+</pre>
+
+<p>
+<strong>Member functions (private)</strong>
+</p>
+
+<ul>
+<li><code>myResize(long n);</code> -- only for ctors
+</li>
+<li><code>myVecLen() const;</code> -- number of <code>BitBlock</code>s in vector
+</li>
+</ul>
+
+</section>
+<section id="toc8">
+<h2>Bugs, shortcomings and other ideas</h2>
+
+<section id="toc9">
+<h3>boost?</h3>
+
+<p>
+This class is needed because C++ <code>bitset</code> length has to be fixed at
+compile time.  There is a class in boost named <code>dynamic_bitset</code>:
+if/when we decide CoCoALib inlude boost <code>DynamicBitset</code> will just
+call the boost implementation.
+</p>
+
+</section>
+<section id="toc10">
+<h3>Stretchable?</h3>
+
+<p>
+<code>DynamicBitset</code>s, unlike boost's <code>dynamic_bitset</code>s, are not
+<em>stretchable</em>: the resize function is private.
+They are used to represent square-free power-products, therefore
+changing size does not make sense.  But there is no technical reason
+to forbid it, so we might make it available.
+</p>
+
+</section>
+</section>
+<section id="toc11">
+<h2>Main changes</h2>
+
+<p>
+<strong>2010</strong>
+</p>
+
+<ul>
+<li>moved definition of class <code>facet</code> from <code>TmpIsTree</code> into
+  <code>DynamicBitset.H,C</code> (and renamed).
+  Rearranged and changed names for similarity with bitsets in STL and
+  boost.  Stuctured in <em>safe</em> or <em>fast</em> functions according to
+  coding conventions.  Test and example.
+</li>
+</ul>
+
+</section>
+</section>
+</div>
+</article></body></html>
