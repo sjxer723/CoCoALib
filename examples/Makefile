@@ -18,6 +18,7 @@ SRCS=ex-empty.C \
       ex-DivMask1.C  ex-DivMask2.C \
       ex-DynamicBitset1.C  ex-DynamicBitset2.C \
       ex-ExternalLibs1.C \
+      ex-FiniteChainRing1.C \
       ex-factor1.C  ex-FloatApprox1.C  ex-frobby1.C \
       ex-geobucket1.C \
       ex-GFan1.C \
