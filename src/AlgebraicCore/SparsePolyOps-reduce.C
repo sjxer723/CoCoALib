@@ -123,6 +123,7 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
   void ReduceActiveLM(ReductionCog& F, SugarDegree& s, const Reductors& v)
   {
     GPoly* g;
+    std::cout << "reduce active LM" << std::endl;
     while ( (g = FindReducer(F, v)) != nullptr )
     {
       CoCoA_ASSERT( !IsZero(*g));

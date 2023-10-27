@@ -853,6 +853,7 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
     }
     else
     {
+      VERBOSE(200) << "Pair: " << myPairs.front() << std::endl;
       mySPoly.myAssignSPoly(myPairs.front(), myAgeValue);  // ??? SPoly computed only if not coprime
       VERBOSE(200) << " --before: " << poly(mySPoly) << std::endl;
       if (myPairs.front().IsInputPoly()) mySPoly.mySetMinimalGen();
@@ -931,6 +932,59 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
 //     };
 //   } // myDoGBasis(const long NumReductions)
 
+  void GReductor::myComputeAPoly(size_t coeff_2_power)
+  {
+    VerboseLog VERBOSE("myComputeAPoly");
+    
+    for (auto f:myPolys) 
+      myC.push_back(f);
+
+    while (!myC.empty()) {
+      auto f = myC.back();;
+      myC.pop_back();
+      std::cout << "leading coefficient: " << LC(f) << std::endl;
+      BigInt N;
+      std::cout << "f = " << f << std::endl;
+      if (IsInteger(N, LC(f))) {
+        size_t N_deg = DegOf2(N);
+        BigInt ann = BigInt(power(2, coeff_2_power- N_deg));
+        // std::cout << "N = " << N << std::endl;
+        // std::cout << N_deg << std::endl;
+        // std::cout << BigInt(power(2, coeff_2_power- N_deg)) << std::endl;
+        RingElem h = f.myPoly() * ann;
+        std::cout <<  f.myPoly() * ann << std::endl;
+        if (!IsZero(h)) {
+          GPoly h_gpoly = GPoly(h, myGRingInfoValue);
+          h_gpoly.myReduce(myTrueReductors);
+          std::cout << h_gpoly << std::endl;
+          if(!IsZero(h_gpoly)) {
+            // myGB.push_back(&h_gpoly);
+            // myTrueReductors.Insert(&h_gpoly);
+          }
+        }
+        std::cout << "h ends!" << std::endl;
+        // myGB.push_back(&h);
+      }
+    }
+  }
+
+  void GReductor::myDoGBasisForGaloisRing()
+  {
+    std::cout << "Hello Galois ring reducer" << std::endl;
+    for (auto &f: myPolys) {
+      std::cout << "F " << f << std::endl;
+      myGB.push_back(&f);
+      myTrueReductors.Insert(&f);
+    }
+    myPrepareGBasis();
+    myComputeAPoly(10);
+    for (auto &f: myGB) {
+      std::cout << "GB\t" << (*f).myPolyValue << std::endl;
+    }
+    
+    // myComputeAPoly(10);
+    // myFinalizeGBasis();
+  } // myDoGBasisForGaloisRing
 
   // ANNA: called by TmpGOperations
   void GReductor::myDoGBasis()
@@ -955,7 +1009,6 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
     if (VerbosityLevel() >= myStat.myFinalLevel)
       myStat.myStampa(VERBOSE(myStat.myFinalLevel));
   } // myDoGBasis
-
 
   RingElem GReductor::myDoGBasisElimFirst(ConstRefPPMonoidElem ElimIndsProd)
   {
@@ -1160,6 +1213,10 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
     for (auto& p: myPolys)
       p.myInitializeSugar(myGRingInfoValue.myNewSugar(poly(p)));
     myCreateInputPolyPairs(myPolys);
+    VERBOSE(100) << "All Pairs" << std::endl;
+    for (auto& pair: myPairs) {
+      VERBOSE(100) << "Pair: " << pair << std::endl;
+    }  
     myPrepared=true;
     if (myGRingInfoValue.IamModule())
       myCriteria.myCoprime = false;// CopCriterion works only for REAL ideals

@@ -78,8 +78,8 @@ namespace CoCoA
 
   const std::vector<RingElem>& SparsePolyRingBase::IdealImpl::myTidyGens(const CpuTimeLimit& CheckForTimeOut) const
   {
-    if (!IsField(CoeffRing(myRing())))
-      CoCoA_THROW_ERROR("CoeffRing must be a field", "GBasis(I)");
+    if (!IsField(CoeffRing(myRing())) && !IsPowerOf2(CoeffRing(myRing())->myCharacteristic()))
+      CoCoA_THROW_ERROR("CoeffRing must be a field or a ring of a power of two", "GBasis(I)");
 
     return myGBasis(CheckForTimeOut);
   }

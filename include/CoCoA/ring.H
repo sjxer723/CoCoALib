@@ -599,6 +599,7 @@ namespace CoCoA
   inline bool IsField(const ring& R)
   { return R->IamField(); }
 
+
   inline bool IsFiniteField(const ring& R)
   { return R->IamFiniteField(); }
 

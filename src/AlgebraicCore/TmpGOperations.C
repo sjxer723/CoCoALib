@@ -123,10 +123,26 @@ namespace CoCoA
     // The new ring should be created by MakeNewPRingFromModule
     // and the embeddings:  WithoutDenominators by EmbedVectorList
     //                   :  WithDenominator1Hom by DeEmbedPolyList
-    if (!IsField(CoeffRing(SPR)))
+    if (!IsField(CoeffRing(SPR)) && !IsPowerOf2(CoeffRing(SPR)->myCharacteristic()))
       CoCoA_THROW_ERROR(ERR::ExpectedCoeffsInField, "ComputeGBasis");
     bool IsSatAlg=false;
-    if (IsFractionFieldOfGCDDomain(CoeffRing(SPR)))
+    std::cout << "Hello, compute gbasis!" << std::endl;
+    if (IsPowerOf2(CoeffRing(SPR)->myCharacteristic())) {
+      size_t coeff_2_power = DegOf2(CoeffRing(SPR)->myCharacteristic());
+      GRingInfo GRI(SPR, IsHomogGrD0(inGens),IsSatAlg,NewDivMaskEvenPowers(), CheckForTimeOut);
+      
+      // GRingInfo GRI(SPR,IsHomogGrD0(inGens),IsSatAlg,NewDivMaskEvenPowers(), CheckForTimeOut);
+      GReductor GBR(GRI, inGens);
+
+      std::cout << "MyDoGBsis for galois ring" << std::endl;
+      // for (auto &f: inGens) {
+      //   std::cout << "F" << f << std::endl;
+      // }
+      //GBR.myComputeAPoly(coeff_2_power);
+      GBR.myDoGBasisForGaloisRing();
+      GBR.myGBasis(outGB);
+      //GBR.myGBasisForGaloisRing(outGB);
+    } else if (IsFractionFieldOfGCDDomain(CoeffRing(SPR)))
     {
       const ring R = BaseRing(CoeffRing(SPR));
       SparsePolyRing Rx = NewPolyRing(R, symbols(PPM(SPR)), ordering(PPM(SPR)));

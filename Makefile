@@ -108,7 +108,8 @@ install:
 
 
 .PHONY: all
-all: check doc cocoa5-check examples server
+all: check cocoa5-check server 
+#check doc cocoa5-check examples server
 
 
 # This target will be "built" only if you try to run make before

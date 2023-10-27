@@ -627,6 +627,14 @@ namespace CoCoA
     return !(N & (N-1));
   }
 
+  std::size_t DegOf2(const BigInt& N) noexcept
+  { 
+    BigInt abs_N = N;
+    if (N < 0) abs_N = -N;
+    if (N == 0) return 0;
+    const std::size_t Last1Bit = mpz_scan1(mpzref(abs_N), 0);
+    return Last1Bit;
+  }
 
   bool IsDivisible(const MachineInt& N, const MachineInt& D) // is N divisibile by D?
   {

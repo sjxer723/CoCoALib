@@ -137,6 +137,8 @@ namespace CoCoA
   bool IsPowerOf2(const BigInt& N) noexcept;
   bool IsPowerOf2(const MachineInt& n) noexcept;
 
+  std::size_t DegOf2(const BigInt& N) noexcept;
+
   // IsDivisible will throw ERR::DivByZero if D==0
   bool IsDivisible(const MachineInt& N, const MachineInt& D); // is N divisibile by D?
   bool IsDivisible(const MachineInt& N, const BigInt& D);     // is N divisibile by D?

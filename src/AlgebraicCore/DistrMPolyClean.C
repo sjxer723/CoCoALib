@@ -519,7 +519,7 @@ namespace CoCoA
   {
     CoCoA_ASSERT(IsCompatible(f, g) && IsCompatible(lhs, f));
     CoCoA_ASSERT(!IsZero(f) && !IsZero(g));
-    //    clog << "DivLM" << std::endl;
+       std::cout << "DivLM" << std::endl;
     const ring& R = f.myCoeffRing;    // shorthand
     typedef DistrMPolyClean::summand summand;            // shorthand
     const summand* const LMf = f.mySummands;  // shorthand

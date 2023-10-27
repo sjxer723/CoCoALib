@@ -64,6 +64,7 @@ namespace CoCoA
   public:
     QuotientRing(const ring& R);
     explicit QuotientRing(const QuotientRingBase* RingPtr);
+    bool isGaloisRing = false;
     // Default copy ctor & assignment work fine.
     // Default dtor works fine.
   public:
@@ -76,6 +77,8 @@ namespace CoCoA
   QuotientRing NewQuotientRing(const ring& R,const std::vector<std::string>& L);
   QuotientRing NewZZmod(const MachineInt& n);
   QuotientRing NewZZmod(const BigInt& N);
+  QuotientRing NewGaloisRing(const MachineInt& p, const MachineInt& deg);
+  QuotientRing NewGaloisRing(const BigInt& p, const BigInt& deg);
   bool IsQuotientRing(const ring& R);
   const ideal& DefiningIdeal(const QuotientRing& RmodI);
   const ring& ReprRing(const QuotientRing& RmodI);

@@ -102,6 +102,7 @@ namespace CoCoA
     bool IamTrueGCDDomain() const override  {return false;} // we don't know how to compute GCDs
     bool IamField() const override  {return IsMaximal(myReducingIdeal);}
     bool IamFiniteField() const override;
+    // bool IamGaloisRing() const override;
     bool IamExact() const override  {return IsExact(myReprRing);}
     ConstRefRingElem myZero() const override  {return *myZeroPtr;}
     ConstRefRingElem myOne() const override  {return *myOnePtr;}
@@ -298,6 +299,8 @@ namespace CoCoA
 
   bool GeneralQuotientRingImpl::IamFiniteField() const
   {
+    // VerboseLog VERBOSE("I am Finite Field");
+    std::cout <<"Finite Field Value" << myCharacteristic() << std::endl; 
     if (IsZZ(myBaseRingValue))  { return IsProbPrime(myCharacteristic()); }  // mildly buggy ??? IsPrime ???
 
     // Currently we recognise only k[x]/I where k is finite field
@@ -309,6 +312,13 @@ namespace CoCoA
            IsMaximal(myReducingIdeal);
   }
 
+  // bool GeneralQuotientRingImpl::IamGaloisRing() const
+  // {
+  //   if (IsZZ(myBaseRingValue)) {
+  //     return IsPowerOf2(myCharacteristic());
+  //   }
+  //   return false;
+  // }
 
   RingElem GeneralQuotientRingImpl::myCanonicalRepr(ConstRawPtr rawx) const
   {
@@ -894,6 +904,21 @@ namespace CoCoA
                            ideal(RingElem(RingZZ(), N)));
   }
 
+  QuotientRing NewGaloisRing(const MachineInt& p, const MachineInt& deg)
+  {
+    return NewGaloisRing(BigInt(p), BigInt(deg));
+  }
+
+  QuotientRing NewGaloisRing(const BigInt& p, const BigInt& deg)
+  {
+    if (p == 1 || p <= 0 || deg < 0) CoCoA_THROW_ERROR(ERR::BadQuotRing, "NewGaloisRing");
+    if (!IsPrime(p))  CoCoA_THROW_ERROR(ERR::BadQuotRing, "NewGaloisRing");
+    QuotientRing r = NewQuotientRing(RingZZ(),
+                           ideal(RingElem(RingZZ(), (power(p, deg)))));
+    r.isGaloisRing = true;
+    
+    return r;
+  }
 
   RingHom QuotientingHom(const QuotientRing& RmodI)
   {

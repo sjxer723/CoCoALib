@@ -108,6 +108,7 @@ public:
     bool WrongLPPFound() const{return myWrongLPPFoundValue;};
     const Stats& myStats() const{return myStat;}
     void myGBasis(PolyList&);// GB output
+    //void myGBasisForGaloisRing(PolyList&);//GB output
     void myMinGens(PolyList&);// GB output
     void myGBasis(GPolyList&);// GB output in GPoly form
     void myGBasisClear(GPolyList&); ///< GB output in GPoly form
@@ -115,6 +116,8 @@ public:
     void myMinGens(VectorList& outMinGens);
     void myDoAFFGBasis(); // I am working on sugar selection strategies
     void myDoGBasis(); ///< flag may be set for using Borel reductors
+    void myComputeAPoly(size_t coeff_2_power);
+    void myDoGBasisForGaloisRing();
     void myDoGBasisTEST(); ///< flag may be set for using Borel reductors
     RingElem myDoGBasisElimFirst(ConstRefPPMonoidElem ElimIndsProd);
     void myReduceCurrentSPoly();
@@ -160,6 +163,7 @@ public:
     GPairList myPairs;// here the polys are ptrs to myPolys
     Reductors myTrueReductors;// the true reductors.
     GPolyPtrList myGB;// the candidate Gbasis - NB polys are ptrs to myPolys
+    GPolyList myC;// the polynomails whose A-polynomials still have to be computed
     GPolyList myPolys;// the REAL Polys, the other are ptrs
     GPoly mySPoly;
     degree myOldDeg;// used for flow control and stats. The degree it refers to is the degree of the pair

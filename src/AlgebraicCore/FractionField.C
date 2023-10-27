@@ -93,8 +93,7 @@ namespace CoCoA
   {
     return false;
   }
-
-
+  
   bool FractionFieldBase::IamExact() const
   {
     return IsExact(myBaseRing());

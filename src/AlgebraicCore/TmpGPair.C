@@ -124,9 +124,9 @@ ostream& operator<<(ostream& out, const GPair& P)
 {
   if (!out) return out;  // short-cut for bad ostreams
 
-  out << "<" << age(*(P.myFirstGPolyPtr));//P.myFirstIndexValue;
+  out << "<" << age(*(P.myFirstGPolyPtr)) << ": " << poly(*P.myFirstGPolyPtr);
   if (P.IsInputPoly()) out <<",InputPoly";
-  else out << "," << age(*(P.mySecondGPolyPtr));//P.mySecondIndexValue;
+  else out << "," << age(*(P.mySecondGPolyPtr)) << ": " << poly(*P.mySecondGPolyPtr);
   if (P.myComponent!=0) out<<", Comp="<<P.myComponent;
   out << ", " << PP(P.myLCMwMask);
   if (P.IamCoprimeFlag)   out << ", coprime";
