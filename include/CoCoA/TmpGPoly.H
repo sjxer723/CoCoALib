@@ -95,6 +95,7 @@ typedef std::list<GPoly> GPolyList;
     inline void mySetMinimalGen() {myMinimalGenLevel=0;};
     void myInitializeSugar(const SugarDegree& s);
     void myAssignSPoly(const GPair&, const long age);
+    void myAssignAPoly(ConstRefRingElem &ann);
     ConstRefPPMonoidElem myLPPForDiv() const { return PP(myLPPForDivwMask);}
     friend long Component(const GPoly& g){return g.myComponent;};
     void MultiplyByPP(ConstRefPPMonoidElem);
@@ -184,7 +185,8 @@ typedef std::list<GPoly> GPolyList;
   typedef std::vector<GPoly*> GPolyPtrVector;
 
 
-  GPoly* FindReducer(const PPWithMask& pm,
+  GPoly* FindReducer(const RingElemAlias& lm,
+                     const PPWithMask& pm,
                      const long component,
                      const Reductors& theReductors);
   GPoly* FindReducer(const GPoly&, const Reductors& theReductors);
@@ -245,7 +247,7 @@ typedef std::list<GPoly> GPolyList;
     mutable bool IamBorelUpdated; ///< true if its degree is the current degree (Homogeneous algorithm)
     bool myIamNotToBeUsedValue;///<true if I don't want to use this element for reduction, i.e. interreducing
 
-    friend GPoly* FindReducer(const PPWithMask& pp,const long pp_component,
+    friend GPoly* FindReducer(const RingElemAlias& lm, const PPWithMask& pp,const long pp_component,
                                 const Reductors& theReductors);
     bool myBorelUpdate(ConstRefPPMonoidElem pp, const Reductors& theReductors);
   };
@@ -278,7 +280,8 @@ typedef std::list<GPoly> GPolyList;
     friend void OrderedInterreduce(Reductors&, GPoly);
     friend void reduce(const Reductors&);
     friend void ReduceTail(const Reductors&);
-    friend GPoly* FindReducer(const PPWithMask& pp,
+    friend GPoly* FindReducer(const RingElemAlias& lm,
+                              const PPWithMask& pp,
                               const long pp_component,
                               const Reductors& theReductors);
     // HERE TO BE NOTICED friend const SparsePolyRing& owner(const Reductors&);

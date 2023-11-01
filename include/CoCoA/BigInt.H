@@ -75,7 +75,10 @@ namespace CoCoA
     BigInt& operator*=(const BigInt& rhs);
     BigInt& operator/=(const BigInt& rhs);
     BigInt& operator%=(const BigInt& rhs);
-  			
+  	BigInt& operator^=(const BigInt& rhs);
+    BigInt& operator<<=(const size_t n);
+    BigInt& operator>>=(const size_t n);
+
     // Same but with RHS a MachineInt...
     BigInt& operator= (const MachineInt& rhs);
     BigInt& operator+=(const MachineInt& rhs);

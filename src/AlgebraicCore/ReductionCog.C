@@ -55,6 +55,7 @@ namespace CoCoA
       void myAssignReset(RingElem& f, long fLen) override;
       void myRelease(RingElem& f) override;
       ConstRefPPMonoidElem myActiveLPP() const override;
+      RingElemAlias myActiveLC() const override;
       void myMoveToNextLM() override;
       bool IamActiveZero() const override;
       void myReduce(ConstRefRingElem reducer, long RedLen=0) override;
@@ -76,6 +77,7 @@ namespace CoCoA
       void myAssignReset(RingElem& f, long fLen) override;
       void myRelease(RingElem& f) override;
       ConstRefPPMonoidElem myActiveLPP() const override;
+      RingElemAlias myActiveLC() const override;
       void myMoveToNextLM() override;
       bool IamActiveZero() const override;
       void myReduce(ConstRefRingElem reducer, long RedLen=0) override;
@@ -100,6 +102,7 @@ namespace CoCoA
       void myAssignReset(RingElem& f, long fLen) override;
       void myRelease(RingElem& f) override;
       ConstRefPPMonoidElem myActiveLPP() const override;
+      RingElemAlias myActiveLC() const override;
       void myMoveToNextLM() override;
       bool IamActiveZero() const override;
       void myReduce(ConstRefRingElem reducer, long RedLen=0) override;
@@ -121,6 +124,7 @@ namespace CoCoA
       void myAssignReset(RingElem& f, long fLen) override;
       void myRelease(RingElem& f) override;
       ConstRefPPMonoidElem myActiveLPP() const override;
+      RingElemAlias myActiveLC() const override;
       void myMoveToNextLM() override;
       bool IamActiveZero() const override;
       void myReduce(ConstRefRingElem reducer, long RedLen=0) override;
@@ -185,6 +189,9 @@ namespace CoCoA
   ConstRefPPMonoidElem RedCog::PolyFieldImpl::myActiveLPP() const
   { return LPP(myActiveSummandsValue); }
 
+  RingElemAlias RedCog::PolyFieldImpl::myActiveLC() const
+  { return LC(myActiveSummandsValue); }
+
 
   void RedCog::PolyFieldImpl::myMoveToNextLM()
   {
@@ -200,7 +207,9 @@ namespace CoCoA
   {
     CoCoA_ASSERT( !IamActiveZero() );
     const SparsePolyRing P = owner(g);
+    // std::cout << "before is field..." << std::endl;
     CoCoA_ASSERT( IsField(CoeffRing(P)) );
+    // std::cout << "after is field..." << std::endl;
     CoCoA_ASSERT( P == owner(myActiveSummandsValue) );
     P->myReductionStep(raw(myActiveSummandsValue), raw(g));
   }
@@ -267,6 +276,9 @@ namespace CoCoA
 
   ConstRefPPMonoidElem RedCog::PolyGCDImpl::myActiveLPP() const
   { return LPP(myActiveSummandsValue); }
+
+  RingElemAlias RedCog::PolyGCDImpl::myActiveLC() const
+  { return LC(myActiveSummandsValue); }
 
 
   void RedCog::PolyGCDImpl::myMoveToNextLM()
@@ -362,6 +374,8 @@ namespace CoCoA
   ConstRefPPMonoidElem RedCog::GeobucketFieldImpl::myActiveLPP() const
   { return LPP(myActiveSummandsValue); }
 
+  RingElemAlias RedCog::GeobucketFieldImpl::myActiveLC() const
+  { return LC(myActiveSummandsValue); }
 
   void RedCog::GeobucketFieldImpl::myMoveToNextLM()
   {
@@ -378,9 +392,13 @@ namespace CoCoA
 
   void RedCog::GeobucketFieldImpl::myReduce(ConstRefRingElem g, long gLen)
   {
+    std::cout << "GeobucketField Imply" << std::endl;
     CoCoA_ASSERT( !IamActiveZero() );
     const SparsePolyRing P = owner(g);
+    // std::cout << "before is field" << std::endl;
     CoCoA_ASSERT( IsField(CoeffRing(P)) );
+    // std::cout << "after is field" << std::endl;
+
     CoCoA_ASSERT( P == owner(myIgnoredPPsValue) );
     CoCoA::ReductionStep(myActiveSummandsValue, g, gLen);
   }
@@ -450,6 +468,9 @@ namespace CoCoA
   ConstRefPPMonoidElem RedCog::GeobucketGCDImpl::myActiveLPP() const
   { return LPP(myActiveSummandsValue); }
 
+  RingElemAlias RedCog::GeobucketGCDImpl::myActiveLC() const
+  { return LC(myActiveSummandsValue); }
+
 
   void RedCog::GeobucketGCDImpl::myMoveToNextLM()
   {
@@ -476,6 +497,7 @@ namespace CoCoA
 
   void RedCog::GeobucketGCDImpl::myReduce(ConstRefRingElem g, long gLen)
   {
+    std::cout << "GeobucketGCD Imply" << std::endl;
     CoCoA_ASSERT( !IamActiveZero() );
     const SparsePolyRing P = owner(g);
     CoCoA_ASSERT( IsTrueGCDDomain(CoeffRing(P)) );

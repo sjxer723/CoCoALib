@@ -46,7 +46,7 @@ namespace CoCoA
   public:
     virtual ~SugarDegreeBase() {};
     virtual SugarDegreeBase* myClone() const =0;
-    ///@name Warning! Throw an error if the wrong type of value is asked!
+    ///@name Warning! Throw an error if the wrong type of value is asked!     
     //@{
     virtual const degree& myWSugar() const =0; ///< only if impl stores this value
     virtual long myStdSugar() const =0; ///< only if impl stores this value

@@ -163,7 +163,7 @@ public:
     GPairList myPairs;// here the polys are ptrs to myPolys
     Reductors myTrueReductors;// the true reductors.
     GPolyPtrList myGB;// the candidate Gbasis - NB polys are ptrs to myPolys
-    GPolyList myC;// the polynomails whose A-polynomials still have to be computed
+    GPolyPtrList myC;// the polynomails whose A-polynomials still have to be computed
     GPolyList myPolys;// the REAL Polys, the other are ptrs
     GPoly mySPoly;
     degree myOldDeg;// used for flow control and stats. The degree it refers to is the degree of the pair

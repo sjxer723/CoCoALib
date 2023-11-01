@@ -26,6 +26,7 @@
 #include <cmath>
 //using std::log;
 //using std::atan;
+#include <iostream>
 #include <limits>
 using std::numeric_limits;
 
@@ -635,6 +636,44 @@ namespace CoCoA
     const std::size_t Last1Bit = mpz_scan1(mpzref(abs_N), 0);
     return Last1Bit;
   }
+
+  void GetReverseOverPowerOf2(BigInt& ans, const BigInt& a, size_t n) noexcept 
+  {
+    // using namespace std;
+    CoCoA_ASSERT((a % 2) && IsPowerOf2(n) && (n >= 4));
+    BigInt x_i = BigInt(3) * a;
+    x_i ^= BigInt(2); 
+    BigInt x_i_plus_1 = BigInt(0);
+    BigInt modulus = BigInt(1 << n);
+    BigInt y = (1 - a*x_i) % modulus;
+    // std::cout << "y = " << y << std::endl;
+    // std::cout << "n = " << n << std::endl;
+    
+    int w = DegOf2(BigInt(n));
+    // std::cout << "w = " << w -2 << std::endl;
+    for (int i=0; i < w - 2; i++) {
+      x_i_plus_1 = (x_i * (1+y)) % modulus;
+      y = (y*y) % modulus; 
+      x_i = x_i_plus_1;
+    }
+    ans = (x_i_plus_1 + modulus) % modulus;
+    // std::cout << "Correct? "<< (((ans*a - 1) % modulus) == 0) << std::endl;
+  }
+
+  void LcmDivisor(BigInt& ans1, BigInt& ans2, BigInt x, BigInt y, size_t n) noexcept
+  {
+    size_t x_deg_of_2 = DegOf2(x);
+    size_t y_deg_of_2 = DegOf2(y);
+    size_t max_deg_of_2 = std::max(x_deg_of_2, y_deg_of_2);
+
+    x >>= x_deg_of_2;
+    y >>= y_deg_of_2;
+    BigInt lcm;
+    mpz_lcm(mpzref(lcm), mpzref(x), mpzref(y));
+    ans1 = BigInt(1 << (max_deg_of_2 - x_deg_of_2)) * (lcm / x);
+    ans2 = BigInt(1 << (max_deg_of_2 - y_deg_of_2)) * (lcm / y);
+  }
+
 
   bool IsDivisible(const MachineInt& N, const MachineInt& D) // is N divisibile by D?
   {

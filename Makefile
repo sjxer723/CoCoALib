@@ -108,7 +108,7 @@ install:
 
 
 .PHONY: all
-all: check cocoa5-check server 
+all: server 
 #check doc cocoa5-check examples server
 
 

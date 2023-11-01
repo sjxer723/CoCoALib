@@ -19,6 +19,7 @@
 
 #include "CoCoA/TmpGPoly.H"
 
+#include "CoCoA/SparsePolyOps-RingElem.H"
 #include "CoCoA/BigIntOps.H"
 #include "CoCoA/ReductionCog.H"
 #include "CoCoA/SugarDegree.H"
@@ -69,14 +70,28 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
   }
 
 
-  inline GPoly* FindReducer(const PPWithMask& pm,
+  inline GPoly* FindReducer(const RingElemAlias& lm,
+                            const PPWithMask& pm,
                             const long comp,
                             const Reductors& theReductors)
   {
+    // std::cout << "Find Reducer: lm: " << lm << "pm: " << PP(pm) << std::endl;
+    char is_domain_power_of_2 = IsPowerOf2(CoeffRing(owner(theReductors))->myCharacteristic());
+
     for (ReductorData& R: theReductors.myBorelReductors)
       if ( comp == R.myComponent && IsDivisibleFast(pm, R.myLPPForDivwMask))
         if (R.IamBorelUpdated || R.myBorelUpdate(PP(pm), theReductors) )
         {
+          if (is_domain_power_of_2) {
+            const RingElemAlias r_lc = LC(poly(*R.myGetGPolyPtr()));
+            BigInt M, N;
+            if (IsInteger(M, lm) && IsInteger(N, r_lc) && DegOf2(M) >= DegOf2(N)) {
+              ++(R.myCount);
+              return R.myGPolyPtr;
+            } else {
+              continue;
+            }
+          }
           ++(R.myCount);
           return R.myGPolyPtr;
         }
@@ -84,6 +99,16 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
     {
       if (comp == R.myComponent && IsDivisibleFast(pm, R.myLPPForDivwMask) && !R.IamNotToBeUsed())
       {
+        if (is_domain_power_of_2) {
+          const RingElemAlias r_lc = LC(poly(*R.myGetGPolyPtr()));
+          BigInt M, N;
+          if (IsInteger(M, lm) && IsInteger(N, r_lc) && DegOf2(M) >= DegOf2(N)) {
+            ++(R.myCount);
+            return R.myGPolyPtr;
+          } else {
+            continue;
+          }
+        }
         ++(R.myCount);
         return R.myGPolyPtr;
       }
@@ -101,7 +126,8 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
     //    const PPWithMask pm(ActiveLPP(F), GRI.myDivMaskRule());
     PPWithMask pm(GRI.myPPM(), GRI.myDivMaskRule());
     pm = exponents(ActiveLPP(F));
-    return FindReducer(pm, GRI.myComponent(PP(pm)), theReductors);
+    // std::cout << "Active LC " << ActiveLC(F) << std::endl;
+    return FindReducer(ActiveLC(F), pm, GRI.myComponent(PP(pm)), theReductors);
   }
 
 
@@ -123,14 +149,22 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
   void ReduceActiveLM(ReductionCog& F, SugarDegree& s, const Reductors& v)
   {
     GPoly* g;
-    std::cout << "reduce active LM" << std::endl;
+    // std::cout << "reduce active LM" << std::endl;
     while ( (g = FindReducer(F, v)) != nullptr )
-    {
+    {  
+      // std::cout << "Active LP" << ActiveLPP(F) << std::endl;
+      // std::cout << "Find Reduce successfully!" << std::endl;
+      // std::cout << *g << std::endl;
       CoCoA_ASSERT( !IsZero(*g));
       CheckForInterrupt("ReduceActiveLM");
       v.myGRingInfo().myCheckForTimeout("ReduceActiveLM");
+      // std::cout << "Before my reducing1" << std::endl;
       s->myUpdate(F, *g);
+      // std::cout << "Before my reducing2" << std::endl;
+      // std::cout << "poly(*g)" << poly(*g) << std::endl;
+      // std::cout << "NumTerms(*g)" << NumTerms(*g) << std::endl;
       F->myReduce(poly(*g), NumTerms(*g));
+      // std::cout << "Reduce end!" << std::endl;
     }//while
   }//ReduceActiveLM
 
@@ -225,12 +259,12 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
   void GPoly::myPolySetSPoly(const GPoly& f, const GPoly& g)
   {
     myPolyValue = poly(f);
-    (owner(f))->myMulByPP(raw(myPolyValue), raw(colon(LPPForOrd(g), LPPForOrd(f))));
+      (owner(f))->myMulByPP(raw(myPolyValue), raw(colon(LPPForOrd(g), LPPForOrd(f))));
     ReductionCog F = ChooseReductionCogPoly(myGRingInfo());
     F->myAssignReset(myPolyValue, f.myNumTerms);
     F->myReduce(poly(g), NumTerms(g));
     F->myRelease(myPolyValue);
-    // sugar will be set as the sugar of the originating pair
+        // sugar will be set as the sugar of the originating pair
   }
 
 
@@ -262,6 +296,7 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
 
   void GPoly::myReduce(const Reductors& theReductors)
   {
+    // std::cout << "Reduing..." << std::endl;
     if ( IsZero(*this) ) return;
     ReductionCog F = ChooseReductionCogGeobucket(myGRingInfo());
     F->myAssignReset(myPolyValue, myNumTerms); // myPolyValue gets 0

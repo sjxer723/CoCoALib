@@ -47,6 +47,7 @@ namespace CoCoA
 
 
   ConstRefPPMonoidElem ActiveLPP(const ReductionCog& F);
+  RingElemAlias ActiveLC(const ReductionCog& f);
   bool IsActiveZero(const ReductionCog& F);
   std::ostream& operator<<(std::ostream& out, const ReductionCog& F);
 
@@ -65,11 +66,13 @@ namespace CoCoA
     virtual void myRelease(RingElem& f) =0; // almost no-throw guarantee (?)
 
     friend ConstRefPPMonoidElem ActiveLPP(const ReductionCog& F);
+    friend RingElemAlias ActiveLC(const ReductionCog& f);
     friend bool IsActiveZero(const ReductionCog& F);
 
   protected:
     virtual bool IamActiveZero() const =0;
     virtual ConstRefPPMonoidElem myActiveLPP() const =0;
+    virtual RingElemAlias myActiveLC() const =0;
   };
 
 
@@ -82,6 +85,9 @@ namespace CoCoA
 
   inline ConstRefPPMonoidElem ActiveLPP(const ReductionCog& F)
   { return F->myActiveLPP(); }
+
+  inline RingElemAlias ActiveLC(const ReductionCog& F)
+  { return F->myActiveLC(); }
 
   inline bool IsActiveZero(const ReductionCog& F)
   { return F->IamActiveZero(); }

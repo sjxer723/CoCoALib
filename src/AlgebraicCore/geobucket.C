@@ -20,6 +20,8 @@
 
 #include "CoCoA/assert.H"
 #include "CoCoA/utils.H"
+#include "CoCoA/BigIntOps.H"
+#include "CoCoA/BigRatOps.H"
 
 #include <iostream>
 using std::ostream;
@@ -418,6 +420,46 @@ namespace CoCoA
 
     const SparsePolyRing& P = gbk.myPolyRing;
     RingElem tmp_poly(P);
+
+    // std::cout << "P = " << P << endl;
+    std::cout << "f = " << poly(gbk.myBuckets[0]) << endl;
+    std::cout << "g = " << g << endl;
+    BigInt M, N;
+    if (IsInteger(M, LC(poly(gbk.myBuckets[0]))) && IsInteger(N, LC(g)) 
+      && IsPowerOf2(CoeffRing(P)->myCharacteristic())) {
+      size_t M_deg = DegOf2(M);
+      size_t N_deg = DegOf2(N);
+      size_t domain_deg = DegOf2(CoeffRing(P)->myCharacteristic());
+      /**
+       * f = 2^{M_deg} * M' * x^alpha
+       * g = 2^{N_deg} * N' * x^beta
+       * g' = g * 2^{M_deg - N_deg} * M' * N'^{-1} * x^{alpha-beta}
+      */      
+      // std::cout << "M " << M << " Deg of M " << DegOf2(M) << std::endl;
+      // std::cout << "N " << N << " Deg of N " << DegOf2(N) << std::endl;
+      if (M_deg >= N_deg) {
+        // std::cout << "Deg of 2 in M:" << M_deg << endl;
+        // std::cout << "Deg of 2 in N:" << N_deg << endl;
+        // std::cout << "Deg of domain:" << domain_deg << endl;
+        M >>= M_deg;
+        N >>= N_deg;
+        BigInt r = power(2, M_deg - N_deg);
+        GetReverseOverPowerOf2(N, N, domain_deg); 
+        ConstRefRingElem f = poly(gbk.myBuckets[0]);
+        ConstRefRingElem f_LP = monomial(P, LPP(f)), g_LP = monomial(P, LPP(g));
+        P->myDivLM(raw(tmp_poly), raw(f_LP), raw(g_LP));
+        auto updated_g = g * M * N * r;
+        std::cout << "Updated g " << updated_g << endl;
+        std::cout << "tmp poly " << tmp_poly << endl;
+        P->myNegate(raw(tmp_poly), raw(tmp_poly));
+        gbk.myDeleteLM();
+        gbk.myAddMulLM(tmp_poly, updated_g, RedLen, SparsePolyRingBase::SkipLMg);
+        std::cout << "reduced f " << poly(gbk.myBuckets[0]) << endl;
+        return;  
+      } else {
+        return;
+      }
+    }
 
     P->myDivLM(raw(tmp_poly), raw(poly(gbk.myBuckets[0])), raw(g));
     P->myNegate(raw(tmp_poly), raw(tmp_poly));

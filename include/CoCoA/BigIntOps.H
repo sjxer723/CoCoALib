@@ -138,6 +138,8 @@ namespace CoCoA
   bool IsPowerOf2(const MachineInt& n) noexcept;
 
   std::size_t DegOf2(const BigInt& N) noexcept;
+  void GetReverseOverPowerOf2(BigInt&ans, const BigInt& a, size_t n) noexcept;
+  void LcmDivisor(BigInt& ans1, BigInt& ans2, BigInt x, BigInt y, size_t n) noexcept;
 
   // IsDivisible will throw ERR::DivByZero if D==0
   bool IsDivisible(const MachineInt& N, const MachineInt& D); // is N divisibile by D?

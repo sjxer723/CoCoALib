@@ -280,6 +280,29 @@ namespace CoCoA
     return *this;
   }
 
+  BigInt& BigInt::operator^=(const BigInt& rhs)
+  {
+    if (IsZero(rhs)) 
+      return *this;
+    mpz_xor(myRepr, myRepr, rhs.myRepr);
+    return *this;
+  }
+
+  BigInt& BigInt::operator<<=(size_t n)
+  {
+    if (n == 0)
+      return *this;
+    mpz_mul_2exp(myRepr, myRepr, n);
+    return *this;
+  }
+
+  BigInt& BigInt::operator>>=(size_t n)
+  {
+    if (n == 0)
+      return *this;
+    mpz_tdiv_q_2exp(myRepr, myRepr, n);
+    return *this;
+  }
 
   //---------------------------------------------------------------------------
   // Assignment and assignment arithmetic with rhs a MachineInt

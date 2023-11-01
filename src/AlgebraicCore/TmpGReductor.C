@@ -491,14 +491,25 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
       {
         //std::clog<<"walking_component "<<Component(**it)<<endl;
         if (myCriteria.myDiv && IsDivisibleFast(LPPForDivwMask(**it), LPPForDivwMask(**last)) ) // speed is not necessary
-        {
-          if (VerbosityLevel() >= myStat.myPolyDeletedLevel)
-            VERBOSE(myStat.myPolyDeletedLevel) <<"<"<<walking_index
-                                               <<"> "<<LPPForDiv(**it)
-                                               <<" DELETED BY NEW "
-                <<"<"<<standing_index<<"> "<<LPPForDiv(**last)<< endl;
-          (*it)->Deactivate();
-          ++myStat.myPolyDeleted;
+        { 
+          char to_deactivate = true;
+          if (IsPowerOf2(CoeffRing(**it)->myCharacteristic()) ) {
+            BigInt M, N;
+            if (IsInteger(M, LC(**it)) && IsInteger(N, LC(**last)) && (DegOf2(M) < DegOf2(N))) {
+              std::cout << "M = " << M << " N = " << N << std::endl;
+        
+              to_deactivate = false;
+            }
+          }
+          if (to_deactivate) {
+            if (VerbosityLevel() >= myStat.myPolyDeletedLevel)
+              VERBOSE(myStat.myPolyDeletedLevel) <<"<"<<walking_index
+                                                 <<"> "<<LPPForDiv(**it)
+                                                 <<" DELETED BY NEW "
+                  <<"<"<<standing_index<<"> "<<LPPForDiv(**last)<< endl;
+            (*it)->Deactivate();
+            ++myStat.myPolyDeleted;
+          }
         } //second if
         //else
         ++inserted_pairs;
@@ -511,6 +522,7 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
           Ordered_Insert(new_pairs,GPair(**it,**last));
         }
       };//Active if
+      std::cout << "end loop body" << std::endl;
     };//for
 
     myStat.myGMKilled+=inserted_pairs-len(new_pairs);
@@ -673,7 +685,23 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
     if (myGRingInfo().myInputAndGrading()==HOMOG)
       myTrueReductors.interreduce(inPoly);// this must be the first op
     ++myAgeValue;
-    if (IsConstant(poly(inPoly)))
+    std::cout << "inpoly: " << poly(inPoly) << std::endl; 
+    if (IsPowerOf2(CoeffRing(inPoly)->myCharacteristic())) {
+      BigInt C;
+      if (IsInteger(C, poly(inPoly))) {
+        if (DegOf2(C) == 0) {
+          VERBOSE(100) << "!!!!!!!!!! ideal(1) !!!!!!!!!!!!" << std::endl;
+          myPolys.clear();
+          myPolys.push_back(inPoly);
+          myGB.clear();
+          myGB.push_back(&myPolys.back());
+          myTrueReductors.myClear();
+          myTrueReductors.Insert(&myPolys.back());
+          myPairs.clear();
+          return;
+        }
+      }
+    } else if (IsConstant(poly(inPoly)))
     {
       VERBOSE(100) << "!!!!!!!!!! ideal(1) !!!!!!!!!!!!" << std::endl;
       myPolys.clear();
@@ -935,55 +963,71 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
   void GReductor::myComputeAPoly(size_t coeff_2_power)
   {
     VerboseLog VERBOSE("myComputeAPoly");
-    
-    for (auto f:myPolys) 
-      myC.push_back(f);
-
     while (!myC.empty()) {
-      auto f = myC.back();;
-      myC.pop_back();
-      std::cout << "leading coefficient: " << LC(f) << std::endl;
+      GPoly *f = myC.back();
+      // std::cout << "f = " << *f << std::endl;
       BigInt N;
-      std::cout << "f = " << f << std::endl;
-      if (IsInteger(N, LC(f))) {
+      if (IsInteger(N, LC(*f))) {
         size_t N_deg = DegOf2(N);
-        BigInt ann = BigInt(power(2, coeff_2_power- N_deg));
-        // std::cout << "N = " << N << std::endl;
-        // std::cout << N_deg << std::endl;
+        BigInt ann(1);
+        ann <<= (coeff_2_power - N_deg);
+        // std::cout << "N:" << N << " N_deg:" << N_deg << std::endl;
         // std::cout << BigInt(power(2, coeff_2_power- N_deg)) << std::endl;
-        RingElem h = f.myPoly() * ann;
-        std::cout <<  f.myPoly() * ann << std::endl;
-        if (!IsZero(h)) {
-          GPoly h_gpoly = GPoly(h, myGRingInfoValue);
-          h_gpoly.myReduce(myTrueReductors);
-          std::cout << h_gpoly << std::endl;
-          if(!IsZero(h_gpoly)) {
-            // myGB.push_back(&h_gpoly);
-            // myTrueReductors.Insert(&h_gpoly);
+        // RingElem h = f->myPoly() * ann;
+        f->myAssignAPoly(RingElem(myGRingInfoValue.myNewSPR(), ann));
+        // std::cout <<  f.myPoly() * ann << std::endl;
+        // std::cout << "Gpoly f = " << f->myPoly() << std::endl;
+        if (!IsZero(*f)) {
+          f->myReduce(myTrueReductors);
+          if(!IsZero(*f)) {
+            // myC.push_front(f);
+            myUpdateBasisAndPairs(*f);
+            continue;
           }
-        }
-        std::cout << "h ends!" << std::endl;
-        // myGB.push_back(&h);
+        } 
       }
+      delete f;
+      myC.pop_back();
+      // std::cout << "h ends!" << std::endl;    
     }
   }
 
   void GReductor::myDoGBasisForGaloisRing()
   {
-    std::cout << "Hello Galois ring reducer" << std::endl;
     for (auto &f: myPolys) {
-      std::cout << "F " << f << std::endl;
       myGB.push_back(&f);
       myTrueReductors.Insert(&f);
     }
     myPrepareGBasis();
-    myComputeAPoly(10);
+    for (auto f:myPolys)
+      myC.push_back(new GPoly(f.myPoly(), myGRingInfoValue));
+    myComputeAPoly(DegOf2(CoeffRing(myGRingInfoValue.myNewSPR())->myCharacteristic()));
+    // std::cout << "Apoly ends!" << std::endl;
+    // for (auto &f: myGB) {
+    //   std::cout << "GB\t" << poly((*f)) << std::endl;
+    // }
+    while (!myPairs.empty())
+    {
+      // std::cout << "Poly 1: " << poly(myPairs.front().myFirstGPoly()) << std::endl;
+      // if (!myPairs.front().IsInputPoly()) {
+      //   std::cout << "Poly 2: " << poly(myPairs.front().mySecondGPoly()) << std::endl;
+      // }
+      // std::cout << std::endl;
+      myReduceCurrentSPoly();
+      // std::cout << "Reduce End!\t" << poly(mySPoly) << std::endl;
+      if (!IsZero(mySPoly))
+      {
+        myUpdateBasisAndPairs();
+        // VERBOSE_NewPolyInGB(VERBOSE, len(myGB), len(myPairs), mySPoly);
+        if (!myPairs.empty())
+          if (myCurrentPairDeg!=myOldDeg&&myTrueReductors.IhaveBorelReductors())
+            myTrueReductors.myBorelReductorsUpdateInNextDegree();
+      }
+    } // while
+    myFinalizeGBasis(); 
     for (auto &f: myGB) {
-      std::cout << "GB\t" << (*f).myPolyValue << std::endl;
+      std::cout << "GB\t" << poly((*f)) << std::endl;
     }
-    
-    // myComputeAPoly(10);
-    // myFinalizeGBasis();
   } // myDoGBasisForGaloisRing
 
   // ANNA: called by TmpGOperations
@@ -1275,6 +1319,10 @@ bool BoolCmpLPPPoly(ConstRefRingElem f, ConstRefRingElem g)
           }
         } // myGB for
       } // interreduction
+      for (auto it=myGB.begin(); it!=myGB.end(); ++it)
+      {
+        std::cout << "Poly\t" << (**it).myPoly() << "\t";
+      }
   } // myFinalizeGBasis
 
 

@@ -290,14 +290,29 @@ void GPoly::myUpdateLenLPPLCDegComp()
     myMinimalGenLevel = -1;
     if (the_gp.IsInputPoly())
       myPolyValue = poly(the_gp.myFirstGPoly());
-    else
-      myPolySetSPoly(the_gp.myFirstGPoly(), the_gp.mySecondGPoly());
+    else if (IsPowerOf2(CoeffRing(the_gp)->myCharacteristic())) {
+      BigInt c1, c2, M, N;
+      const GPoly& f = the_gp.myFirstGPoly(), g = the_gp.mySecondGPoly();
+      size_t domain_deg_of_2 = DegOf2(CoeffRing(the_gp)->myCharacteristic());
+      if (IsInteger(M, LC(f)) && IsInteger(N, LC(g))) {
+        LcmDivisor(c1, c2, M, N, domain_deg_of_2);
+        myPolyValue = c1 * poly(f) * monomial(owner(f), colon(LPPForOrd(g), LPPForOrd(f)));
+        myPolyValue -= c2 * poly(g) * monomial(owner(g), colon(LPPForOrd(f), LPPForOrd(g)));
+      }
+    } else {
+      myPolySetSPoly(the_gp.myFirstGPoly(), the_gp.mySecondGPoly());  
+    }
     myUpdateLenLPPLCDegComp();
     myAge = the_age;
     // MAX: do these things only if necessary.
     mySugar = sugar(the_gp);
    }//myAssignSPoly
 
+  void GPoly::myAssignAPoly(ConstRefRingElem &ann)
+  {
+    myPolyValue *= ann;
+    mySugar = NewStdSugar(myPolyValue);
+  }
  /*
 //???  This does not work, I don't understand why.
  void GPoly::myAppendClear(RingElem& p)
