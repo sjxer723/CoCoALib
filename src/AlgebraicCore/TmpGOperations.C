@@ -126,7 +126,7 @@ namespace CoCoA
     if (!IsField(CoeffRing(SPR)) && !IsPowerOf2(CoeffRing(SPR)->myCharacteristic()))
       CoCoA_THROW_ERROR(ERR::ExpectedCoeffsInField, "ComputeGBasis");
     bool IsSatAlg=false;
-    // std::cout << "Hello, compute gbasis!" << std::endl;
+    std::cout << "Hello, compute gbasis!" << std::endl;
     if (IsPowerOf2(CoeffRing(SPR)->myCharacteristic())) {
       size_t coeff_2_power = DegOf2(CoeffRing(SPR)->myCharacteristic());
       GRingInfo GRI(SPR, IsHomogGrD0(inGens),IsSatAlg,NewDivMaskEvenPowers(), CheckForTimeOut);
@@ -134,7 +134,7 @@ namespace CoCoA
       // GRingInfo GRI(SPR,IsHomogGrD0(inGens),IsSatAlg,NewDivMaskEvenPowers(), CheckForTimeOut);
       GReductor GBR(GRI, inGens);
 
-      // std::cout << "MyDoGBsis for galois ring" << std::endl;
+      std::cout << "MyDoGBsis for galois ring" << std::endl;
       // for (auto &f: inGens) {
       //   std::cout << "F" << f << std::endl;
       // }

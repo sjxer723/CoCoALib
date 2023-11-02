@@ -50,6 +50,10 @@ namespace CoCoA
 
     ideal J7 = ideal(85*w*y, 64*w + 4*z, 12*z);
     cout << "GBasis(J7)  = " << GBasis(J7) << endl;    
+
+    ideal J8 = ideal(-2*w +1);
+    cout << "GBasis(J8)  = " << GBasis(J8) << endl;    
+
   }
 
   void program3()
@@ -64,7 +68,7 @@ namespace CoCoA
 
 int main()
 {
-  // CoCoA::SetVerbosityLevel(200); // change arg to get more/less verbose logging.
+  CoCoA::SetVerbosityLevel(200); // change arg to get more/less verbose logging.
   try
   {
     CoCoA::program2();

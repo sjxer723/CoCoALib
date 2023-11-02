@@ -78,7 +78,7 @@ namespace CoCoA
     if (myIsZero(rawf)) // or CoCoA_ASSERT???
       CoCoA_THROW_ERROR(ERR::ZeroRingElem,"PolyRingBase::myMonic");
     RingElem ans = RingElemAlias(ring(this), rawf);
-    if (!IsOne(myLC(rawf)) && !myDivByCoeff(raw(ans), raw(myLC(rawf))))
+    if (!IsOne(myLC(rawf)) && !IsGaloisRing(ring(this)) && !myDivByCoeff(raw(ans), raw(myLC(rawf))))
       CoCoA_THROW_ERROR(ERR::BadQuot, "PolyRingBase::myDiv");
     mySwap(rawmonic, raw(ans));
   }

@@ -438,17 +438,17 @@ namespace CoCoA
       // std::cout << "M " << M << " Deg of M " << DegOf2(M) << std::endl;
       // std::cout << "N " << N << " Deg of N " << DegOf2(N) << std::endl;
       if (M_deg >= N_deg) {
-        // std::cout << "Deg of 2 in M:" << M_deg << endl;
-        // std::cout << "Deg of 2 in N:" << N_deg << endl;
         // std::cout << "Deg of domain:" << domain_deg << endl;
         M >>= M_deg;
         N >>= N_deg;
+        // std::cout << "M: " << M << " N: " << N  <<std::endl;
         BigInt r = power(2, M_deg - N_deg);
         GetReverseOverPowerOf2(N, N, domain_deg); 
         ConstRefRingElem f = poly(gbk.myBuckets[0]);
         ConstRefRingElem f_LP = monomial(P, LPP(f)), g_LP = monomial(P, LPP(g));
         P->myDivLM(raw(tmp_poly), raw(f_LP), raw(g_LP));
         auto updated_g = g * M * N * r;
+        // std::cout << "M: " << M << " N: " << N << " r: " <<r <<std::endl;
         std::cout << "Updated g " << updated_g << endl;
         std::cout << "tmp poly " << tmp_poly << endl;
         P->myNegate(raw(tmp_poly), raw(tmp_poly));

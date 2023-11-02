@@ -22,6 +22,7 @@
 #include "CoCoA/SmartPtrIRC.H"
 #include "CoCoA/assert.H"
 #include "CoCoA/bool3.H"
+#include "BigIntOps.H"
 
 #include "gmp.h"
 
@@ -599,9 +600,11 @@ namespace CoCoA
   inline bool IsField(const ring& R)
   { return R->IamField(); }
 
-
   inline bool IsFiniteField(const ring& R)
   { return R->IamFiniteField(); }
+
+  inline bool IsGaloisRing(const ring& R)
+  { return IsPowerOf2(R->myCharacteristic()); }
 
   inline bool IsExact(const ring& R)
   { return R->IamExact(); }
