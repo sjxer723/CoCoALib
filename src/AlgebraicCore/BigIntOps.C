@@ -644,7 +644,7 @@ namespace CoCoA
     BigInt x_i = BigInt(3) * a;
     x_i ^= BigInt(2); 
     BigInt x_i_plus_1 = BigInt(0);
-    BigInt modulus = BigInt(1 << n);
+    BigInt modulus = power(2, n);
     BigInt y = (1 - a*x_i) % modulus;
     // std::cout << "y = " << y << std::endl;
     // std::cout << "n = " << n << std::endl;
