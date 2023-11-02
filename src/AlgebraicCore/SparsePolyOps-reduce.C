@@ -298,6 +298,7 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
   {
     // std::cout << "Reduing..." << std::endl;
     if ( IsZero(*this) ) return;
+    if ( handlersEnabled ) reductionStartHandler(myPoly());
     ReductionCog F = ChooseReductionCogGeobucket(myGRingInfo());
     F->myAssignReset(myPolyValue, myNumTerms); // myPolyValue gets 0
     reduce(F, mySugar, theReductors); // mySugar updated
@@ -307,6 +308,7 @@ degree HereForProfilingOnlyWDeg(ConstRefPPMonoidElem cofactor1)
     if ( !IsZero(*this) && !IsOne(myLCValue) ) // makes myPolyValue monic
       if ( myGRingInfo().myCoeffRingType()==CoeffEncoding::Field )
         myGRingInfo().myNewSPR()->myDivByCoeff(raw(myPolyValue), raw(myLCValue));
+    if ( handlersEnabled ) reductionEndHandler(myPoly());
     // if CoeffEncoding::Field myRelease does NOT make poly monic
     // if CoeffEncoding::FrFldOfGCDDomain myRelease makes poly content free
   }

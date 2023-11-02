@@ -33,6 +33,7 @@
 #include "CoCoA/convert.H"
 #include "CoCoA/error.H"
 #include "CoCoA/utils.H"  // for len
+#include "CoCoA/TmpGPoly.H"
 
 
 #include <vector>
@@ -128,7 +129,9 @@ namespace CoCoA
   {
     const PolyRing Rx = owner(f);
     RingElem ans(Rx);
+    if (handlersEnabled) reductionStartHandler(f);
     Rx->myMonic(raw(ans), raw(f));
+    if (handlersEnabled) reductionEndHandler(ans);
     return ans;
   }
 

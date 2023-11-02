@@ -29,6 +29,7 @@
 #include "CoCoA/TmpGTypes.H"
 #include "CoCoA/utils.H"
 
+#include<functional>
 #include<list>
 // using std::list; // for GPolyList; GPolyPtrList;
 #include<vector>
@@ -46,6 +47,11 @@ enum ClearMarker {clear};
 
 class GPoly;
 
+extern bool handlersEnabled;
+extern std::function<void(ConstRefRingElem p, ConstRefRingElem q, ConstRefRingElem s)> sPolyHandler;
+extern std::function<void(ConstRefRingElem p)> reductionStartHandler;
+extern std::function<void(ConstRefRingElem q)> reductionStepHandler;
+extern std::function<void(ConstRefRingElem r)> reductionEndHandler;
 
 typedef std::list<GPoly> GPolyList;
 

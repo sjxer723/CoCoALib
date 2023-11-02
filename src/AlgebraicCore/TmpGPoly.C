@@ -46,8 +46,13 @@ using std::vector;
 
 namespace CoCoA
 {  
-
-
+  
+  bool handlersEnabled = false;
+  std::function<void(ConstRefRingElem p, ConstRefRingElem q, ConstRefRingElem s)> sPolyHandler = nullptr;
+  std::function<void(ConstRefRingElem p)> reductionStartHandler = nullptr;
+  std::function<void(ConstRefRingElem q)> reductionStepHandler = nullptr;
+  std::function<void(ConstRefRingElem r)> reductionEndHandler = nullptr;
+ 
   //---------class GPoly-------------------------------
 
   // WARNING: is not possible to build the zero GPoly here.
