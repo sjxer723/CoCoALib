@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "ex-FiniteChainRing1.C": "cpp"
+        "ex-FiniteChainRing1.C": "cpp",
+        "TmpGPoly.C": "cpp",
+        "SparsePolyOps-reduce.C": "cpp"
     }
 }
